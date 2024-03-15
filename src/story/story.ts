@@ -1,6 +1,4 @@
-import axios from "axios";
-import {reformatStoryFields} from "./reformat-story-fields";
-import ShortcutResource from "../base-class";
+import ShortcutResource from "@/src/base-class"
 
 interface Branch {
 }
