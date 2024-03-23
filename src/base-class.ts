@@ -1,4 +1,6 @@
 export default class ShortcutResource {
+    public static baseUrl = 'https://api.app.shortcut.com/api/v3'
+
     private get workflows(): { [p: number]: { [p: string]: unknown } } {
         return this._workflows;
     }

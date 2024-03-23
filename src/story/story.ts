@@ -1,9 +1,10 @@
-import ShortcutResource from "@/src/base-class"
+import ShortcutResource from "@/base-class"
+import axios from "axios";
+import {getHeaders} from "@/utils/headers";
+import {StoryComment, StoryCommentData} from "@/story/comment/story-comment";
+import {convertKeysToCamelCase} from "@/utils/convert-fields";
 
 interface Branch {
-}
-
-interface StoryComment {
 }
 
 interface Commit {
@@ -97,6 +98,15 @@ export class Story extends ShortcutResource implements StoryData {
     constructor(init: StoryData) {
         super()
         Object.assign(this, init)
+    }
+
+    public async comment(comment: string): Promise<StoryComment | void> {
+        const url = `${Story.baseUrl}/stories/${this.id}/comments`
+        const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error creating comment: ${error}`)
+        })
+        const data: StoryCommentData = response.data
+        return convertKeysToCamelCase(data) as StoryComment
     }
 
     appUrl!: string;
