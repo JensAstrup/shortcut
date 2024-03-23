@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2022",
     "lib": [
       "ES2022"
     ],
-    "module": "CommonJS",
+    "module": "esnext",
     "moduleResolution": "node",
     "baseUrl": "./",
     "declaration": true,
@@ -15,18 +15,21 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": [
-        "./*"
+        "./src/*"
       ],
-      "@story": [
-        "story/*"
+      "@/story/*": [
+        "./src/story/*"
       ]
     },
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true
   },
+  "ts-node": {
+    "esm": true
+  },
   "include": [
     "*/*.ts",
-    "./src/**/*.ts",
+    "./src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
