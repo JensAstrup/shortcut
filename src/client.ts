@@ -23,7 +23,6 @@ export default class Client {
 
 
     constructor(shortcutApiKey?: string) {
-        console.log('Hello, world!!')
         this.stories = new StoriesService({headers: this.headers})
         if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
     }
