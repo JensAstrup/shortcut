@@ -1,9 +1,9 @@
-import * as process from "process";
-import StoriesService from "@story/stories-service.js";
-import WorkflowService from "@workflows/workflows-service";
-import IterationsService from "@iterations/iterations-service";
+import * as process from 'process'
+import StoriesService from '@story/stories-service.js'
+import WorkflowService from '@workflows/workflows-service'
+import IterationsService from '@iterations/iterations-service'
 
-export type ShortcutHeaders = { "Shortcut-Token": string; "Content-Type": string }
+export type ShortcutHeaders = { 'Shortcut-Token': string; 'Content-Type': string }
 
 export default class Client {
     get headers(): ShortcutHeaders {
