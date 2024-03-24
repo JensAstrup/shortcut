@@ -1,16 +1,20 @@
 {
-  "name": "shortcut",
+  "name": "shortcut-api",
+  "version": "1.0.0-beta.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "type": "module",
-  "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.27",
     "tsconfig-paths": "^4.2.0"
