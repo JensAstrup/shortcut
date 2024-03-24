@@ -1,10 +1,10 @@
-import ShortcutResource from "@/base-class"
+import ShortcutResource from "@base-class"
 import axios from "axios";
-import {getHeaders} from "@/utils/headers";
-import {StoryComment, StoryCommentData} from "@/story/comment/story-comment";
-import {convertKeysToCamelCase} from "@/utils/convert-fields";
-import WorkflowService from "@/workflows/workflows-service";
-import camelToSnake from "@/utils/camel-to-snake";
+import {getHeaders} from "@utils/headers";
+import {StoryComment, StoryCommentData} from "@story/comment/story-comment";
+import {convertKeysToCamelCase} from "@utils/convert-fields";
+import WorkflowService from "@workflows/workflows-service";
+import camelToSnake from "@utils/camel-to-snake";
 
 interface Branch {
 }

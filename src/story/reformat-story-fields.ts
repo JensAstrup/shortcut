@@ -1,5 +1,5 @@
-import {Story, StoryData} from "./story.js"
-import snakeToCamel from "../utils/snake-to-camel";
+import {Story, StoryData} from "./story"
+import snakeToCamel from "@utils/snake-to-camel";
 
 /**
  * Reformats an array of story objects, converting custom field keys from snake_case to camelCase and restructuring

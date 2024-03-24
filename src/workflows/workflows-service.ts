@@ -19,7 +19,7 @@ export default class WorkflowService extends ShortcutResource {
         return response.data
     }
 
-    private static async getWorkflowStates(): Promise<WorkflowState[]> {
+    public static async getWorkflowStates(): Promise<WorkflowState[]> {
         const workflows = await this.getWorkflows()
         const workflowStates= this.extractWorkflowStates(workflows)
         WORKFLOW_STATES = workflowStates.reduce((acc: {[key: number]: WorkflowState}, state) => {

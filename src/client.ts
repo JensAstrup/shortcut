@@ -1,5 +1,6 @@
 import * as process from "process";
-import StoriesService from "./story/stories-service.js";
+import StoriesService from "@story/stories-service.js";
+import WorkflowService from "@workflows/workflows-service";
 
 export type ShortcutHeaders = { "Shortcut-Token": string; "Content-Type": string }
 
@@ -18,12 +19,14 @@ export default class Client {
     }
 
     public stories: StoriesService
+    public workflows: WorkflowService
     static baseUrl: string = 'https://api.app.shortcut.com/api/v3'
     private readonly shortcutApiKey: string | undefined
 
 
     constructor(shortcutApiKey?: string) {
         this.stories = new StoriesService({headers: this.headers})
+        this.workflows = new WorkflowService({headers: this.headers})
         if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
     }
 

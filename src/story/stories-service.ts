@@ -11,6 +11,15 @@ export default class StoriesService {
         this.headers = init.headers
     }
 
+    public async create(story: CreateStoryData): Promise<Story> {
+        const response = await axios.post(StoriesService.baseUrl, story, {headers: this.headers})
+        if (response.status >= 400) {
+            throw new Error("HTTP error " + response.status)
+        }
+        const storyData = convertKeysToCamelCase(response.data) as StoryData
+        return new Story(storyData)
+    }
+
     public async get(id: number): Promise<Story> {
         const url = `https://api.app.shortcut.com/api/v3/stories/${id}`
         const response = await axios.get(url, {headers: this.headers})
