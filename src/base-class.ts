@@ -7,6 +7,7 @@ export default class ShortcutResource<T = {}> { // Default to an empty object ty
         if (init) {
             Object.assign(this, init)
         }
+        this.changedFields = []
         return new Proxy(this, {
             get(target, property, receiver) {
                 console.log(`Property ${String(property)} accessed`)

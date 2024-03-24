@@ -12,6 +12,7 @@ import {
     StoryData, StoryStats, SyncedItem, Task, TypedStoryLink,
     UploadedFile
 } from "@story/contracts/storyData";
+import IterationsService from "@iterations/iterations-service";
 
 
 export class Story extends ShortcutResource implements StoryData {
@@ -23,6 +24,14 @@ export class Story extends ShortcutResource implements StoryData {
 
     get workflow() {
         return WorkflowService.getWorkflowState(this.workflowStateId)
+    }
+
+    get iteration(): Promise<Iteration> {
+        if (!this.iterationId) {
+            throw new Error("Story does not have an iteration")
+        }
+        const iterationService = new IterationsService({headers: getHeaders()})
+        return iterationService.get(this.iterationId)
     }
 
     public async comment(comment: string): Promise<StoryComment | void> {
