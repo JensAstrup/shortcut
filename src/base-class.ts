@@ -1,5 +1,5 @@
-export default class ShortcutResource<T = {}> { // Default to an empty object type if no generic type is provided
-    [key: string]: any // Keep the index signature to handle dynamic property access
+export default class ShortcutResource<T = object> { // Default to an empty object type if no generic type is provided
+    [key: string]: unknown // Keep the index signature to handle dynamic property access
     protected changedFields: string[] = []
     public static baseUrl = 'https://api.app.shortcut.com/api/v3'
 

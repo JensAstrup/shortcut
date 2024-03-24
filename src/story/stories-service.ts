@@ -1,7 +1,7 @@
-import axios from "axios";
-import {Story} from "@/story/story";
-import {convertKeysToCamelCase} from "@/utils/convert-fields";
-import {StoryData} from "@story/contracts/storyData";
+import axios from 'axios'
+import {Story} from '@/story/story'
+import {convertKeysToCamelCase} from '@/utils/convert-fields'
+import {StoryData} from '@story/contracts/storyData'
 
 
 export default class StoriesService {
@@ -15,7 +15,7 @@ export default class StoriesService {
     public async create(story: CreateStoryData): Promise<Story> {
         const response = await axios.post(StoriesService.baseUrl, story, {headers: this.headers})
         if (response.status >= 400) {
-            throw new Error("HTTP error " + response.status)
+            throw new Error('HTTP error ' + response.status)
         }
         const storyData = convertKeysToCamelCase(response.data) as StoryData
         return new Story(storyData)
@@ -25,7 +25,7 @@ export default class StoriesService {
         const url = `https://api.app.shortcut.com/api/v3/stories/${id}`
         const response = await axios.get(url, {headers: this.headers})
         if (response.status >= 400) {
-            throw new Error("HTTP error " + response.status)
+            throw new Error('HTTP error ' + response.status)
         }
         const storyData = convertKeysToCamelCase(response.data) as StoryData
         return new Story(storyData)
@@ -42,7 +42,7 @@ export default class StoriesService {
 
         const response = await axios.get(url.toString(), {headers: this.headers})
 
-        const storyData: StoryData[] = response.data.data ?? []
+        const storyData: Record<string, unknown>[] = response.data ?? []
         return storyData.map((story) => new Story(convertKeysToCamelCase(story)))
 
     }

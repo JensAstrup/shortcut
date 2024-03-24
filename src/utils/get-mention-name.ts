@@ -10,7 +10,7 @@ export default async function getMentionName(memberId: string): Promise<string> 
 
     const response = await axios.get(url, {headers})
     if (response.status >= 400) {
-        throw new Error("HTTP error " + response.status)
+        throw new Error('HTTP error ' + response.status)
     }
     return response.data['profile']['mention_name']
 }

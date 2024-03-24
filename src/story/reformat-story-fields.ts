@@ -1,6 +1,6 @@
-import {Story} from "./story"
-import snakeToCamel from "@utils/snake-to-camel";
-import {StoryData} from "@story/contracts/storyData";
+import {Story} from './story'
+import snakeToCamel from '@utils/snake-to-camel'
+import {StoryData} from '@story/contracts/storyData'
 
 /**
  * Reformats an array of story objects, converting custom field keys from snake_case to camelCase and restructuring
@@ -13,25 +13,25 @@ import {StoryData} from "@story/contracts/storyData";
  */
 export function reformatStoryFields(stories: StoryData[]): Story[] {
     return stories.map((story) => {
-        const newStory: { [key: string]: number | object | string } = {};
+        const newStory: { [key: string]: number | object | string } = {}
 
         for (const [key, value] of Object.entries(story)) {
             if (key === 'custom_fields' && Array.isArray(value)) {
-                const customFields: { [fieldId: string]: { value: string; valueId: string } } = {};
+                const customFields: { [fieldId: string]: { value: string; valueId: string } } = {}
                 for (const field of value) {
-                    customFields[field.fieldId] = { value: field.value, valueId: field.value_id };
+                    customFields[field.fieldId] = {value: field.value, valueId: field.value_id}
                 }
 
-                newStory[snakeToCamel(key)] = customFields;
+                newStory[snakeToCamel(key)] = customFields
             } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
                 // Recursively handle nested objects
-                newStory[snakeToCamel(key)] = reformatStoryFields([value])[0];
+                newStory[snakeToCamel(key)] = reformatStoryFields([value])[0]
             }
             else {
-                newStory[snakeToCamel(key)] = value;
+                newStory[snakeToCamel(key)] = value
             }
         }
 
         return newStory as unknown as Story
-    });
+    })
 }

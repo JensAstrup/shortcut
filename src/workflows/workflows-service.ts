@@ -1,20 +1,20 @@
-import axios from "axios";
-import ShortcutResource from "../base-class";
-import {Workflow, WorkflowState} from "@/workflows/workflow";
-import {convertKeysToCamelCase} from "@/utils/convert-fields";
+import axios from 'axios'
+import ShortcutResource from '../base-class'
+import {Workflow, WorkflowState} from '@/workflows/workflow'
+import {convertKeysToCamelCase} from '@/utils/convert-fields'
 
 let WORKFLOW_STATES: { [key: number]: WorkflowState } = {}
 
 export default class WorkflowService extends ShortcutResource {
     public static async getWorkflows(): Promise<Workflow[]> {
-        const url: string = `https://api.app.shortcut.com/api/v3/workflows`
+        const url: string = 'https://api.app.shortcut.com/api/v3/workflows'
         const headers = {
             'Content-Type': 'application/json',
             'Shortcut-Token': process.env.SHORTCUT_API_KEY || ''
         }
         const response = await axios.get(url, {headers})
         if (response.status >= 400) {
-            throw new Error("HTTP error " + response.status)
+            throw new Error('HTTP error ' + response.status)
         }
         return response.data
     }
