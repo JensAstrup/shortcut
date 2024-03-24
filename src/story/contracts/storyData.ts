@@ -1,4 +1,4 @@
-import {StoryComment} from '@story/comment/story-comment'
+import {StoryComment} from '@sx/story/comment/story-comment'
 
 export interface Branch {
 }

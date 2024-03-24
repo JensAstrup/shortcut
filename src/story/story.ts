@@ -1,10 +1,10 @@
-import ShortcutResource from '@base-class'
+import ShortcutResource from '@sx/base-class'
 import axios from 'axios'
-import {getHeaders} from '@utils/headers'
-import {StoryComment, StoryCommentData} from '@story/comment/story-comment'
-import {convertKeysToCamelCase} from '@utils/convert-fields'
-import WorkflowService from '@workflows/workflows-service'
-import camelToSnake from '@utils/camel-to-snake'
+import {getHeaders} from '@sx/utils/headers'
+import {StoryComment, StoryCommentData} from '@sx/story/comment/story-comment'
+import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import WorkflowService from '@sx/workflows/workflows-service'
+import camelToSnake from '@sx/utils/camel-to-snake'
 import {
     Branch,
     Commit,
@@ -18,9 +18,9 @@ import {
     Task,
     TypedStoryLink,
     UploadedFile
-} from '@story/contracts/storyData'
-import IterationsService from '@iterations/iterations-service'
-import Iteration from '@iterations/iteration'
+} from '@sx/story/contracts/storyData'
+import IterationsService from '@sx/iterations/iterations-service'
+import Iteration from '@sx/iterations/iteration'
 
 
 export class Story extends ShortcutResource implements StoryData {

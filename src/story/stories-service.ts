@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {Story} from '@/story/story'
-import {convertKeysToCamelCase} from '@/utils/convert-fields'
-import {StoryData} from '@story/contracts/storyData'
+import {Story} from '@sx/story/story'
+import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import {StoryData} from '@sx/story/contracts/storyData'
 
 
 export default class StoriesService {

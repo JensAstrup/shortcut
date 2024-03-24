@@ -1,7 +1,7 @@
-import camelToSnake from '@utils/camel-to-snake'
+import camelToSnake from '@sx/utils/camel-to-snake'
 import axios from 'axios'
-import {getHeaders} from '@utils/headers'
-import snakeToCamel from '@utils/snake-to-camel'
+import {getHeaders} from '@sx/utils/headers'
+import snakeToCamel from '@sx/utils/snake-to-camel'
 
 export default class ShortcutResource<T = object> {
     [key: string]: unknown

@@ -1,4 +1,4 @@
-import snakeToCamel from './snake-to-camel'
+import snakeToCamel from '@sx/utils/snake-to-camel'
 
 type AnyObject = Record<string, unknown>
 

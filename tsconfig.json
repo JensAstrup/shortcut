@@ -14,13 +14,14 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@*": [
+      "@sx*": [
         "./src/*"
       ]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
   "ts-node": {
     "esm": true

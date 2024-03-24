@@ -1,8 +1,8 @@
-import {convertKeysToCamelCase} from '@utils/convert-fields'
+import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
 import axios from 'axios'
-import Iteration from '@iterations/iteration'
-import {IterationData} from '@iterations/contracts/iterationData'
-import CreateIterationData from '@iterations/contracts/createIterationData'
+import Iteration from '@sx/iterations/iteration'
+import {IterationData} from '@sx/iterations/contracts/iterationData'
+import CreateIterationData from '@sx/iterations/contracts/createIterationData'
 
 
 export default class IterationsService {

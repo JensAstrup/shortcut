@@ -1,6 +1,6 @@
-import ShortcutResource from '@base-class'
-import {IterationStats, Label} from '@iterations/contracts/iteration'
-import {IterationData} from '@iterations/contracts/iterationData'
+import ShortcutResource from '@sx/base-class'
+import {IterationStats, Label} from '@sx/iterations/contracts/iteration'
+import {IterationData} from '@sx/iterations/contracts/iterationData'
 
 
 export default class Iteration extends ShortcutResource {

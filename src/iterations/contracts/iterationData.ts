@@ -1,4 +1,4 @@
-import {IterationStats, Label} from '@iterations/contracts/iteration'
+import {IterationStats, Label} from '@sx/iterations/contracts/iteration'
 
 export interface IterationData {
     app_url: string;
