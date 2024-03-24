@@ -1,5 +1,6 @@
-import {Story, StoryData} from "./story"
+import {Story} from "./story"
 import snakeToCamel from "@utils/snake-to-camel";
+import {StoryData} from "@story/contracts/storyData";
 
 /**
  * Reformats an array of story objects, converting custom field keys from snake_case to camelCase and restructuring

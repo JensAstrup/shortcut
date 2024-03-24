@@ -1,6 +1,7 @@
 import axios from "axios";
-import {Story, StoryData} from "@/story/story";
+import {Story} from "@/story/story";
 import {convertKeysToCamelCase} from "@/utils/convert-fields";
+import {StoryData} from "@story/contracts/storyData";
 
 
 export default class StoriesService {
