@@ -5,10 +5,11 @@ import {IterationData} from '@iterations/contracts/iterationData'
 
 export default class Iteration extends ShortcutResource {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
+    public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
 
     appUrl!: string
     createdAt!: Date
-    endDate!: Date
+    endDate!: string
     entityType!: string
     followerIds!: string[]
     groupIds!: string[]
@@ -29,6 +30,4 @@ export default class Iteration extends ShortcutResource {
         Object.assign(this, init)
         this.changedFields = []
     }
-
-
 }

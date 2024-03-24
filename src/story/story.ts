@@ -7,9 +7,16 @@ import WorkflowService from '@workflows/workflows-service'
 import camelToSnake from '@utils/camel-to-snake'
 import {
     Branch,
-    Commit, LabelSlim, LinkedFile, PullRequest,
+    Commit,
+    LabelSlim,
+    LinkedFile,
+    PullRequest,
     StoryCustomField,
-    StoryData, StoryStats, SyncedItem, Task, TypedStoryLink,
+    StoryData,
+    StoryStats,
+    SyncedItem,
+    Task,
+    TypedStoryLink,
     UploadedFile
 } from '@story/contracts/storyData'
 import IterationsService from '@iterations/iterations-service'
@@ -42,22 +49,6 @@ export class Story extends ShortcutResource implements StoryData {
         })
         const data: StoryCommentData = response.data
         return convertKeysToCamelCase(data) as StoryComment
-    }
-
-    public async save(): Promise<Story> {
-        const url = `${Story.baseUrl}/stories/${this.id}`
-        const body = this.changedFields.reduce((acc: {[key: string]: unknown}, field) => {
-            acc[camelToSnake(field)] = (this as any)[field]
-            return acc
-        }, {})
-
-        const response = await axios.put(url, body, {headers: getHeaders()}).catch((error) => {
-            throw new Error(`Error saving story: ${error}`)
-        })
-
-        const data: StoryData = response.data
-        this.changedFields = []
-        return new Story(data)
     }
 
     public async delete(): Promise<void> {

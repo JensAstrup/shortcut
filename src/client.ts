@@ -27,10 +27,10 @@ export default class Client {
 
 
     constructor(shortcutApiKey?: string) {
+        if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
         this.stories = new StoriesService({headers: this.headers})
         this.workflows = new WorkflowService({headers: this.headers})
         this.iterations = new IterationsService({headers: this.headers})
-        if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
     }
 
 }

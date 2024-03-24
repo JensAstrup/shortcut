@@ -2,6 +2,7 @@ import {convertKeysToCamelCase} from '@utils/convert-fields'
 import axios from 'axios'
 import Iteration from '@iterations/iteration'
 import {IterationData} from '@iterations/contracts/iterationData'
+import CreateIterationData from '@iterations/contracts/createIterationData'
 
 
 export default class IterationsService {
@@ -13,7 +14,7 @@ export default class IterationsService {
         this.headers = init.headers
     }
 
-    public async create(iteration: IterationData): Promise<Iteration> {
+    public async create(iteration: CreateIterationData): Promise<Iteration> {
         const response = await axios.post(this.baseUrl, iteration, {headers: this.headers})
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)

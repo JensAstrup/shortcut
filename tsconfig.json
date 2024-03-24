@@ -19,6 +19,7 @@
       ]
     },
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true
   },
   "ts-node": {
