@@ -51,13 +51,6 @@ export class Story extends ShortcutResource implements StoryData {
         return convertKeysToCamelCase(data) as StoryComment
     }
 
-    public async delete(): Promise<void> {
-        const url = `${Story.baseUrl}/stories/${this.id}`
-        await axios.delete(url, {headers: getHeaders()}).catch((error) => {
-            throw new Error(`Error deleting story: ${error}`)
-        })
-    }
-
     appUrl!: string
     archived!: boolean
     blocked!: boolean

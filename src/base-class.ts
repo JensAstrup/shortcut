@@ -74,4 +74,11 @@ export default class ShortcutResource<T = object> {
             await this.create()
         }
     }
+
+    public async delete(): Promise<void> {
+        const url = `${this.baseUrl}/stories/${this.id}`
+        await axios.delete(url, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error deleting story: ${error}`)
+        })
+    }
 }
