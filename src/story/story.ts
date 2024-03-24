@@ -97,8 +97,6 @@ export interface StoryData {
 
 
 export class Story extends ShortcutResource implements StoryData {
-    public changedFields: string[] = []
-
     constructor(init: StoryData) {
         super()
         Object.assign(this, init)
@@ -132,6 +130,13 @@ export class Story extends ShortcutResource implements StoryData {
         const data: StoryData = response.data;
         this.changedFields = [];
         return new Story(data);
+    }
+
+    public async delete(): Promise<void> {
+        const url = `${Story.baseUrl}/stories/${this.id}`;
+        await axios.delete(url, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error deleting story: ${error}`);
+        });
     }
 
     appUrl!: string;

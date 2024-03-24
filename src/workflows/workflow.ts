@@ -1,9 +1,3 @@
-enum WorkflowType {
-    UNSTARTED = "unstarted",
-    STARTED= "started",
-    FINISHED = "finished",
-}
-
 export interface WorkflowState {
     color: string; // Assuming color is a hex string (e.g., "#FFFFFF")
     createdAt: Date;

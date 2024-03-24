@@ -4,8 +4,6 @@ import StoriesService from "./story/stories-service.js";
 export type ShortcutHeaders = { "Shortcut-Token": string; "Content-Type": string }
 
 export default class Client {
-    private _headers: ShortcutHeaders | {} = {}
-
     get headers(): ShortcutHeaders {
         if (this.shortcutApiKey) {
             return {
