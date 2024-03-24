@@ -3,6 +3,8 @@ import axios from "axios";
 import {getHeaders} from "@/utils/headers";
 import {StoryComment, StoryCommentData} from "@/story/comment/story-comment";
 import {convertKeysToCamelCase} from "@/utils/convert-fields";
+import WorkflowService from "@/workflows/workflows-service";
+import camelToSnake from "@/utils/camel-to-snake";
 
 interface Branch {
 }
@@ -95,9 +97,16 @@ export interface StoryData {
 
 
 export class Story extends ShortcutResource implements StoryData {
+    public changedFields: string[] = []
+
     constructor(init: StoryData) {
         super()
         Object.assign(this, init)
+        this.changedFields = []
+    }
+
+    get workflow() {
+        return WorkflowService.getWorkflowState(this.workflowStateId)
     }
 
     public async comment(comment: string): Promise<StoryComment | void> {
@@ -107,6 +116,22 @@ export class Story extends ShortcutResource implements StoryData {
         })
         const data: StoryCommentData = response.data
         return convertKeysToCamelCase(data) as StoryComment
+    }
+
+    public async save(): Promise<Story> {
+        const url = `${Story.baseUrl}/stories/${this.id}`;
+        const body = this.changedFields.reduce((acc: {[key: string]: unknown}, field) => {
+            acc[camelToSnake(field)] = (this as any)[field];
+            return acc;
+        }, {});
+
+        const response = await axios.put(url, body, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error saving story: ${error}`);
+        });
+
+        const data: StoryData = response.data;
+        this.changedFields = [];
+        return new Story(data);
     }
 
     appUrl!: string;

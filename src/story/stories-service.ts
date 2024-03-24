@@ -17,7 +17,8 @@ export default class StoriesService {
         if (response.status >= 400) {
             throw new Error("HTTP error " + response.status)
         }
-        return new Story(response.data)
+        const storyData = convertKeysToCamelCase(response.data) as StoryData
+        return new Story(storyData)
     }
 
     public async search(query: string): Promise<Story[]> {
