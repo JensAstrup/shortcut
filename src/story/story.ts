@@ -37,7 +37,7 @@ export class Story extends ShortcutResource implements StoryData {
         if (!this.iterationId) {
             throw new Error('Story does not have an iteration')
         }
-        const iterationService = new IterationsService((data) => new Iteration(data), {headers: getHeaders()})
+        const iterationService = new IterationsService({headers: getHeaders()})
         return iterationService.get(this.iterationId)
     }
 

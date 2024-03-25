@@ -7,9 +7,10 @@ import BaseService from '@sxbase-service'
 
 export default class StoriesService extends BaseService<Story> {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
+    protected factory = (data: object) => new Story(data)
 
     constructor(init: { headers: Record<string, string> }) {
-        super(data => new Story(data), init)
+        super(init)
     }
 
     public async create(story: CreateStoryData): Promise<Story> {
@@ -32,7 +33,7 @@ export default class StoriesService extends BaseService<Story> {
 
         const response = await axios.get(url.toString(), {headers: this.headers})
 
-        const storyData: Record<string, unknown>[] = response.data ?? []
+        const storyData: Record<string, unknown>[] = response.data.data ?? []
         return storyData.map((story) => new Story(convertKeysToCamelCase(story)))
 
     }

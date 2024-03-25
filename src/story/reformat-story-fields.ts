@@ -2,6 +2,7 @@ import {Story} from './story'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 import {StoryData} from '@sx/story/contracts/storyData'
 
+
 /**
  * Reformats an array of story objects, converting custom field keys from snake_case to camelCase and restructuring
  * the `custom_fields` array into an object indexed by `field_id`. Each `custom_fields` entry is transformed into
