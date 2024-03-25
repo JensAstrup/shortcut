@@ -1,9 +1,9 @@
 import axios from 'axios'
 import ShortcutResource from '../base-class'
-import {Workflow, WorkflowState} from '@/workflows/workflow'
-import {convertKeysToCamelCase} from '@/utils/convert-fields'
+import {Workflow, WorkflowState} from '@sx/workflows/workflow'
+import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
 
-let WORKFLOW_STATES: { [key: number]: WorkflowState } = {}
+const WORKFLOW_STATES: { [key: number]: WorkflowState } = {}
 
 export default class WorkflowService extends ShortcutResource {
     public static async getWorkflows(): Promise<Workflow[]> {
@@ -16,16 +16,17 @@ export default class WorkflowService extends ShortcutResource {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        return response.data
+        return response.data as Workflow[]
     }
 
     public static async getWorkflowStates(): Promise<WorkflowState[]> {
-        const workflows = await this.getWorkflows()
-        const workflowStates= this.extractWorkflowStates(workflows)
-        WORKFLOW_STATES = workflowStates.reduce((acc: {[key: number]: WorkflowState}, state) => {
-            acc[state.id] = convertKeysToCamelCase(state) as WorkflowState
-            return acc
-        }, {})
+        const workflows: Workflow[] = await this.getWorkflows()
+        const workflowStates: WorkflowState[] = this.extractWorkflowStates(workflows)
+
+        for (const state of workflowStates) {
+            WORKFLOW_STATES[state.id] = convertKeysToCamelCase(state) as WorkflowState
+        }
+
         return workflowStates
     }
 

@@ -1,4 +1,6 @@
 export interface WorkflowState {
+    [index: string]: unknown;
+
     color: string; // Assuming color is a hex string (e.g., "#FFFFFF")
     createdAt: Date;
     description: string;
