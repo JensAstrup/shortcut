@@ -32,7 +32,7 @@ export default class ShortcutResource<T = object> {
 
     private async update(): Promise<void> {
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
-        const url = `${baseUrl}/stories/${this.id}`
+        const url = `${baseUrl}/${this.id}`
         const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
             acc[camelToSnake(field)] = this[field]
             return acc
@@ -76,7 +76,7 @@ export default class ShortcutResource<T = object> {
     }
 
     public async delete(): Promise<void> {
-        const url = `${this.baseUrl}/stories/${this.id}`
+        const url = `${this.baseUrl}/${this.id}`
         await axios.delete(url, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error deleting story: ${error}`)
         })
