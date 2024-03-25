@@ -1,4 +1,4 @@
-import Client from './Client'
+import Client from '../src/client'
 
 
 describe('Client', () => {

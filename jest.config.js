@@ -92,6 +92,9 @@ const config = {
     moduleNameMapper: {
         '^@sx/(.*)$': '<rootDir>/src/$1'
     },
+    roots: ['<rootDir>/src', '<rootDir>/tests'],
+    testMatch: ['**/tests/*.js', '**/?(*.)+(spec|test).js'],
+
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
 
