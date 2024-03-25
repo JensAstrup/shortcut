@@ -1,10 +1,27 @@
-import ShortcutResource from '@sxbase-resource'
+import ShortcutResource from '@sx/base-resource'
+import {getHeaders} from '@sxutils/headers'
+import axios from 'axios'
+import {Story} from '@sxstory/story'
+import {convertKeysToCamelCase} from '@sxutils/convert-fields'
 
 
 export default class TeamResource extends ShortcutResource {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/groups' // Shortcut renamed groups to teams
     public createFields: string[] = ['name', 'mentionName']
 
+    get stories() {
+        return this.getStories()
+    }
+
+    public async getStories(): Promise<Story[]> {
+        const url = new URL(`${TeamResource.baseUrl}/${this.id}/stories`)
+        const response = await axios.get(url.toString(), {headers: getHeaders()}).catch((error: string) => {
+            throw new Error(`Error fetching stories: ${error}`)
+        })
+        const storiesData: Record<string, unknown>[] = response.data.data ?? []
+        return storiesData.map((story) => new Story(convertKeysToCamelCase(story)))
+
+    }
     appUrl!: string
     archived!: boolean
     color!: string
