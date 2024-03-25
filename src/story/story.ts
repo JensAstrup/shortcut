@@ -4,7 +4,6 @@ import {getHeaders} from '@sx/utils/headers'
 import {StoryComment, StoryCommentData} from '@sx/story/comment/story-comment'
 import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
 import WorkflowService from '@sx/workflows/workflows-service'
-import camelToSnake from '@sx/utils/camel-to-snake'
 import {
     Branch,
     Commit,
