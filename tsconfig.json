@@ -14,7 +14,7 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@sx*": [
+      "@sx/*": [
         "./src/*"
       ]
     },
