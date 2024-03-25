@@ -1,6 +1,6 @@
 import axios from 'axios'
 import process from 'process'
-import ShortcutResource from '../src/base-class'
+import ShortcutResource from '../src/base-resource.js'
 
 
 jest.mock('axios', () => ({

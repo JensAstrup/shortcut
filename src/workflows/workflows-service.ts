@@ -1,5 +1,5 @@
 import axios from 'axios'
-import ShortcutResource from '../base-class'
+import ShortcutResource from '../base-resource'
 import {Workflow, WorkflowState} from '@sx/workflows/workflow'
 import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
 

@@ -1,4 +1,4 @@
-import ShortcutResource from '@sx/base-class'
+import ShortcutResource from '@sx/base-resource'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import {StoryComment, StoryCommentData} from '@sx/story/comment/story-comment'
@@ -23,7 +23,7 @@ import Iteration from '@sx/iterations/iteration'
 
 
 export class Story extends ShortcutResource implements StoryData {
-    constructor(init: StoryData) {
+    constructor(init: StoryData | object) {
         super()
         Object.assign(this, init)
         this.changedFields = []
@@ -37,7 +37,7 @@ export class Story extends ShortcutResource implements StoryData {
         if (!this.iterationId) {
             throw new Error('Story does not have an iteration')
         }
-        const iterationService = new IterationsService({headers: getHeaders()})
+        const iterationService = new IterationsService((data) => new Iteration(data), {headers: getHeaders()})
         return iterationService.get(this.iterationId)
     }
 
