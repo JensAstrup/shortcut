@@ -1,10 +1,12 @@
+import BaseInterface from '@sx/base-interface'
+
 export interface Label {
 }
 
 export interface IterationStats {
 }
 
-interface Iteration {
+export default interface IterationInterface extends BaseInterface {
     appUrl: string;
     createdAt: Date;
     endDate: Date;
