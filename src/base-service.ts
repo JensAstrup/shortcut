@@ -4,7 +4,7 @@ import ShortcutResource from '@sx/base-resource'
 
 
 export default class BaseService<T extends ShortcutResource> {
-    public baseUrl = 'https://api.app.shortcut.com/api/v3/'
+    public baseUrl = ''
     public headers: Record<string, string>
     // @ts-expect-error This is set on child classes so has no intializer here
     protected factory: (data: object) => T
@@ -23,11 +23,14 @@ export default class BaseService<T extends ShortcutResource> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        console.log(response.data)
         const instanceData: object = convertApiFields(response.data)
         const instance = this.factory(instanceData)
         this.instances[id] = instance
         return instance
+    }
+
+    public async getMany(ids: string[] | number[]): Promise<T[]> {
+        return Promise.all(ids.map(id => this.get(id)))
     }
 
     public async list(): Promise<T[]> {
