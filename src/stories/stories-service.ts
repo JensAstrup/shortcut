@@ -1,13 +1,13 @@
 import axios from 'axios'
 import {Story} from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
-import {StoryData} from '@sx/stories/contracts/storyData'
 import BaseService from '@sx/base-service'
+import StoryInterface from '@sx/stories/contracts/story-interface'
 
 
 export default class StoriesService extends BaseService<Story> {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
-    protected factory = (data: object) => new Story(data)
+    protected factory = (data: object) => new Story(data as StoryInterface)
 
     constructor(init: { headers: Record<string, string> }) {
         super(init)
@@ -18,7 +18,7 @@ export default class StoriesService extends BaseService<Story> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const storyData = convertApiFields(response.data) as StoryData
+        const storyData = convertApiFields(response.data) as StoryInterface
         return new Story(storyData)
     }
 
