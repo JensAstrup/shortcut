@@ -1,4 +1,4 @@
-import {Label} from '@sx/iterations/contracts/iteration'
+import {Label} from '@sx/iterations/contracts/iteration-interface'
 
 export default interface CreateIterationData {
     description?: string;
