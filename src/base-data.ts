@@ -1,4 +1,4 @@
 export default interface BaseData {
-    appUrl: string
+    app_url: string
     id: string | number
 }
