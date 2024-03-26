@@ -1,7 +1,7 @@
 import axios from 'axios'
 import ShortcutResource from '../base-resource'
 import {Workflow, WorkflowState} from '@sx/workflows/workflow'
-import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import {convertApiFields} from '@sx/utils/convert-fields'
 
 const WORKFLOW_STATES: { [key: number]: WorkflowState } = {}
 
@@ -24,7 +24,7 @@ export default class WorkflowService extends ShortcutResource {
         const workflowStates: WorkflowState[] = this.extractWorkflowStates(workflows)
 
         for (const state of workflowStates) {
-            WORKFLOW_STATES[state.id] = convertKeysToCamelCase(state) as WorkflowState
+            WORKFLOW_STATES[state.id] = convertApiFields(state) as WorkflowState
         }
 
         return workflowStates

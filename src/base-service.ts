@@ -1,12 +1,12 @@
 import axios from 'axios'
-import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import {convertApiFields} from '@sx/utils/convert-fields'
 import ShortcutResource from '@sx/base-resource'
 
 
 export default class BaseService<T extends ShortcutResource> {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/'
     public headers: Record<string, string>
-    // @ts-expect-error This is set on child classes
+    // @ts-expect-error This is set on child classes so has no intializer here
     protected factory: (data: object) => T
     protected instances: Record<string, T> = {}
 
@@ -14,7 +14,7 @@ export default class BaseService<T extends ShortcutResource> {
         this.headers = init.headers
     }
 
-    public async get(id: number): Promise<T> {
+    public async get(id: string | number): Promise<T> {
         if (this.instances[id]) {
             return this.instances[id]
         }
@@ -23,7 +23,8 @@ export default class BaseService<T extends ShortcutResource> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const instanceData: object = convertKeysToCamelCase(response.data)
+        console.log(response.data)
+        const instanceData: object = convertApiFields(response.data)
         const instance = this.factory(instanceData)
         this.instances[id] = instance
         return instance
@@ -35,7 +36,7 @@ export default class BaseService<T extends ShortcutResource> {
             throw new Error('HTTP error ' + response.status)
         }
         const instancesData: Record<string, unknown>[] = response.data ?? []
-        return instancesData.map((instance) => this.factory(convertKeysToCamelCase(instance)))
+        return instancesData.map((instance) => this.factory(convertApiFields(instance)))
     }
 
 }

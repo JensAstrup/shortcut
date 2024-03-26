@@ -1,6 +1,6 @@
 import axios from 'axios'
-import {Story} from '@sx/story/story'
-import {convertKeysToCamelCase} from '../../src/utils/convert-fields'
+import {Story} from '@sx/stories/stories'
+import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
 
 
@@ -10,7 +10,7 @@ jest.mock('axios', () => ({
     put: jest.fn(),
     delete: jest.fn()
 }))
-// Mock WorkflowService, IterationsService, getHeaders, convertKeysToCamelCase as necessary
+// Mock WorkflowService, IterationsService, getHeaders, convertApiFields as necessary
 
 describe('Story', () => {
     process.env.SHORTCUT_API_KEY = 'token'
@@ -43,12 +43,12 @@ describe('Story', () => {
             const commentData = {text: 'Test comment'}
             const expectedResponse = {data: commentData}
             axios.post.mockResolvedValue(expectedResponse)
-            // Mock convertKeysToCamelCase to return a camelCase version of the data
+            // Mock convertApiFields to return a camelCase version of the data
 
             const story = new Story({id: 1}) // Adjust initial data as needed
             const result = await story.comment('Test comment')
 
-            expect(result).toEqual(convertKeysToCamelCase(commentData))
+            expect(result).toEqual(convertApiFields(commentData))
             expect(axios.post).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/comments`, {text: 'Test comment'}, {headers: getHeaders()})
         })
 

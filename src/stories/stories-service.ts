@@ -1,12 +1,12 @@
 import axios from 'axios'
-import {Story} from '@sx/story/story'
-import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
-import {StoryData} from '@sx/story/contracts/storyData'
+import {Story} from '@sx/stories/story'
+import {convertApiFields} from '@sx/utils/convert-fields'
+import {StoryData} from '@sx/stories/contracts/storyData'
 import BaseService from '@sx/base-service'
 
 
 export default class StoriesService extends BaseService<Story> {
-    public static baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
+    public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
     protected factory = (data: object) => new Story(data)
 
     constructor(init: { headers: Record<string, string> }) {
@@ -14,11 +14,11 @@ export default class StoriesService extends BaseService<Story> {
     }
 
     public async create(story: CreateStoryData): Promise<Story> {
-        const response = await axios.post(StoriesService.baseUrl, story, {headers: this.headers})
+        const response = await axios.post(this.baseUrl, story, {headers: this.headers})
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const storyData = convertKeysToCamelCase(response.data) as StoryData
+        const storyData = convertApiFields(response.data) as unknown as StoryData
         return new Story(storyData)
     }
 
@@ -34,7 +34,7 @@ export default class StoriesService extends BaseService<Story> {
         const response = await axios.get(url.toString(), {headers: this.headers})
 
         const storyData: Record<string, unknown>[] = response.data.data ?? []
-        return storyData.map((story) => new Story(convertKeysToCamelCase(story)))
+        return storyData.map((story) => new Story(convertApiFields(story)))
 
     }
 }

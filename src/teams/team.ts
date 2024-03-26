@@ -1,8 +1,8 @@
 import ShortcutResource from '@sx/base-resource'
 import {getHeaders} from '@sx/utils/headers'
 import axios from 'axios'
-import {Story} from '@sx/story/story'
-import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import {Story} from '@sx/stories/story'
+import {convertApiFields} from '@sx/utils/convert-fields'
 
 
 export default class Team extends ShortcutResource {
@@ -19,7 +19,7 @@ export default class Team extends ShortcutResource {
             throw new Error(`Error fetching stories: ${error}`)
         })
         const storiesData: Record<string, unknown>[] = response.data.data ?? []
-        return storiesData.map((story) => new Story(convertKeysToCamelCase(story)))
+        return storiesData.map((story) => new Story(convertApiFields(story)))
 
     }
     appUrl!: string
@@ -29,7 +29,7 @@ export default class Team extends ShortcutResource {
     description!: string
     displayIcon!: string
     entityType !: string
-    id!: number
+    id!: string
     memberIds!: number[]
     mentionName!: string
     name!: string

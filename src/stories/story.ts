@@ -1,9 +1,8 @@
 import ShortcutResource from '@sx/base-resource'
-import Team from '@sx/teams/team'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
-import {StoryComment, StoryCommentData} from '@sx/story/comment/story-comment'
-import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import {StoryComment, StoryCommentData} from '@sx/stories/comment/story-comment'
+import {convertApiFields} from '@sx/utils/convert-fields'
 import WorkflowService from '@sx/workflows/workflows-service'
 import {
     Branch,
@@ -18,10 +17,10 @@ import {
     Task,
     TypedStoryLink,
     UploadedFile
-} from '@sx/story/contracts/storyData'
+} from '@sx/stories/contracts/storyData'
 import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
-import 'reflect-metadata'
+import TeamService from '@sx/teams/team-service'
 
 export class Story extends ShortcutResource implements StoryData {
     constructor(init: StoryData | object) {
@@ -42,13 +41,21 @@ export class Story extends ShortcutResource implements StoryData {
         return iterationService.get(this.iterationId)
     }
 
+    get team() {
+        if (!this.groupId) {
+            throw new Error('Story does not have a team')
+        }
+        const service = new TeamService({headers: getHeaders()})
+        return service.get(this.groupId)
+    }
+
     public async comment(comment: string): Promise<StoryComment | void> {
         const url = `${Story.baseUrl}/stories/${this.id}/comments`
         const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)
         })
         const data: StoryCommentData = response.data
-        return convertKeysToCamelCase(data) as StoryComment
+        return convertApiFields(data) as unknown as StoryComment
     }
 
     appUrl!: string
@@ -73,7 +80,6 @@ export class Story extends ShortcutResource implements StoryData {
     externalLinks!: string[]
     files!: UploadedFile[]
     followerIds!: string[]
-    @Reflect.metadata('resourceType', Team)
     groupId!: string | null
     groupMentionIds!: string[]
     id!: number

@@ -1,4 +1,4 @@
-import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import {convertApiFields} from '@sx/utils/convert-fields'
 import axios from 'axios'
 import Iteration from '@sx/iterations/iteration'
 import {IterationData} from '@sx/iterations/contracts/iterationData'
@@ -16,7 +16,7 @@ export default class IterationsService extends BaseService<Iteration> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const iterationData = convertKeysToCamelCase(response.data) as IterationData
+        const iterationData = convertApiFields(response.data) as unknown as IterationData
         return new Iteration(iterationData)
     }
 }

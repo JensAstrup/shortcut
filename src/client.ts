@@ -1,7 +1,8 @@
 import * as process from 'process'
-import StoriesService from '@sx/story/stories-service'
+import StoriesService from '@sx/stories/stories-service'
 import WorkflowService from '@sx/workflows/workflows-service'
 import IterationsService from '@sx/iterations/iterations-service'
+import TeamService from '@sx/teams/team-service'
 
 export type ShortcutHeaders = { 'Shortcut-Token': string; 'Content-Type': string }
 
@@ -25,13 +26,14 @@ export default class Client {
     public stories: StoriesService
     public workflows: WorkflowService
     public iterations: IterationsService
-
+    public teams: TeamService
 
     constructor(shortcutApiKey?: string) {
         if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
         this.stories = new StoriesService({headers: this.headers})
         this.workflows = new WorkflowService({headers: this.headers})
         this.iterations = new IterationsService({headers: this.headers})
+        this.teams = new TeamService({headers: this.headers})
     }
 
 }

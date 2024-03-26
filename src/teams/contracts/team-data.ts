@@ -6,7 +6,7 @@ export default interface TeamData {
     description: string
     displayIcon: string
     entityType : string
-    id: number
+    id: string
     memberIds: number[]
     mentionName: string
     name: string
