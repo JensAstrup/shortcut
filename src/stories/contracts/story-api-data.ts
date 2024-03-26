@@ -34,7 +34,7 @@ export interface SyncedItem {
 export interface Task {
 }
 
-export interface StoryData extends BaseData {
+export interface StoryApiData extends BaseData {
     app_url: string;
     archived: boolean;
     blocked: boolean;
