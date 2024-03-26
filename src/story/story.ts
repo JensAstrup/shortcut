@@ -1,4 +1,5 @@
 import ShortcutResource from '@sx/base-resource'
+import Team from '@sx/teams/team'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import {StoryComment, StoryCommentData} from '@sx/story/comment/story-comment'
@@ -20,7 +21,7 @@ import {
 } from '@sx/story/contracts/storyData'
 import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
-
+import 'reflect-metadata'
 
 export class Story extends ShortcutResource implements StoryData {
     constructor(init: StoryData | object) {
@@ -72,6 +73,7 @@ export class Story extends ShortcutResource implements StoryData {
     externalLinks!: string[]
     files!: UploadedFile[]
     followerIds!: string[]
+    @Reflect.metadata('resourceType', Team)
     groupId!: string | null
     groupMentionIds!: string[]
     id!: number

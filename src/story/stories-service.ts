@@ -2,7 +2,7 @@ import axios from 'axios'
 import {Story} from '@sx/story/story'
 import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
 import {StoryData} from '@sx/story/contracts/storyData'
-import BaseService from '@sxbase-service'
+import BaseService from '@sx/base-service'
 
 
 export default class StoriesService extends BaseService<Story> {

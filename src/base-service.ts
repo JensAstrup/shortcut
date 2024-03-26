@@ -1,6 +1,6 @@
 import axios from 'axios'
-import {convertKeysToCamelCase} from '@sxutils/convert-fields'
-import ShortcutResource from '@sxbase-resource'
+import {convertKeysToCamelCase} from '@sx/utils/convert-fields'
+import ShortcutResource from '@sx/base-resource'
 
 
 export default class BaseService<T extends ShortcutResource> {
