@@ -1,4 +1,5 @@
 import {StoryComment} from '@sx/stories/comment/story-comment'
+import BaseData from '@sx/base-data'
 
 export interface Branch {
 }
@@ -33,7 +34,7 @@ export interface SyncedItem {
 export interface Task {
 }
 
-export interface StoryData {
+export interface StoryData extends BaseData {
     appUrl: string;
     archived: boolean;
     blocked: boolean;

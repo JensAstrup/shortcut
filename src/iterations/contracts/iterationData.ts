@@ -1,6 +1,8 @@
 import {IterationStats, Label} from '@sx/iterations/contracts/iteration'
+import BaseData from '@sx/base-data'
 
-export interface IterationData {
+
+export interface IterationData extends BaseData {
     app_url: string;
     created_at: Date;
     end_date: Date;

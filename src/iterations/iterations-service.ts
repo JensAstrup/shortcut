@@ -16,7 +16,7 @@ export default class IterationsService extends BaseService<Iteration> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const iterationData = convertApiFields(response.data) as unknown as IterationData
+        const iterationData = convertApiFields(response.data) as IterationData
         return new Iteration(iterationData)
     }
 }

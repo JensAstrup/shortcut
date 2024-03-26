@@ -18,7 +18,7 @@ export default class StoriesService extends BaseService<Story> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const storyData = convertApiFields(response.data) as unknown as StoryData
+        const storyData = convertApiFields(response.data) as StoryData
         return new Story(storyData)
     }
 

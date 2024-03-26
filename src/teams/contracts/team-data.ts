@@ -1,4 +1,6 @@
-export default interface TeamData {
+import BaseData from '@sx/base-data'
+
+export default interface TeamData extends BaseData {
     appUrl: string
     archived: boolean
     color: string
