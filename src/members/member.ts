@@ -1,4 +1,5 @@
 import ShortcutResource from '@sx/base-resource'
+import StoryInterface from '@sx/stories/contracts/story-interface'
 
 export default class Member extends ShortcutResource {
     createdAt!: string
@@ -11,6 +12,11 @@ export default class Member extends ShortcutResource {
     state!: 'disabled' | 'full' | 'imported' | 'partial'
     updatedAt!: string
 
-    public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+    public baseUrl = 'https://api.app.shortcut.com/api/v3/members'
 
+    constructor(init: StoryInterface | object) {
+        super()
+        Object.assign(this, init)
+        this.changedFields = []
+    }
 }

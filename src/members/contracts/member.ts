@@ -1,4 +1,6 @@
-export default interface Member {
+import BaseInterface from '@sx/base-interface'
+
+export default interface MemberInterface extends BaseInterface {
     createdAt: string
     disabled: boolean
     entityType: string
