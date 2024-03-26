@@ -11,19 +11,23 @@ import {
     LinkedFile,
     PullRequest,
     StoryCustomField,
-    StoryData,
     StoryStats,
     SyncedItem,
     Task,
     TypedStoryLink,
     UploadedFile
-} from '@sx/stories/contracts/storyData'
+} from '@sx/stories/contracts/story-api-data'
 import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
 import TeamService from '@sx/teams/team-service'
+import Member from '@sx/members/member'
+import MembersService from '@sx/members/members-service'
+import StoryInterface from '@sx/stories/contracts/story-interface'
+
+
 
 export class Story extends ShortcutResource {
-    constructor(init: StoryData | object) {
+    constructor(init: StoryInterface | object) {
         super()
         Object.assign(this, init)
         this.changedFields = []
@@ -47,6 +51,11 @@ export class Story extends ShortcutResource {
         }
         const service = new TeamService({headers: getHeaders()})
         return service.get(this.groupId)
+    }
+
+    get owners(): Promise<Member[]> {
+        const service = new MembersService({headers: getHeaders()})
+        return service.getMany(this.ownerIds)
     }
 
     public async comment(comment: string): Promise<StoryComment | void> {
