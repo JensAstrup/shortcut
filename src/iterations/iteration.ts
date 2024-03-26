@@ -1,6 +1,8 @@
 import ShortcutResource from '@sx/base-resource'
-import {IterationStats, Label} from '@sx/iterations/contracts/iteration'
-import {IterationData} from '@sx/iterations/contracts/iterationData'
+import IterationInterface, {
+    IterationStats,
+    Label
+} from '@sx/iterations/contracts/iteration-interface'
 
 
 export default class Iteration extends ShortcutResource {
@@ -25,7 +27,7 @@ export default class Iteration extends ShortcutResource {
     status!: 'unstarted' | 'started' | 'done'
     updatedAt!: Date
 
-    constructor(init: IterationData | object) {
+    constructor(init: IterationInterface | object) {
         super()
         Object.assign(this, init)
         this.changedFields = []
