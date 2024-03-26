@@ -22,7 +22,7 @@ import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
 import TeamService from '@sx/teams/team-service'
 
-export class Story extends ShortcutResource implements StoryData {
+export class Story extends ShortcutResource {
     constructor(init: StoryData | object) {
         super()
         Object.assign(this, init)

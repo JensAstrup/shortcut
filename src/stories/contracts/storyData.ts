@@ -35,7 +35,7 @@ export interface Task {
 }
 
 export interface StoryData extends BaseData {
-    appUrl: string;
+    app_url: string;
     archived: boolean;
     blocked: boolean;
     blocker: boolean;
@@ -43,49 +43,49 @@ export interface StoryData extends BaseData {
     comments: StoryComment[];
     commits: Commit[];
     completed: boolean;
-    completedAt: Date | null;
-    completedAtOverride: Date | null;
-    createdAt: Date;
-    customFields: StoryCustomField[];
-    cycleTime: number;
+    completed_at: Date | null;
+    completed_at_override: Date | null;
+    created_at: Date;
+    custom_fields: StoryCustomField[];
+    cycle_time: number;
     deadline: Date | null;
     description: string;
-    entityType: string;
-    epicId: number | null;
+    entity_type: string;
+    epic_id: number | null;
     estimate: number | null;
-    externalId: string | null;
-    externalLinks: string[];
+    external_id: string | null;
+    external_links: string[];
     files: UploadedFile[];
-    followerIds: string[]; // UUID
-    groupId: string | null; // UUID
-    groupMentionIds: string[]; // UUID
+    follower_ids: string[]; // UUID
+    group_id: string | null; // UUID
+    group_mention_ids: string[]; // UUID
     id: number;
-    iterationId: number | null;
-    labelIds: number[];
+    iteration_id: number | null;
+    label_ids: number[];
     labels: LabelSlim[];
-    leadTime: number;
-    linkedFiles: LinkedFile[];
-    memberMentionIds: string[]; // UUID
-    mentionIds: string[]; // Deprecated: use memberMentionIds.
-    movedAt: Date | null;
+    lead_time: number;
+    linked_files: LinkedFile[];
+    member_mention_ids: string[]; // UUID
+    mention_ids: string[]; // Deprecated: use memberMentionIds.
+    moved_at: Date | null;
     name: string;
-    ownerIds: string[]; // UUID
+    owner_ids: string[]; // UUID
     position: number;
-    previousIterationIds: number[];
-    projectId: number | null;
-    pullRequests: PullRequest[];
-    requestedById: string; // UUID
+    previous_iteration_ids: number[];
+    project_id: number | null;
+    pull_requests: PullRequest[];
+    requested_by_id: string; // UUID
     started: boolean;
-    startedAt: Date | null;
-    startedAtOverride: Date | null;
+    started_at: Date | null;
+    started_at_override: Date | null;
     stats: StoryStats;
-    storyLinks: TypedStoryLink[];
-    storyTemplateId: string | null; // UUID
-    storyType: string;
-    syncedItem: SyncedItem;
+    story_links: TypedStoryLink[];
+    story_template_id: string | null; // UUID
+    story_type: string;
+    synced_item: SyncedItem;
     tasks: Task[];
-    unresolvedBlockerComments: number[];
-    updatedAt: Date | null;
-    workflowId: number;
-    workflowStateId: number;
+    unresolved_blocker_comments: number[];
+    updated_at: Date | null;
+    workflow_id: number;
+    workflow_state_id: number;
 }
