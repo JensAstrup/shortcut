@@ -96,4 +96,3 @@ This project is licensed under the MIT License.
 
 If you have any questions or feedback about the Shortcut API Client, please open an issue on GitHub.
 ```
-
