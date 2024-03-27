@@ -1,4 +1,4 @@
-interface CreateStoryData {
+export default interface CreateStoryData {
     name: string; // Required
     archived?: boolean;
     comments?: [];
