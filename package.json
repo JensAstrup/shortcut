@@ -6,8 +6,14 @@
   "files": [
     "lib"
   ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.js"
+    }
+  },
   "type": "module",
-  "description": "",
+  "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
