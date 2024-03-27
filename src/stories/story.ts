@@ -1,6 +1,4 @@
 import ShortcutResource from '@sx/base-resource'
-import {PullRequestApiData} from '@sx/pull-requests/contracts/pull-request-api-data'
-import {PullRequestInterface} from '@sx/pull-requests/contracts/pull-request-interface'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
 import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import axios from 'axios'
