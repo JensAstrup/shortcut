@@ -1,12 +1,13 @@
+import BaseService from '@sx/base-service'
+import Workflow from '@sx/workflows/workflow'
 import axios from 'axios'
-import ShortcutResource from '../base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {WorkflowInterface} from '@sx/workflows/contracts/workflow-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 
 const WORKFLOW_STATES: { [key: number]: WorkflowStateInterface } = {}
 
-export default class WorkflowService extends ShortcutResource {
+export default class WorkflowService extends BaseService<Workflow> {
     public static async getWorkflows(): Promise<WorkflowInterface[]> {
         const url: string = 'https://api.app.shortcut.com/api/v3/workflows'
         const headers = {
