@@ -1,4 +1,4 @@
-export interface PullRequest {
+export interface PullRequestApiData {
     branch_id: number
     branch_name: string
     build_status: string

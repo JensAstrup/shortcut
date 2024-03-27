@@ -1,4 +1,7 @@
-export default interface CreateStoryData {
+import BaseData from '@sx/base-data'
+
+
+export default interface CreateStoryData extends BaseData{
     name: string; // Required
     archived?: boolean;
     comments?: [];

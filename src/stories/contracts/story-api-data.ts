@@ -1,5 +1,5 @@
 import BaseData from '@sx/base-data'
-import {PullRequest} from '@sx/pull-requests/contracts/pull-request-api-data'
+import {PullRequestApiData} from '@sx/pull-requests/contracts/pull-request-api-data'
 import {StoryComment} from '@sx/stories/comment/story-comment'
 
 
@@ -72,7 +72,7 @@ export interface StoryApiData extends BaseData {
     position: number;
     previous_iteration_ids: number[];
     project_id: number | null;
-    pull_requests: PullRequest[];
+    pull_requests: PullRequestApiData[];
     requested_by_id: string; // UUID
     started: boolean;
     started_at: Date | null;

@@ -1,3 +1,4 @@
+import BaseData from '@sx/base-data'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 import ShortcutResource from '@sx/base-resource'
 import isValidDatetimeFormat from '@sx/utils/is-valid-datetime-format'
@@ -6,8 +7,8 @@ import BaseInterface from '@sx/base-interface'
 
 type AnyObject = Record<string, unknown>
 
-export function convertApiFields<Input extends AnyObject, U extends ShortcutResource | BaseInterface>(object: Input): U {
-    const convertObject = (obj: AnyObject | AnyObject[]): AnyObject | Array<object> => {
+export function convertApiFields<Input extends BaseData, U extends ShortcutResource | BaseInterface>(object: Input): U {
+    const convertObject = (obj: BaseData | BaseData[]): AnyObject | Array<object> => {
         if (Array.isArray(obj)) {
             return obj.map(item => convertObject(item)) // Recursively process each item in the array
         } else if (obj !== null && typeof obj === 'object') {

@@ -1,5 +1,8 @@
 import ShortcutResource from '@sx/base-resource'
-import {PullRequest} from '@sx/pull-requests/contracts/pull-request-api-data'
+import {PullRequestApiData} from '@sx/pull-requests/contracts/pull-request-api-data'
+import {PullRequestInterface} from '@sx/pull-requests/contracts/pull-request-interface'
+import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
+import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import {StoryComment, StoryCommentData} from '@sx/stories/comment/story-comment'
@@ -58,6 +61,15 @@ export class Story extends ShortcutResource {
         return service.getMany(this.ownerIds)
     }
 
+    public async history(): Promise<HistoryInterface[]> {
+        const url = `${Story.baseUrl}/stories/${this.id}/history`
+        const response = await axios.get(url, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error fetching history: ${error}`)
+        })
+        const historyData: HistoryApiData[] = response.data
+        return historyData.map((history) => convertApiFields(history) as HistoryInterface)
+    }
+
     public async comment(comment: string): Promise<StoryComment | void> {
         const url = `${Story.baseUrl}/stories/${this.id}/comments`
         const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
@@ -105,7 +117,6 @@ export class Story extends ShortcutResource {
     position!: number
     previousIterationIds!: number[]
     projectId!: number | null
-    pullRequests!: PullRequest[]
     requestedById!: string
     started!: boolean
     startedAt!: Date | null

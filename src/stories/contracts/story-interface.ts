@@ -1,4 +1,4 @@
-import {PullRequest} from '@sx/pull-requests/contracts/pull-request-api-data'
+import {PullRequestInterface} from '@sx/pull-requests/contracts/pull-request-interface'
 import {
     Branch,
     Commit,
@@ -47,7 +47,7 @@ export default interface StoryInterface extends BaseInterface {
     position: number
     previousIterationIds: number[]
     projectId: number | null
-    pullRequests: PullRequest[]
+    pullRequests: PullRequestInterface[]
     requestedById: string
     started: boolean
     startedAt: Date | null
