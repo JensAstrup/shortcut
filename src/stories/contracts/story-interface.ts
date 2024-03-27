@@ -1,8 +1,8 @@
+import {PullRequest} from '@sx/pull-requests/contracts/pull-request-api-data'
 import {
     Branch,
     Commit,
-    LabelSlim, LinkedFile, PullRequest,
-    StoryCustomField, StoryStats, SyncedItem, Task, TypedStoryLink,
+    LabelSlim, LinkedFile, StoryCustomField, StoryStats, SyncedItem, Task, TypedStoryLink,
     UploadedFile
 } from '@sx/stories/contracts/story-api-data'
 import {StoryComment} from '@sx/stories/comment/story-comment'

@@ -1,5 +1,7 @@
-import {StoryComment} from '@sx/stories/comment/story-comment'
 import BaseData from '@sx/base-data'
+import {PullRequest} from '@sx/pull-requests/contracts/pull-request-api-data'
+import {StoryComment} from '@sx/stories/comment/story-comment'
+
 
 export interface Branch {
 }
@@ -17,9 +19,6 @@ export interface LabelSlim {
 }
 
 export interface LinkedFile {
-}
-
-export interface PullRequest {
 }
 
 export interface StoryStats {

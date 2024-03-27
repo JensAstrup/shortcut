@@ -1,4 +1,5 @@
 import ShortcutResource from '@sx/base-resource'
+import {PullRequest} from '@sx/pull-requests/contracts/pull-request-api-data'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import {StoryComment, StoryCommentData} from '@sx/stories/comment/story-comment'
@@ -9,7 +10,6 @@ import {
     Commit,
     LabelSlim,
     LinkedFile,
-    PullRequest,
     StoryCustomField,
     StoryStats,
     SyncedItem,
