@@ -26,8 +26,12 @@ import MembersService from '@sx/members/members-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 
 
-
-export class Story extends ShortcutResource {
+/**
+ * @story
+ * See also:
+ * - {@link StoriesService} for the service managing stories.
+ */
+export default class Story extends ShortcutResource {
     constructor(init: StoryInterface | object) {
         super()
         Object.assign(this, init)

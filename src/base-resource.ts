@@ -1,8 +1,14 @@
+import BaseCreateData from '@sx/base-create-data'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 
+
+/**
+ * Base class for all Shortcut resources. Provides methods for creating, updating, and deleting resources.
+ * @group Story
+ */
 export default class ShortcutResource<T = object> {
     [key: string]: unknown
 
@@ -30,7 +36,7 @@ export default class ShortcutResource<T = object> {
         })
     }
 
-    private async update(): Promise<void> {
+    public async update(): Promise<void> {
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
         const url = `${baseUrl}/${this.id}`
         const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
@@ -50,7 +56,11 @@ export default class ShortcutResource<T = object> {
         this.changedFields = []
     }
 
-    private async create(): Promise<this> {
+    /**
+     * Create a new instance of the resource, using the current object's properties. Use the `xCreateData` interface to determine which fields are available for creation.
+     * @return {Promise<this>} - A Promise that resolves with the newly created instance.
+     */
+    public async create(): Promise<this> {
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
         const body: Record<string, unknown> = {}
         Object.keys(this).forEach(key => {
