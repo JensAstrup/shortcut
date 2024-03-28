@@ -1,7 +1,7 @@
-import BaseData from '@sx/base-data'
+import BaseCreateData from '@sx/base-create-data'
 
 
-export default interface CreateStoryData extends BaseData{
+export default interface CreateStoryData extends BaseCreateData {
     name: string; // Required
     archived?: boolean;
     comments?: [];

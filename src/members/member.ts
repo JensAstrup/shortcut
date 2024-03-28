@@ -1,6 +1,10 @@
 import ShortcutResource from '@sx/base-resource'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 
+
+/**
+ * @inheritDoc
+ */
 export default class Member extends ShortcutResource {
     createdAt!: string
     disabled!: boolean

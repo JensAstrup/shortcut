@@ -10,6 +10,9 @@ export default class BaseService<T extends ShortcutResource> {
     protected factory: (data: object) => T
     protected instances: Record<string, T> = {}
 
+    /**
+     * Service classes are not intended to be instantiated directly. Instead, use the {@link Client} class to create instances of services.
+     */
     constructor(init: { headers: Record<string, string> }) {
         this.headers = init.headers
     }
