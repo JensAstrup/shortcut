@@ -1,6 +1,6 @@
 {
   "name": "shortcut-api",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "main": "lib/client.js",
   "types": "lib/client.d.ts",
   "files": [
