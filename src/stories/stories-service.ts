@@ -17,15 +17,6 @@ export default class StoriesService extends BaseService<Story> {
         super(init)
     }
 
-    public async create(story: CreateStoryData): Promise<Story> {
-        const response = await axios.post(this.baseUrl, story, {headers: this.headers})
-        if (response.status >= 400) {
-            throw new Error('HTTP error ' + response.status)
-        }
-        const storyData = convertApiFields(response.data) as StoryInterface
-        return new Story(storyData)
-    }
-
     public async search(query: string): Promise<Story[]> {
         if (query.constructor === Object) {
             const queryEntries = Object.entries(query)
