@@ -1,4 +1,3 @@
-import CreateStoryData from '@sx/stories/contracts/create-story-data'
 import axios from 'axios'
 import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
