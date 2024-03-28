@@ -3,5 +3,9 @@
     "src/index.ts",
     "src/stories/story.ts"
   ],
-  "out": "docs"
+  "out": "docs",
+  "plugin": [
+    "typedoc-plugin-coverage"
+  ],
+  "coverageLabel": "Docs"
 }
