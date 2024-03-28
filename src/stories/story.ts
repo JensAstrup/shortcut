@@ -1,6 +1,9 @@
 import ShortcutResource from '@sx/base-resource'
+import Epic from '@sx/epics/epic'
+import EpicsService from '@sx/epics/epics-service'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
 import HistoryInterface from '@sx/stories/history/contracts/history-interface'
+import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import {StoryComment, StoryCommentData} from '@sx/stories/comment/story-comment'
@@ -51,6 +54,10 @@ export default class Story extends ShortcutResource {
         return iterationService.get(this.iterationId)
     }
 
+    /**
+     * Get the team assigned to the story, labelled as "Group" in the Shortcut API
+     * @returns {Promise<Team>}
+     */
     get team() {
         if (!this.groupId) {
             throw new Error('Story does not have a team')
@@ -59,9 +66,25 @@ export default class Story extends ShortcutResource {
         return service.get(this.groupId)
     }
 
+    /**
+     * Get the owners of the story
+     * @returns {Promise<Member[]>}
+     */
     get owners(): Promise<Member[]> {
         const service = new MembersService({headers: getHeaders()})
         return service.getMany(this.ownerIds)
+    }
+
+    /**
+     * Get the epic of the story
+     * @returns {Promise<Epic>}
+     */
+    get epic(): Promise<Epic> {
+        if (!this.epicId) {
+            throw new Error('Story does not have an epic')
+        }
+        const service = new EpicsService({headers: getHeaders()})
+        return service.get(this.epicId)
     }
 
     public async history(): Promise<HistoryInterface[]> {
@@ -71,6 +94,40 @@ export default class Story extends ShortcutResource {
         })
         const historyData: HistoryApiData[] = response.data
         return historyData.map((history) => convertApiFields(history) as HistoryInterface)
+    }
+
+    /**
+     * Calculates the cycle time of a story in hours.
+     *
+     * @returns {Promise<number>} - The cycle time in hours.
+     * @throws {Error} - If the story is not completed or has not been started.
+     */
+    public async cycleTime(): Promise<number> {
+        let startedAt: Date | null = this.startedAt
+        let completedAt: Date | null = this.completedAt
+
+        if (!startedAt || !completedAt) {
+            throw new Error('Story does not have a cycle time')
+        }
+
+        return (completedAt.getTime() - startedAt.getTime()) / (1000 * 60 * 60)
+    }
+
+    /**
+     * Calculates the time a story has been in development in hours.
+     *
+     * @returns {Promise<number>} - The time in development in hours.
+     * @throws {Error} - If the story is already finished or not started.
+     */
+    public async timeInDevelopment(): Promise<number> {
+        const workflow: WorkflowStateInterface = await this.workflow
+        if (workflow.type === 'Finished') {
+            throw new Error('Story is already finished')
+        }
+        if (!this.startedAt) {
+            throw new Error('Story is not started')
+        }
+        return (new Date().getTime() - this.startedAt!.getTime()) / (1000 * 60 * 60)
     }
 
     public async comment(comment: string): Promise<StoryComment | void> {
@@ -94,7 +151,6 @@ export default class Story extends ShortcutResource {
     completedAtOverride!: Date | null
     createdAt!: Date
     customFields!: StoryCustomField[]
-    cycleTime!: number
     deadline!: Date | null
     description!: string
     entityType!: string
@@ -110,6 +166,8 @@ export default class Story extends ShortcutResource {
     iterationId!: number | null
     labelIds!: number[]
     labels!: LabelSlim[]
+
+    /* The lead time in seconds of this story */
     leadTime!: number
     linkedFiles!: LinkedFile[]
     memberMentionIds!: string[]

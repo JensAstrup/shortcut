@@ -1,15 +1,15 @@
 {
   "name": "shortcut-api",
   "version": "1.0.0-beta.7",
-  "main": "lib/client.js",
-  "types": "lib/client.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "lib"
   ],
   "exports": {
     ".": {
-      "import": "./lib/client.js",
-      "require": "./lib/client.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.js"
     }
   },
   "type": "module",
@@ -18,7 +18,8 @@
     "build": "tsc && tscpaths -p tsconfig.json -s ./src -o ./lib && npm run reformatImports",
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "docs": "npx typedoc"
   },
   "keywords": [],
   "author": "",
