@@ -1,4 +1,6 @@
 import ShortcutResource from '@sx/base-resource'
+import Epic from '@sx/epics/epic'
+import EpicsService from '@sx/epics/epics-service'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
 import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
@@ -73,6 +75,18 @@ export default class Story extends ShortcutResource {
         return service.getMany(this.ownerIds)
     }
 
+    /**
+     * Get the epic of the story
+     * @returns {Promise<Epic>}
+     */
+    get epic(): Promise<Epic> {
+        if (!this.epicId) {
+            throw new Error('Story does not have an epic')
+        }
+        const service = new EpicsService({headers: getHeaders()})
+        return service.get(this.epicId)
+    }
+
     public async history(): Promise<HistoryInterface[]> {
         const url = `${Story.baseUrl}/stories/${this.id}/history`
         const response = await axios.get(url, {headers: getHeaders()}).catch((error) => {
@@ -83,9 +97,9 @@ export default class Story extends ShortcutResource {
     }
 
     /**
-     * Calculates the cycle time of a story in days.
+     * Calculates the cycle time of a story in hours.
      *
-     * @returns {Promise<number>} - The cycle time in days.
+     * @returns {Promise<number>} - The cycle time in hours.
      * @throws {Error} - If the story is not completed or has not been started.
      */
     public async cycleTime(): Promise<number> {
@@ -96,13 +110,13 @@ export default class Story extends ShortcutResource {
             throw new Error('Story does not have a cycle time')
         }
 
-        return (completedAt.getTime() - startedAt.getTime()) / (60 * 60 * 24)
+        return (completedAt.getTime() - startedAt.getTime()) / (1000 * 60 * 60)
     }
 
     /**
-     * Calculates the time a story has been in development in days.
+     * Calculates the time a story has been in development in hours.
      *
-     * @returns {Promise<number>} - The time in development in days.
+     * @returns {Promise<number>} - The time in development in hours.
      * @throws {Error} - If the story is already finished or not started.
      */
     public async timeInDevelopment(): Promise<number> {
@@ -113,7 +127,7 @@ export default class Story extends ShortcutResource {
         if (!this.startedAt) {
             throw new Error('Story is not started')
         }
-        return (new Date().getTime() - this.startedAt!.getTime()) / (1000 * 60 * 60 * 24)
+        return (new Date().getTime() - this.startedAt!.getTime()) / (1000 * 60 * 60)
     }
 
     public async comment(comment: string): Promise<StoryComment | void> {
