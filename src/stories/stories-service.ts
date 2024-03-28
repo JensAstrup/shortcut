@@ -1,4 +1,3 @@
-import CreateStoryData from '@sx/stories/contracts/create-story-data'
 import axios from 'axios'
 import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
@@ -17,6 +16,18 @@ export default class StoriesService extends BaseService<Story> {
         super(init)
     }
 
+    /**
+     * Search for stories using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
+     *
+     * @example
+     * ```typescript
+     * const client = new Client()
+     * const stories = client.stories.search('type:bug')
+     * ```
+     *
+     * @throws Error if the HTTP status code is 400 or greater
+     * @param query
+     */
     public async search(query: string): Promise<Story[]> {
         if (query.constructor === Object) {
             const queryEntries = Object.entries(query)
@@ -27,6 +38,11 @@ export default class StoriesService extends BaseService<Story> {
         url.search = new URLSearchParams({query: query}).toString()
 
         const response = await axios.get(url.toString(), {headers: this.headers})
+
+        if (response.status >= 400) {
+            throw new Error('HTTP error ' + response.status)
+
+        }
 
         const storyData: Record<string, unknown>[] = response.data.data ?? []
         return storyData.map((story) => new Story(convertApiFields(story)))
