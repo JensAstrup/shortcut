@@ -1,9 +1,10 @@
 import BaseData from '@sx/base-data'
+import HistoryActionApiData from '@sx/stories/history/contracts/history-action-api-data'
 import UUID from '@sx/utils/uuid'
 
 
 export default interface HistoryApiData extends BaseData {
-    actions: []
+    actions: HistoryActionApiData[]
     changed_at: string
     external_id: string
     id: UUID
