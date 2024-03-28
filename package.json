@@ -18,7 +18,8 @@
     "build": "tsc && tscpaths -p tsconfig.json -s ./src -o ./lib && npm run reformatImports",
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "docs": "npx typedoc"
   },
   "keywords": [],
   "author": "",
