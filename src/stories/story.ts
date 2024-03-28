@@ -28,6 +28,7 @@ import StoryInterface from '@sx/stories/contracts/story-interface'
 
 /**
  * @story
+ * @inheritDoc
  * See also:
  * - {@link StoriesService} for the service managing stories.
  */

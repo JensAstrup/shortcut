@@ -5,6 +5,9 @@ import IterationInterface, {
 } from '@sx/iterations/contracts/iteration-interface'
 
 
+/**
+ * @InheritDoc
+ */
 export default class Iteration extends ShortcutResource {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
     public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']

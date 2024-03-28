@@ -12,9 +12,19 @@ import snakeToCamel from '@sx/utils/snake-to-camel'
 export default class ShortcutResource<T = object> {
     [key: string]: unknown
 
-    protected changedFields: string[] = [] // Fields that have been changed, used to determine what to update
+    /**
+     * @internal
+     * Fields that have been changed, used to determine what to update
+     */
+    protected changedFields: string[] = []
+    /**
+     * The base URL for the API endpoint related to the resource
+     */
     public static baseUrl = 'https://api.app.shortcut.com/api/v3'
-    public createFields: string[] = [] // Fields that are used when creating a new resource
+    /**
+     * Fields that are used when creating a new resource
+     */
+    public createFields: string[] = []
 
     constructor(init?: T) {
         if (init) {
@@ -36,6 +46,11 @@ export default class ShortcutResource<T = object> {
         })
     }
 
+    /**
+     * Update the current instance of the resource with the changed fields.
+     * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
+     * @throws {Error} - Throws an error if the HTTP request fails.
+     */
     public async update(): Promise<void> {
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
         const url = `${baseUrl}/${this.id}`
@@ -59,6 +74,7 @@ export default class ShortcutResource<T = object> {
     /**
      * Create a new instance of the resource, using the current object's properties. Use the `xCreateData` interface to determine which fields are available for creation.
      * @return {Promise<this>} - A Promise that resolves with the newly created instance.
+     * @throws {Error} - Throws an error if the HTTP request fails.
      */
     public async create(): Promise<this> {
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
@@ -77,6 +93,10 @@ export default class ShortcutResource<T = object> {
         return Object.assign(this, response.data)
     }
 
+    /**
+     * Save the current instance of the resource. If the resource already exists (has an ID), it will be updated.
+     * Otherwise, it will be created using the fields `createFields`.
+     */
     public async save(): Promise<void> {
         if (this.id) {
             await this.update()
@@ -85,6 +105,11 @@ export default class ShortcutResource<T = object> {
         }
     }
 
+    /**
+     * Delete the current instance of the resource.
+     * @return {Promise<void>} - A Promise that resolves when the resource has been deleted.
+     * @throws {Error} - Throws an error if the HTTP request fails.
+     */
     public async delete(): Promise<void> {
         const url = `${this.baseUrl}/${this.id}`
         await axios.delete(url, {headers: getHeaders()}).catch((error) => {

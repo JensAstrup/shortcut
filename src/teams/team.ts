@@ -5,6 +5,9 @@ import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
 
 
+/**
+ * @inheritDoc
+ */
 export default class Team extends ShortcutResource {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/groups' // Shortcut renamed groups to teams
     public createFields: string[] = ['name', 'mentionName']

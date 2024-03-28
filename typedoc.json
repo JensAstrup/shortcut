@@ -1,11 +1,11 @@
 {
   "entryPoints": [
-    "src/index.ts",
-    "src/stories/story.ts"
+    "src/index.ts"
   ],
   "out": "docs",
   "plugin": [
     "typedoc-plugin-coverage"
   ],
-  "coverageLabel": "Docs"
+  "coverageLabel": "Docs",
+  "excludeExternals": true
 }
