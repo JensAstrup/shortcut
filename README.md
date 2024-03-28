@@ -1,5 +1,6 @@
 # Shortcut API Client
 [![npm version](https://badge.fury.io/js/shortcut-api.svg)](https://badge.fury.io/js/shortcut-api)
+[![codecov](https://codecov.io/gh/JensAstrup/shortcut/graph/badge.svg?token=CteCCD1D6w)](https://codecov.io/gh/JensAstrup/shortcut)
 [![Documentation Coverage](https://raw.githubusercontent.com/JensAstrup/shortcut/develop/docs/coverage.svg)](https://jensastrup.github.io/shortcut/)
 
     
