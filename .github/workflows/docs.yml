@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 35-generate-docs-in-github-action
 
 jobs:
   generate-docs:
