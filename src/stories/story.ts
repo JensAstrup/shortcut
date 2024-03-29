@@ -136,7 +136,7 @@ export default class Story extends ShortcutResource {
             throw new Error(`Error creating comment: ${error}`)
         })
         const data: StoryCommentData = response.data
-        return convertApiFields(data) as unknown as StoryComment
+        return convertApiFields(data) as StoryComment
     }
 
     appUrl!: string
