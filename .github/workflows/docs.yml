@@ -31,7 +31,7 @@ jobs:
           echo ::group::Archive artifact
           tar \
             --create \
-            --file "$RUNNER_TEMP/artifact.tar" \
+            --file "artifact.tar" \
             --exclude=.git \
             --exclude=.github \
             -C ./docs/ . \
