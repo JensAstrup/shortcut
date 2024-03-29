@@ -54,7 +54,7 @@ export default class Epic extends ShortcutResource {
      * @param comment
      */
     public async comment(comment: string): Promise<ThreadedCommentInterface | void> {
-        const url = `${Epic.baseUrl}/epics/${this.id}/comments`
+        const url = `${Epic.baseUrl}/${this.id}/comments`
         const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)
         })
@@ -72,7 +72,7 @@ export default class Epic extends ShortcutResource {
      * {@link ThreadedCommentCreateData}
      */
     public async addComment(comment: ThreadedCommentCreateData): Promise<ThreadedCommentInterface | void> {
-        const url = `${Epic.baseUrl}/epics/${this.id}/comments`
+        const url = `${Epic.baseUrl}/${this.id}/comments`
         const requestData: BaseData = convertToApiFields(comment)
         const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)
