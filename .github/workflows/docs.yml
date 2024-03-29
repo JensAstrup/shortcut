@@ -9,11 +9,6 @@ on:
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-    environment: github-pages
-    # Deploy to the github-pages environment
 
     steps:
       - name: Checkout code
@@ -36,6 +31,15 @@ jobs:
           name: github-pages
           path: docs/
 
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+    environment: github-pages
+
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
