@@ -1,3 +1,4 @@
+import ShortcutResource from '@sx/base-resource'
 import Client from '@sx/client'
 import Iteration from '@sx/iterations/iteration'
 import Member from '@sx/members/member'
@@ -23,3 +24,4 @@ export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic}
 export {StoriesService, IterationsService, TeamService, MembersService, WorkflowsService, EpicsService}
 export {ThreadedCommentInterface, ThreadedCommentCreateData, StoryComment}
+export {ShortcutResource}

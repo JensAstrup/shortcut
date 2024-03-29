@@ -1,3 +1,4 @@
+import EpicsService from '@sx/epics/epics-service'
 import * as process from 'process'
 import StoriesService from '@sx/stories/stories-service'
 import WorkflowService from '@sx/workflows/workflows-service'
@@ -29,6 +30,7 @@ export default class Client {
     public iterations: IterationsService
     public teams: TeamService
     public members: MembersService
+    public epics: EpicsService
 
     constructor(shortcutApiKey?: string) {
         if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
@@ -37,6 +39,7 @@ export default class Client {
         this.iterations = new IterationsService({headers: this.headers})
         this.teams = new TeamService({headers: this.headers})
         this.members = new MembersService({headers: this.headers})
+        this.epics = new EpicsService({headers: this.headers})
     }
 
 }
