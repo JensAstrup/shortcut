@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 35_fix_docs
 
 jobs:
   generate-docs:
