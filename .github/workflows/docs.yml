@@ -8,7 +8,7 @@ on:
 
 jobs:
   generate-docs:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -25,8 +25,23 @@ jobs:
       - name: Generate TypeDocs
         run: npm run docs && ls -a docs
 
-      - name: Upload TypeDocs as GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v3.0.1
+      - name: Archive artifact
+        shell: sh
+        run: |
+          echo ::group::Archive artifact
+          tar \
+            --dereference --hard-dereference \
+            --directory "docs/" \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
+            -C .
+          echo ::endgroup::
+      - name: Upload artifact
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: docs/
+          path: docs/artifact.tar
+          retention-days: "1"
+          if-no-files-found: error
