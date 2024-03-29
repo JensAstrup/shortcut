@@ -35,7 +35,7 @@ jobs:
             -cvf "$RUNNER_TEMP/artifact.tar" \
             --exclude=.git \
             --exclude=.github \
-            -C .
+            -C ./docs/ .
           echo ::endgroup::
       - name: Upload artifact
         id: upload-artifact
