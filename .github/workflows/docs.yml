@@ -32,11 +32,12 @@ jobs:
           tar \
             --dereference --hard-dereference \
             --create \
-            --file "$RUNNER_TEMP/artifact.tar" \
+            --file "artifact.tar" \
             --exclude=.git \
             --exclude=.github \
             -C ./docs/ .  # Include all files in the 'docs' directory
           echo ::endgroup::
+
       - name: Upload artifact
         id: upload-artifact
         uses: actions/upload-artifact@v4
