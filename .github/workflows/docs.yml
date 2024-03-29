@@ -30,12 +30,12 @@ jobs:
         run: |
           echo ::group::Archive artifact
           tar \
-            --dereference --hard-dereference \
             --create \
-            --file "artifact.tar" \
+            --file "$RUNNER_TEMP/artifact.tar" \
             --exclude=.git \
             --exclude=.github \
-            -C ./docs/ .  # Include all files in the 'docs' directory
+            -C ./docs/ . \
+            -C ./docs/ .nojekyll  # Include .nojekyll explicitly
           echo ::endgroup::
 
       - name: Upload artifact
