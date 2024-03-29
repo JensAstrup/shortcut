@@ -1,4 +1,7 @@
-export interface StoryComment {
+import BaseInterface from '@sx/base-interface'
+
+
+export interface StoryComment extends BaseInterface {
     authorId: string; // UUID
     createdAt: Date;
     deleted: boolean

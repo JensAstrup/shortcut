@@ -1,11 +1,17 @@
+import BaseData from '@sx/base-data'
 import ShortcutResource from '@sx/base-resource'
 import IterationInterface from '@sx/iterations/contracts/iteration-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import Team from '@sx/teams/team'
 import TeamService from '@sx/teams/team-service'
+import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-comment-api-data'
+import ThreadedCommentCreateData from '@sx/threaded-comments/contracts/threaded-comment-create-data'
+import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
+import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
+import axios from 'axios'
 
 
 export default class Epic extends ShortcutResource {
@@ -34,6 +40,47 @@ export default class Epic extends ShortcutResource {
         const service: MembersService = new MembersService({headers: getHeaders()})
         return service.getMany(this.followerIds)
     }
+
+    /**
+     * Add a comment to the epic authored by the user associated with the API key currently in use
+     *
+     * @example
+     * ```typescript
+     * const epic = new Epic({id: 123})
+     * epic.comment('This is a comment').then((comment) => {
+     *    console.log(comment)
+     * })
+     * ```
+     * @param comment
+     */
+    public async comment(comment: string): Promise<ThreadedCommentInterface | void> {
+        const url = `${Epic.baseUrl}/epics/${this.id}/comments`
+        const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error creating comment: ${error}`)
+        })
+        const data: ThreadedCommentApiData = response.data
+        return convertApiFields(data) as ThreadedCommentInterface
+    }
+
+    /**
+     * Add a comment to the epic using the provided comment data. If you're just looking to add a comment from the authorized user, use the `comment` method.
+     *
+     * @param comment
+     * @returns {Promise<ThreadedCommentInterface | void>}
+     * {@link Epic.comment}
+     *
+     * {@link ThreadedCommentCreateData}
+     */
+    public async addComment(comment: ThreadedCommentCreateData): Promise<ThreadedCommentInterface | void> {
+        const url = `${Epic.baseUrl}/epics/${this.id}/comments`
+        const requestData: BaseData = convertToApiFields(comment)
+        const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error creating comment: ${error}`)
+        })
+        const data: ThreadedCommentApiData = response.data
+        return convertApiFields(data) as ThreadedCommentInterface
+    }
+
 
     appUrl!: string
     archived!: boolean

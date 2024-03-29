@@ -14,6 +14,12 @@ import MembersService from '@sx/members/members-service'
 import WorkflowsService from '@sx/workflows/workflows-service'
 import EpicsService from '@sx/epics/epics-service'
 
+// Interfaces
+import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
+import ThreadedCommentCreateData from '@sx/threaded-comments/contracts/threaded-comment-create-data'
+import {StoryComment} from '@sx/stories/comment/story-comment'
+
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic}
 export {StoriesService, IterationsService, TeamService, MembersService, WorkflowsService, EpicsService}
+export {ThreadedCommentInterface, ThreadedCommentCreateData, StoryComment}
