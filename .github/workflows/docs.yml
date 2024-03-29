@@ -29,7 +29,7 @@ jobs:
         shell: sh
         run: |
           echo ::group::Archive artifact
-          find ./docs -name ".nojekyll" -print0 | tar --null --no-recursion --create --file "artifact.tar" --exclude=.git --exclude=.github --files-from -
+          tar --create --file "artifact.tar" -C ./docs .
           echo ::endgroup::
 
       - name: Upload artifact
