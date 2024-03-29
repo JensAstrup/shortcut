@@ -25,18 +25,8 @@ jobs:
       - name: Generate TypeDocs
         run: npm run docs && ls -a docs
 
-      - name: Archive artifact
-        shell: sh
-        run: |
-          echo ::group::Archive artifact
-          tar --create --file "artifact.tar" -C ./docs .
-          echo ::endgroup::
-
-      - name: Upload artifact
-        id: upload-artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload TypeDocs as GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3.0.1
         with:
           name: github-pages
-          path: artifact.tar
-          retention-days: "1"
-          if-no-files-found: error
+          path: docs/
