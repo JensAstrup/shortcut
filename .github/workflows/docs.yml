@@ -35,7 +35,7 @@ jobs:
             --exclude=.git \
             --exclude=.github \
             -C ./docs/ . \
-            -C ./docs/ .nojekyll  # Include .nojekyll explicitly
+            -C ./docs/.nojekyll  # Include .nojekyll explicitly
           echo ::endgroup::
 
       - name: Upload artifact
