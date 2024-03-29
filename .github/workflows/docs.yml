@@ -31,8 +31,11 @@ jobs:
           echo ::group::Archive artifact
           tar \
             --dereference --hard-dereference \
-            -cvf "$RUNNER_TEMP/artifact.tar" \
-            -C "./docs/"
+            --create \
+            --file "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
+            -C ./docs/ .  # Include all files in the 'docs' directory
           echo ::endgroup::
       - name: Upload artifact
         id: upload-artifact
