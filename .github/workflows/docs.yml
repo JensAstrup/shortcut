@@ -42,6 +42,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: docs/artifact.tar
+          path: artifact.tar
           retention-days: "1"
           if-no-files-found: error
