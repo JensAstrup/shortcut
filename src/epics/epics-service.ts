@@ -8,10 +8,9 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 export default class EpicsService extends BaseService<Epic> {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/epics'
     protected factory = (data: object) => new Epic(data)
-    public static epics: Record<number, Epic> = {}
 
     /**
-     * Search for epic using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
+     * Search for epics using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
      *
      * @example
      * ```typescript
