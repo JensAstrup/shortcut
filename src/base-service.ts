@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import ShortcutResource from '@sx/base-resource'
+import BaseData from '@sx/base-data'
 
 
 export default class BaseService<T extends ShortcutResource> {
@@ -45,4 +46,37 @@ export default class BaseService<T extends ShortcutResource> {
         return instancesData.map((instance) => this.factory(convertApiFields(instance)))
     }
 
+}
+
+export class BaseSearchableService<T extends ShortcutResource> extends BaseService<T> {
+    /**
+     * Search for resources using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
+     *
+     * @example
+     * ```typescript
+     * const client = new Client()
+     * const epics = client.epic.search('My epic')
+     * const stories = client.story.search('team:platform')
+     * const objectives = client.objective.search({team_id: 123})
+     * const iterations = client.iteration.search('team:platform')
+     * ```
+     *
+     * @throws Error if the HTTP status code is 400 or greater
+     * @param query
+     */
+    public async search(query: string): Promise<T[]> {
+        const url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
+        url.search = new URLSearchParams({query: query}).toString()
+
+        const response = await axios.get(url.toString(), {headers: this.headers})
+
+        if (response.status >= 400) {
+            throw new Error('HTTP error ' + response.status)
+
+        }
+
+        const resourceData: BaseData[] = response.data.data ?? []
+        return resourceData.map((resource) => (convertApiFields(resource) as T))
+
+    }
 }
