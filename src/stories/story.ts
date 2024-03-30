@@ -12,7 +12,6 @@ import WorkflowService from '@sx/workflows/workflows-service'
 import {
     Branch,
     Commit,
-    LabelSlim,
     LinkedFile,
     StoryCustomField,
     StoryStats,
@@ -27,6 +26,7 @@ import TeamsService from '@sx/teams/teams-service'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
+import Label from '@sx/labels/label'
 
 
 /**
@@ -165,7 +165,7 @@ export default class Story extends ShortcutResource {
     id!: number
     iterationId!: number | null
     labelIds!: number[]
-    labels!: LabelSlim[]
+    labels!: Label[]
 
     /* The lead time in seconds of this story */
     leadTime!: number
