@@ -11,7 +11,7 @@ import Objective from '@sx/objectives/objective'
 // Services
 import StoriesService from '@sx/stories/stories-service'
 import IterationsService from '@sx/iterations/iterations-service'
-import TeamService from '@sx/teams/team-service'
+import TeamsService from '@sx/teams/teams-service'
 import MembersService from '@sx/members/members-service'
 import WorkflowsService from '@sx/workflows/workflows-service'
 import EpicsService from '@sx/epics/epics-service'
@@ -27,7 +27,7 @@ export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective}
 export {
     StoriesService,
     IterationsService,
-    TeamService,
+    TeamsService,
     MembersService,
     WorkflowsService,
     EpicsService,

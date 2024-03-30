@@ -23,7 +23,7 @@ import {
 } from '@sx/stories/contracts/story-api-data'
 import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
-import TeamService from '@sx/teams/team-service'
+import TeamsService from '@sx/teams/teams-service'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
@@ -62,7 +62,7 @@ export default class Story extends ShortcutResource {
         if (!this.groupId) {
             throw new Error('Story does not have a team')
         }
-        const service = new TeamService({headers: getHeaders()})
+        const service = new TeamsService({headers: getHeaders()})
         return service.get(this.groupId)
     }
 
@@ -103,8 +103,8 @@ export default class Story extends ShortcutResource {
      * @throws {Error} - If the story is not completed or has not been started.
      */
     public async cycleTime(): Promise<number> {
-        let startedAt: Date | null = this.startedAt
-        let completedAt: Date | null = this.completedAt
+        const startedAt: Date | null = this.startedAt
+        const completedAt: Date | null = this.completedAt
 
         if (!startedAt || !completedAt) {
             throw new Error('Story does not have a cycle time')

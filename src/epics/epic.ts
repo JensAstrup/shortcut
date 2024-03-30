@@ -1,10 +1,9 @@
 import BaseData from '@sx/base-data'
 import ShortcutResource from '@sx/base-resource'
-import IterationInterface from '@sx/iterations/contracts/iteration-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import Team from '@sx/teams/team'
-import TeamService from '@sx/teams/team-service'
+import TeamsService from '@sx/teams/teams-service'
 import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-comment-api-data'
 import ThreadedCommentCreateData from '@sx/threaded-comments/contracts/threaded-comment-create-data'
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
@@ -19,6 +18,10 @@ import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 export default class Epic extends ShortcutResource {
     public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
+    public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
+        'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',
+        'name', 'objectiveIds', 'ownerIds', 'plannedStartDate', 'requestedById',
+        'startedAtOverride', 'state', 'updatedAt']
 
     constructor(init: EpicInterface | object) {
         super()
@@ -26,6 +29,10 @@ export default class Epic extends ShortcutResource {
         this.changedFields = []
     }
 
+    /**
+     * Get the objectives associated with the epic
+     * @returns {Promise<Objective[]>}
+     */
     get objectives(): Promise<Objective[]> {
         const service = new ObjectivesService({headers: getHeaders()})
         return service.getMany(this.objectiveIds)
@@ -36,7 +43,7 @@ export default class Epic extends ShortcutResource {
      * @returns {Promise<Team>}
      */
     get teams(): Promise<Team[]> {
-        const service = new TeamService({headers: getHeaders()})
+        const service = new TeamsService({headers: getHeaders()})
         return service.getMany(this.groupIds)
     }
 
