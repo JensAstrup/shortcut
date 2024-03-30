@@ -217,5 +217,12 @@ describe('Story', () => {
             expect(story.tasks[0].description).toEqual('Test task')
             expect(axios.post).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/tasks`, {description: 'Test task'}, {headers: getHeaders()})
         })
+
+        it('should throw an error if the axios request fails', async () => {
+            axios.post.mockRejectedValue(new Error('Network error'))
+            const story = new Story({id: 1, tasks: []})
+
+            await expect(story.addTask('Test task')).rejects.toThrow('Error adding task: Error: Network error')
+        })
     })
 })
