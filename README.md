@@ -51,33 +51,55 @@ Full documentation for the Shortcut API can be found [here](https://shortcut.com
 
 ### Searching Stories
 
-```javascript
-const client = new Client()
-const stories = await client.stories.search('team:engineering is:started')
+```typescript
+const client: Client = new Client()
+const stories: Story[] = await client.stories.search('team:engineering is:started')
 console.log(stories)
 ```
 
+### Commenting on a Story
+
+_Also available on epics_
+
+```typescript
+const client: Client = new Client()
+const story: Story = await client.stories.get('story-id')
+const comment = await story.comment('This is a comment')
+````
+
 ### Listing Iterations
 
-```javascript
-const iterations = await client.iterations.list();
+```typescript
+const client: Client = new Client();
+const iterations: Iteration[] = await client.iterations.list();
 console.log(iterations);
 ```
 
 ### Creating an Iteration
 
-```javascript
-const iteration = await client.iterations.create({
-  name: 'Sprint 1',
-  start_date: '2022-01-01',
-  end_date: '2022-01-14',
+```typescript
+
+const client: Client = new Client();
+const iteration: Iteration = await client.iterations.create({
+    name: 'Sprint 1',
+    start_date: '2022-01-01',
+    end_date: '2022-01-14',
 });
+````
+
+### Delete a label
+
+```typescript
+const client: Client = new Client();
+const label: Label = await client.labels.get('label-id');
+await label.delete();
 ````
 
 ### Get a Team
 
-```javascript
-const team = await client.teams.get('team-id');
+```typescript
+const client: Client = new Client();
+const team: Team = await client.teams.get('team-id');
 console.log(team);
 ````
 
