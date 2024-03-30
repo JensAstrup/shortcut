@@ -4,12 +4,17 @@ import ShortcutResource from '@sx/base-resource'
 import BaseData from '@sx/base-data'
 
 
+export type ServiceOperation = 'get' | 'search' | 'list'
+
+
 export default class BaseService<T extends ShortcutResource> {
     public baseUrl = ''
     public headers: Record<string, string>
     // @ts-expect-error This is set on child classes so has no intializer here
     protected factory: (data: object) => T
     protected instances: Record<string, T> = {}
+    /** Lists out the available operations for the resource, calling methods not in this list will result in an error */
+    public availableOperations: ServiceOperation[] = []
 
     /**
      * Service classes are not intended to be instantiated directly. Instead, use the {@link Client} class to create instances of services.
@@ -19,6 +24,9 @@ export default class BaseService<T extends ShortcutResource> {
     }
 
     public async get(id: string | number): Promise<T> {
+        if ('get' ! in this.availableOperations) {
+            throw new Error('Operation not supported')
+        }
         if (this.instances[id]) {
             return this.instances[id]
         }
@@ -34,10 +42,16 @@ export default class BaseService<T extends ShortcutResource> {
     }
 
     public async getMany(ids: string[] | number[]): Promise<T[]> {
+        if ('get' ! in this.availableOperations) {
+            throw new Error('Operation not supported')
+        }
         return Promise.all(ids.map(id => this.get(id)))
     }
 
     public async list(): Promise<T[]> {
+        if ('list' ! in this.availableOperations) {
+            throw new Error('Operation not supported')
+        }
         const response = await axios.get(this.baseUrl, {headers: this.headers})
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
@@ -64,6 +78,9 @@ export class BaseSearchableService<T extends ShortcutResource> extends BaseServi
      * @param query
      */
     public async search(query: string): Promise<T[]> {
+        if ('search' ! in this.availableOperations) {
+            throw new Error('Operation not supported')
+        }
         const url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
         url.search = new URLSearchParams({query: query}).toString()
 

@@ -5,16 +5,16 @@ import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-int
 /**
  * @inheritDoc
  */
-export default class Workflow extends ShortcutResource{
-    autoAssignOwner!: boolean;
-    createdAt!: Date;
-    defaultStateId!: number;
-    description!: string;
-    entityType!: string;
-    id!: number;
-    name!: string;
-    projectIds!: number[];
-    states!: WorkflowStateInterface[];
-    teamId!: number;
-    updatedAt!: Date;
+export default class Workflow extends ShortcutResource {
+    autoAssignOwner!: boolean
+    createdAt!: Date
+    defaultStateId!: number
+    description!: string
+    entityType!: string
+    id!: number
+    name!: string
+    projectIds!: number[]
+    states!: WorkflowStateInterface[]
+    teamId!: number
+    updatedAt!: Date
 }

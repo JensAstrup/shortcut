@@ -1,7 +1,10 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import UUID from '@sx/utils/uuid'
 
 export default class Objective extends ShortcutResource {
+    public baseUrl: string = 'https://api.shortcut.com/api/v3/objectives'
+    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
+
     constructor(init: object) {
         super()
         Object.assign(this, init)

@@ -1,4 +1,4 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
@@ -36,6 +36,8 @@ import Label from '@sx/labels/label'
  * - {@link StoriesService} for the service managing stories.
  */
 export default class Story extends ShortcutResource {
+    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
+
     constructor(init: StoryInterface | object) {
         super()
         Object.assign(this, init)

@@ -1,4 +1,4 @@
-import BaseService from '@sx/base-service'
+import BaseService, {ServiceOperation} from '@sx/base-service'
 import Workflow from '@sx/workflows/workflow'
 import axios from 'axios'
 import {convertApiFields} from '@sx/utils/convert-fields'
@@ -8,6 +8,10 @@ import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-int
 const WORKFLOW_STATES: { [key: number]: WorkflowStateInterface } = {}
 
 export default class WorkflowService extends BaseService<Workflow> {
+    public baseUrl = 'https://api.app.shortcut.com/api/v3/workflows'
+    protected factory = (data: object) => new Workflow(data)
+    public availableOperations: ServiceOperation[] = ['get', 'list']
+
     public static async getWorkflows(): Promise<WorkflowInterface[]> {
         const url: string = 'https://api.app.shortcut.com/api/v3/workflows'
         const headers = {
