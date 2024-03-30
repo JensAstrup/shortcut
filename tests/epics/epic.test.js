@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Epic from '../../src/epics/epic'
+import ObjectivesService from '../../src/objectives/objectives-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
 
@@ -15,6 +16,14 @@ describe('Epic', () => {
     process.env.SHORTCUT_API_KEY = 'token'
     beforeEach(() => {
         axios.post.mockClear()
+    })
+
+    describe('objectives getter', () => {
+        it('returns an array of objectives', () => {
+            jest.spyOn(ObjectivesService.prototype, 'getMany').mockResolvedValue([{id: 1}, {id: 2}])
+            const epic = new Epic({id: 1, objectiveIds: [1, 2]})
+            expect(epic.objectives).resolves.toEqual([{id: 1}, {id: 2}])
+        })
     })
 
     describe('comment method', () => {

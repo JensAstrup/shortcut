@@ -12,15 +12,23 @@ import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 import axios from 'axios'
+import Objective from '@sx/objectives/objective'
+import ObjectivesService from '@sx/objectives/objectives-service'
+import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 
 export default class Epic extends ShortcutResource {
     public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
 
-    constructor(init: IterationInterface | object) {
+    constructor(init: EpicInterface | object) {
         super()
         Object.assign(this, init)
         this.changedFields = []
+    }
+
+    get objectives(): Promise<Objective[]> {
+        const service = new ObjectivesService({headers: getHeaders()})
+        return service.getMany(this.objectiveIds)
     }
 
     /**
