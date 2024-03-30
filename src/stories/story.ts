@@ -150,6 +150,14 @@ export default class Story extends ShortcutResource {
         this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
     }
 
+    public async addTask(task: string): Promise<void> {
+        const url = `${Story.baseUrl}/stories/${this.id}/tasks`
+        const requestData = {description: task}
+        await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error adding task: ${error}`)
+        })
+    }
+
 
     appUrl!: string
     archived!: boolean
