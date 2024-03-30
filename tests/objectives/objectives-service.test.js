@@ -40,4 +40,11 @@ describe('Objectives service', () => {
 
         expect(convertApiFields).toHaveBeenCalledTimes(2)
     })
+
+    it('should throw an error if the axios request returns a status of 400', async () => {
+        axios.get.mockResolvedValue({status: 400})
+        const service = new ObjectivesService({headers: {}})
+
+        await expect(service.search('objective')).rejects.toThrow('HTTP error 400')
+    })
 })
