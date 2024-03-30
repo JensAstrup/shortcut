@@ -6,6 +6,12 @@ import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-int
  * @inheritDoc
  */
 export default class Workflow extends ShortcutResource {
+    constructor(init: object) {
+        super()
+        Object.assign(this, init)
+        this.changedFields = []
+    }
+    
     autoAssignOwner!: boolean
     createdAt!: Date
     defaultStateId!: number

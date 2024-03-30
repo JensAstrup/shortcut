@@ -45,7 +45,8 @@ export default class Story extends ShortcutResource {
     }
 
     get workflow() {
-        return WorkflowService.getWorkflowState(this.workflowStateId)
+        const service = new WorkflowService({headers: getHeaders()})
+        return service.getWorkflowState(this.workflowStateId)
     }
 
     get iteration(): Promise<Iteration> {

@@ -25,9 +25,12 @@ describe('Story', () => {
     describe('workflow getter', () => {
         it('should return workflow state by ID', () => {
             const story = new Story({workflowStateId: 1})
-            jest.spyOn(WorkflowService, 'getWorkflowState').mockReturnValue({id: 1, name: 'Unstarted'})
+            jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+                id: 1,
+                name: 'Unstarted'
+            })
             expect(story.workflow).toEqual({id: 1, name: 'Unstarted'})
-            expect(WorkflowService.getWorkflowState).toHaveBeenCalledWith(1)
+            expect(WorkflowService.prototype.getWorkflowState).toHaveBeenCalledWith(1)
         })
     })
 
@@ -138,13 +141,19 @@ describe('Story', () => {
 
 
         it('should throw an error if workflow state is finished', () => {
-            jest.spyOn(WorkflowService, 'getWorkflowState').mockReturnValue({id: 1, type: 'Finished'})
+            jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+                id: 1,
+                type: 'Finished'
+            })
             const story = new Story({id: 1, workflowStateId: 1})
             expect(story.timeInDevelopment()).rejects.toThrow('Story is already finished')
         })
 
         it('should throw an error if story does not have a started date', () => {
-            jest.spyOn(WorkflowService, 'getWorkflowState').mockReturnValue({id: 1, type: 'Started'})
+            jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+                id: 1,
+                type: 'Started'
+            })
             const story = new Story({id: 1, startedAt: null})
             expect(story.timeInDevelopment()).rejects.toThrow('Story is not started')
         })
