@@ -10,7 +10,7 @@ export default class Task extends ShortcutResource {
         super()
         Object.assign(this, init)
         this.changedFields = []
-        this.baseUrl = `https://api.app.shortcut.com/api/v3/stories/${this.storyId}/tasks/${this.id}`
+        this.baseUrl = `https://api.app.shortcut.com/api/v3/stories/${this.storyId}/tasks`
     }
 
     complete!: boolean
