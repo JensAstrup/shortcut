@@ -194,4 +194,9 @@ describe('Story', () => {
             await expect(story.comment('Test comment')).rejects.toThrow('Error creating comment: Error: Network error')
         })
     })
+
+    it('should instantiate comments', () => {
+        const story = new Story({id: 1, comments: [{id: 1, text: 'Test comment'}]})
+        expect(story.comments[0].text).toEqual('Test comment')
+    })
 })

@@ -1,6 +1,6 @@
 import BaseData from '@sx/base-data'
 import {PullRequestApiData} from '@sx/pull-requests/contracts/pull-request-api-data'
-import {StoryComment} from '@sx/stories/comment/story-comment'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 
 
 export interface Branch {
@@ -39,7 +39,7 @@ export interface StoryApiData extends BaseData {
     blocked: boolean;
     blocker: boolean;
     branches: Branch[];
-    comments: StoryComment[];
+    comments: StoryCommentInterface[];
     commits: Commit[];
     completed: boolean;
     completed_at: Date | null;

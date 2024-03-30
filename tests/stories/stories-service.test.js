@@ -14,6 +14,11 @@ jest.mock('../../src/utils/convert-fields', () => {
 
 
 describe('Stories service', () => {
+    it('should construct a new instance', () => {
+        const service = new StoriesService({headers: {Authorization: 'Bearer token'}})
+        expect(service.headers).toEqual({Authorization: 'Bearer token'})
+    })
+
     it('should return an array of stories after searching', async () => {
         axios.get.mockResolvedValue({
             data: {

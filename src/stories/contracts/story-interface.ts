@@ -5,7 +5,7 @@ import {
     LabelSlim, LinkedFile, StoryCustomField, StoryStats, SyncedItem, Task, TypedStoryLink,
     UploadedFile
 } from '@sx/stories/contracts/story-api-data'
-import {StoryComment} from '@sx/stories/comment/story-comment'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import BaseInterface from '@sx/base-interface'
 
 export default interface StoryInterface extends BaseInterface {
@@ -14,7 +14,7 @@ export default interface StoryInterface extends BaseInterface {
     blocked: boolean
     blocker: boolean
     branches: Branch[]
-    comments: StoryComment[]
+    comments: StoryCommentInterface[]
     commits: Commit[]
     completed: boolean
     completedAt: Date | null

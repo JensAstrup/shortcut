@@ -6,7 +6,7 @@ import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
-import {StoryComment, StoryCommentData} from '@sx/stories/comment/story-comment'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import WorkflowService from '@sx/workflows/workflows-service'
 import {
@@ -27,6 +27,9 @@ import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Label from '@sx/labels/label'
+import Team from '@sx/teams/team'
+import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
+import StoryComment from '@sx/stories/comment/story-comment'
 
 
 /**
@@ -42,6 +45,7 @@ export default class Story extends ShortcutResource {
         super()
         Object.assign(this, init)
         this.changedFields = []
+        this.instantiateComments()
     }
 
     get workflow() {
@@ -61,7 +65,7 @@ export default class Story extends ShortcutResource {
      * Get the team assigned to the story, labelled as "Group" in the Shortcut API
      * @returns {Promise<Team>}
      */
-    get team() {
+    get team(): Promise<Team> {
         if (!this.groupId) {
             throw new Error('Story does not have a team')
         }
@@ -133,21 +137,26 @@ export default class Story extends ShortcutResource {
         return (new Date().getTime() - this.startedAt!.getTime()) / (1000 * 60 * 60)
     }
 
-    public async comment(comment: string): Promise<StoryComment | void> {
+    public async comment(comment: string): Promise<StoryComment> {
         const url = `${Story.baseUrl}/stories/${this.id}/comments`
         const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)
         })
-        const data: StoryCommentData = response.data
+        const data: StoryCommentApiData = response.data
         return convertApiFields(data) as StoryComment
     }
+
+    private instantiateComments() {
+        this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
+    }
+
 
     appUrl!: string
     archived!: boolean
     blocked!: boolean
     blocker!: boolean
     branches!: Branch[]
-    comments!: StoryComment[]
+    comments!: StoryCommentInterface[] | StoryComment[]
     commits!: Commit[]
     completed!: boolean
     completedAt!: Date | null
