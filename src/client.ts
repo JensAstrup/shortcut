@@ -3,7 +3,7 @@ import * as process from 'process'
 import StoriesService from '@sx/stories/stories-service'
 import WorkflowService from '@sx/workflows/workflows-service'
 import IterationsService from '@sx/iterations/iterations-service'
-import TeamService from '@sx/teams/team-service'
+import TeamsService from '@sx/teams/teams-service'
 import MembersService from '@sx/members/members-service'
 import ObjectivesService from '@sx/objectives/objectives-service'
 
@@ -29,7 +29,7 @@ export default class Client {
     public stories: StoriesService
     public workflows: WorkflowService
     public iterations: IterationsService
-    public teams: TeamService
+    public teams: TeamsService
     public members: MembersService
     public epics: EpicsService
     public objectives: ObjectivesService
@@ -39,7 +39,7 @@ export default class Client {
         this.stories = new StoriesService({headers: this.headers})
         this.workflows = new WorkflowService({headers: this.headers})
         this.iterations = new IterationsService({headers: this.headers})
-        this.teams = new TeamService({headers: this.headers})
+        this.teams = new TeamsService({headers: this.headers})
         this.members = new MembersService({headers: this.headers})
         this.epics = new EpicsService({headers: this.headers})
         this.objectives = new ObjectivesService({headers: this.headers})

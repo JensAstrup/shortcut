@@ -4,7 +4,7 @@ import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
 import Iteration from '../../src/iterations/iteration'
 import WorkflowService from '../../src/workflows/workflows-service'
-import TeamService from '../../src/teams/team-service'
+import TeamsService from '../../src/teams/teams-service'
 import MembersService from '../../src/members/members-service'
 import EpicsService from '../../src/epics/epics-service'
 
@@ -55,10 +55,10 @@ describe('Story', () => {
 
         it('should return the team object', () => {
             const teamData = {id: 1, name: 'Test team'}
-            jest.spyOn(TeamService.prototype, 'get').mockReturnValue(teamData)
+            jest.spyOn(TeamsService.prototype, 'get').mockReturnValue(teamData)
             const story = new Story({groupId: 1})
             expect(story.team).toEqual(teamData)
-            expect(TeamService.prototype.get).toHaveBeenCalledWith(1)
+            expect(TeamsService.prototype.get).toHaveBeenCalledWith(1)
         })
     })
 

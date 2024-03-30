@@ -1,9 +1,8 @@
 # Shortcut API Client
 [![npm version](https://badge.fury.io/js/shortcut-api.svg)](https://badge.fury.io/js/shortcut-api)
 [![codecov](https://codecov.io/gh/JensAstrup/shortcut/graph/badge.svg?token=CteCCD1D6w)](https://codecov.io/gh/JensAstrup/shortcut)
-[![Documentation Coverage](https://raw.githubusercontent.com/JensAstrup/shortcut/develop/docs/coverage.svg)](https://jensastrup.github.io/shortcut/)
 
-    
+[Full Documentation](https://jensastrup.github.io/shortcut/)
 
 This is an object-oriented Node.js client for interacting with the Shortcut (formerly Clubhouse) REST API. 
 It simplifies the process of making requests to the API by providing a set of easy-to-use classes and methods. 
@@ -52,37 +51,62 @@ Full documentation for the Shortcut API can be found [here](https://shortcut.com
 
 ### Searching Stories
 
-```javascript
-const client = new Client()
-const stories = await client.stories.search('team:engineering is:started')
+```typescript
+const client: Client = new Client()
+const stories: Story[] = await client.stories.search('team:engineering is:started')
 console.log(stories)
 ```
 
+### Commenting on a Story
+
+_Also available on epics_
+
+```typescript
+const client: Client = new Client()
+const story: Story = await client.stories.get('story-id')
+const comment = await story.comment('This is a comment')
+````
+
 ### Listing Iterations
 
-```javascript
-const iterations = await client.iterations.list();
+```typescript
+const client: Client = new Client();
+const iterations: Iteration[] = await client.iterations.list();
 console.log(iterations);
 ```
 
 ### Creating an Iteration
 
-```javascript
-const iteration = await client.iterations.create({
-  name: 'Sprint 1',
-  start_date: '2022-01-01',
-  end_date: '2022-01-14',
+```typescript
+
+const client: Client = new Client();
+const iteration: Iteration = await client.iterations.create({
+    name: 'Sprint 1',
+    start_date: '2022-01-01',
+    end_date: '2022-01-14',
 });
+````
+
+### Delete a label
+
+```typescript
+const client: Client = new Client();
+const label: Label = await client.labels.get('label-id');
+await label.delete();
 ````
 
 ### Get a Team
 
-```javascript
-const team = await client.teams.get('team-id');
+```typescript
+const client: Client = new Client();
+const team: Team = await client.teams.get('team-id');
 console.log(team);
 ````
 
-The syntax for all types is shared, so you can use the same methods for stories, iterations, members, workflows, and teams.
+The syntax for all types is shared, so you can use the same methods for stories, iterations,
+members, workflows, teams, etc.
+Some methods are specific to certain types, such as `comment` for stories and epics. Refer to the
+full documentation for more information.
 
 ## Contributing
 
