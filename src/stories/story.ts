@@ -27,6 +27,9 @@ import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Label from '@sx/labels/label'
+import Team from '@sx/teams/team'
+import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
+import StoryComment from '@sx/stories/comment/story-comment'
 
 
 /**
@@ -62,7 +65,7 @@ export default class Story extends ShortcutResource {
      * Get the team assigned to the story, labelled as "Group" in the Shortcut API
      * @returns {Promise<Team>}
      */
-    get team() {
+    get team(): Promise<Team> {
         if (!this.groupId) {
             throw new Error('Story does not have a team')
         }
