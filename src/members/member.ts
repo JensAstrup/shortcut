@@ -1,4 +1,4 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 
 
@@ -6,6 +6,9 @@ import StoryInterface from '@sx/stories/contracts/story-interface'
  * @inheritDoc
  */
 export default class Member extends ShortcutResource {
+    public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+    public availableOperations: ResourceOperation[] = []
+
     createdAt!: string
     disabled!: boolean
     entityType!: string

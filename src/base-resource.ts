@@ -1,8 +1,11 @@
-import BaseCreateData from '@sx/base-create-data'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
+
+
+/* The possible operations that can be available on a resource */
+export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
 
 
 /**
@@ -25,13 +28,22 @@ export default class ShortcutResource<T = object> {
      * Fields that are used when creating a new resource
      */
     public createFields: string[] = []
+    /**
+     * The available operations for the resource, any not in this list will raise an error when called
+     */
+    public availableOperations: ResourceOperation[] = []
 
+    /**
+     * Return a Proxy object to intercept property access and set operations on derived classes.
+     * The Proxy object will track changes made to the object and store them in the `changedFields` property
+     * to be used when updating the resource.
+     * @param init - An object containing the initial values for the resource.
+     */
     constructor(init?: T) {
         if (init) {
             Object.assign(this, init)
         }
         this.changedFields = []
-        // Return a Proxy object to intercept property access and set operations on derived classes
         return new Proxy(this, {
             get(target, property, receiver) {
                 return Reflect.get(target, property, receiver)

@@ -1,28 +1,17 @@
-import BaseService from '@sx/base-service'
+import BaseService, {ServiceOperation} from '@sx/base-service'
 import Workflow from '@sx/workflows/workflow'
-import axios from 'axios'
 import {convertApiFields} from '@sx/utils/convert-fields'
-import {WorkflowInterface} from '@sx/workflows/contracts/workflow-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 
-const WORKFLOW_STATES: { [key: number]: WorkflowStateInterface } = {}
+export const WORKFLOW_STATES: Record<number, WorkflowStateInterface> = {}
 
 export default class WorkflowService extends BaseService<Workflow> {
-    public static async getWorkflows(): Promise<WorkflowInterface[]> {
-        const url: string = 'https://api.app.shortcut.com/api/v3/workflows'
-        const headers = {
-            'Content-Type': 'application/json',
-            'Shortcut-Token': process.env.SHORTCUT_API_KEY || ''
-        }
-        const response = await axios.get(url, {headers})
-        if (response.status >= 400) {
-            throw new Error('HTTP error ' + response.status)
-        }
-        return response.data as WorkflowInterface[]
-    }
+    public baseUrl = 'https://api.app.shortcut.com/api/v3/workflows'
+    protected factory = (data: object) => new Workflow(data)
+    public availableOperations: ServiceOperation[] = ['get', 'list']
 
-    public static async getWorkflowStates(): Promise<WorkflowStateInterface[]> {
-        const workflows: WorkflowInterface[] = await this.getWorkflows()
+    public async getWorkflowStates(): Promise<WorkflowStateInterface[]> {
+        const workflows: Workflow[] = await this.list()
         const workflowStates: WorkflowStateInterface[] = this.extractWorkflowStates(workflows)
 
         for (const state of workflowStates) {
@@ -32,7 +21,7 @@ export default class WorkflowService extends BaseService<Workflow> {
         return workflowStates
     }
 
-    private static extractWorkflowStates(workflows: WorkflowInterface[]): WorkflowStateInterface[] {
+    private extractWorkflowStates(workflows: Workflow[]): WorkflowStateInterface[] {
         return workflows.reduce((acc: WorkflowStateInterface[], workflow) => {
             const states = workflow.states
             acc.push(...states)
@@ -40,7 +29,7 @@ export default class WorkflowService extends BaseService<Workflow> {
         }, [])
     }
 
-    public static async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
+    public async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
         if(Object.keys(WORKFLOW_STATES).length === 0) {
             await this.getWorkflowStates()
         }

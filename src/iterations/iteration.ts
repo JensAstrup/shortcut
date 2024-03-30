@@ -1,4 +1,4 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import IterationInterface, {
     IterationStats,
     Label
@@ -11,6 +11,7 @@ import IterationInterface, {
 export default class Iteration extends ShortcutResource {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
     public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
+    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
     appUrl!: string
     createdAt!: Date

@@ -1,4 +1,4 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import {getHeaders} from '@sx/utils/headers'
 import axios from 'axios'
 import Story from '@sx/stories/story'
@@ -11,6 +11,7 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 export default class Team extends ShortcutResource {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/groups' // Shortcut renamed groups to teams
     public createFields: string[] = ['name', 'mentionName']
+    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
     get stories() {
         return this.getStories()

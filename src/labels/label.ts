@@ -1,10 +1,11 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import LabelInterface from '@sx/labels/contracts/label-interface'
 
 
 export default class Label extends ShortcutResource {
     public static baseUrl: string = 'https://api.shortcut.com/api/v3/labels'
     public createFields = ['color', 'description', 'externalId', 'name']
+    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
     constructor(init: LabelInterface | object) {
         super()

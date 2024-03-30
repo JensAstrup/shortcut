@@ -6,13 +6,11 @@ describe('Client', () => {
     const contentType = 'application/json'
     const shortcutApiKey = 'fakekey'
 
-    // Save the original process.env
     beforeAll(() => {
         originalProcessEnv = {...process.env}
         process.env.SHORTCUT_API_KEY = 'fakeEnvKey'
     })
 
-    // Restore the original process.env so NODE_APP_INSTANCE will be available for other tests
     afterAll(() => {
         process.env = {...originalProcessEnv}
     })
