@@ -1,51 +1,22 @@
 import BaseData from '@sx/base-data'
 import {PullRequestApiData} from '@sx/pull-requests/contracts/pull-request-api-data'
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
+import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
 
-
-export interface Branch {
-}
-
-export interface Commit {
-}
-
-export interface StoryCustomField {
-}
-
-export interface UploadedFile {
-}
-
-export interface LabelSlim {
-}
-
-export interface LinkedFile {
-}
-
-export interface StoryStats {
-}
-
-export interface TypedStoryLink {
-}
-
-export interface SyncedItem {
-}
-
-export interface Task {
-}
 
 export interface StoryApiData extends BaseData {
     app_url: string;
     archived: boolean;
     blocked: boolean;
     blocker: boolean;
-    branches: Branch[];
+    branches: object[];
     comments: StoryCommentInterface[];
-    commits: Commit[];
+    commits: object[];
     completed: boolean;
     completed_at: Date | null;
     completed_at_override: Date | null;
     created_at: Date;
-    custom_fields: StoryCustomField[];
+    custom_fields: object[];
     cycle_time: number;
     deadline: Date | null;
     description: string;
@@ -54,16 +25,16 @@ export interface StoryApiData extends BaseData {
     estimate: number | null;
     external_id: string | null;
     external_links: string[];
-    files: UploadedFile[];
+    files: object[];
     follower_ids: string[]; // UUID
     group_id: string | null; // UUID
     group_mention_ids: string[]; // UUID
     id: number;
     iteration_id: number | null;
     label_ids: number[];
-    labels: LabelSlim[];
+    labels: object[];
     lead_time: number;
-    linked_files: LinkedFile[];
+    linked_files: object[];
     member_mention_ids: string[]; // UUID
     mention_ids: string[]; // Deprecated: use memberMentionIds.
     moved_at: Date | null;
@@ -77,12 +48,12 @@ export interface StoryApiData extends BaseData {
     started: boolean;
     started_at: Date | null;
     started_at_override: Date | null;
-    stats: StoryStats;
-    story_links: TypedStoryLink[];
+    stats: object;
+    story_links: object[];
     story_template_id: string | null; // UUID
     story_type: string;
-    synced_item: SyncedItem;
-    tasks: Task[];
+    synced_item: object;
+    tasks: TaskApiData[];
     unresolved_blocker_comments: number[];
     updated_at: Date | null;
     workflow_id: number;
