@@ -1,9 +1,8 @@
 # Shortcut API Client
 [![npm version](https://badge.fury.io/js/shortcut-api.svg)](https://badge.fury.io/js/shortcut-api)
 [![codecov](https://codecov.io/gh/JensAstrup/shortcut/graph/badge.svg?token=CteCCD1D6w)](https://codecov.io/gh/JensAstrup/shortcut)
-[![Documentation Coverage](https://raw.githubusercontent.com/JensAstrup/shortcut/develop/docs/coverage.svg)](https://jensastrup.github.io/shortcut/)
 
-    
+[Full Documentation](https://jensastrup.github.io/shortcut/)
 
 This is an object-oriented Node.js client for interacting with the Shortcut (formerly Clubhouse) REST API. 
 It simplifies the process of making requests to the API by providing a set of easy-to-use classes and methods. 
