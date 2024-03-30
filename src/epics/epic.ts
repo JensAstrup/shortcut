@@ -12,15 +12,23 @@ import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 import axios from 'axios'
+import Objective from '@sx/objectives/objective'
+import ObjectivesService from '@sx/objectives/objectives-service'
+import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 
 export default class Epic extends ShortcutResource {
     public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
 
-    constructor(init: IterationInterface | object) {
+    constructor(init: EpicInterface | object) {
         super()
         Object.assign(this, init)
         this.changedFields = []
+    }
+
+    get objectives(): Promise<Objective[]> {
+        const service = new ObjectivesService({headers: getHeaders()})
+        return service.getMany(this.objectiveIds)
     }
 
     /**
@@ -54,7 +62,7 @@ export default class Epic extends ShortcutResource {
      * @param comment
      */
     public async comment(comment: string): Promise<ThreadedCommentInterface | void> {
-        const url = `${Epic.baseUrl}/epics/${this.id}/comments`
+        const url = `${Epic.baseUrl}/${this.id}/comments`
         const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)
         })
@@ -72,7 +80,7 @@ export default class Epic extends ShortcutResource {
      * {@link ThreadedCommentCreateData}
      */
     public async addComment(comment: ThreadedCommentCreateData): Promise<ThreadedCommentInterface | void> {
-        const url = `${Epic.baseUrl}/epics/${this.id}/comments`
+        const url = `${Epic.baseUrl}/${this.id}/comments`
         const requestData: BaseData = convertToApiFields(comment)
         const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)

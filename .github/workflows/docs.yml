@@ -22,10 +22,24 @@ jobs:
         run: npm install
 
       - name: Generate TypeDocs
-        run: npm run docs
+        run: npm run docs && ls -a docs
 
       - name: Upload TypeDocs as GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
           name: github-pages
-          path: docs
+          path: docs/
+
+  deploy:
+    needs: generate-docs
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+    environment: github-pages
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
