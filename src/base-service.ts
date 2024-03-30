@@ -45,7 +45,6 @@ export default class BaseService<T extends ShortcutResource> {
         const instancesData: Record<string, unknown>[] = response.data ?? []
         return instancesData.map((instance) => this.factory(convertApiFields(instance)))
     }
-
 }
 
 export class BaseSearchableService<T extends ShortcutResource> extends BaseService<T> {
