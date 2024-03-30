@@ -50,12 +50,15 @@ export default class BaseService<T extends ShortcutResource> {
 
 export class BaseSearchableService<T extends ShortcutResource> extends BaseService<T> {
     /**
-     * Search for epics using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
+     * Search for resources using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
      *
      * @example
      * ```typescript
      * const client = new Client()
      * const epics = client.epic.search('My epic')
+     * const stories = client.story.search('team:platform')
+     * const objectives = client.objective.search({team_id: 123})
+     * const iterations = client.iteration.search('team:platform')
      * ```
      *
      * @throws Error if the HTTP status code is 400 or greater
