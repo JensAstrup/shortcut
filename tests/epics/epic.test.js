@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Epic from '../../src/epics/epic'
+import TeamsService from '../../src/teams/teams-service'
 import ObjectivesService from '../../src/objectives/objectives-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
@@ -23,6 +24,16 @@ describe('Epic', () => {
             jest.spyOn(ObjectivesService.prototype, 'getMany').mockResolvedValue([{id: 1}, {id: 2}])
             const epic = new Epic({id: 1, objectiveIds: [1, 2]})
             expect(epic.objectives).resolves.toEqual([{id: 1}, {id: 2}])
+            expect(ObjectivesService.prototype.getMany).toHaveBeenCalledWith([1, 2])
+        })
+    })
+
+    describe('teams getter', () => {
+        it('returns the team object', () => {
+            jest.spyOn(TeamsService.prototype, 'getMany').mockResolvedValue([{id: 1}])
+            const epic = new Epic({groupIds: [1]})
+            expect(epic.teams).resolves.toEqual([{id: 1}])
+            expect(TeamsService.prototype.getMany).toHaveBeenCalledWith([1])
         })
     })
 
