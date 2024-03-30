@@ -23,7 +23,7 @@ import LabelsService from '@sx/labels/labels-service'
 // Interfaces
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
 import ThreadedCommentCreateData from '@sx/threaded-comments/contracts/threaded-comment-create-data'
-import {StoryComment} from '@sx/stories/comment/story-comment'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label}
@@ -38,5 +38,5 @@ export {
     ObjectivesService,
     LabelsService
 }
-export {ThreadedCommentInterface, ThreadedCommentCreateData, StoryComment}
+export {ThreadedCommentInterface, ThreadedCommentCreateData, StoryCommentInterface}
 export {ShortcutResource}
