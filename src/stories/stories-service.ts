@@ -3,6 +3,7 @@ import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import BaseService from '@sx/base-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
+import {StoryApiData} from '@sx/stories/contracts/story-api-data'
 
 
 /**
@@ -44,7 +45,7 @@ export default class StoriesService extends BaseService<Story> {
 
         }
 
-        const storyData: Record<string, unknown>[] = response.data.data ?? []
+        const storyData: StoryApiData[] = response.data.data ?? []
         return storyData.map((story) => new Story(convertApiFields(story)))
 
     }
