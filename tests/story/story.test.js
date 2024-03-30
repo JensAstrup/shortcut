@@ -47,7 +47,7 @@ describe('Story', () => {
             const story = new Story({iterationId: 1})
             const result = await story.iteration
             expect(result).toEqual(iteration)
-        });
+        })
     })
 
     describe('team getter', () => {
@@ -73,7 +73,10 @@ describe('Story', () => {
                 name: 'Test user 2'
             }]
             jest.spyOn(MembersService.prototype, 'getMany').mockReturnValue(users)
-            expect(story.owners).toEqual([{id: 1, name: 'Test user 1'}, {id: 2, name: 'Test user 2'}])
+            expect(story.owners).toEqual([{id: 1, name: 'Test user 1'}, {
+                id: 2,
+                name: 'Test user 2'
+            }])
         })
     })
 

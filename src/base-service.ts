@@ -2,6 +2,7 @@ import axios from 'axios'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import ShortcutResource from '@sx/base-resource'
 import BaseData from '@sx/base-data'
+import * as console from 'console'
 
 
 export type ServiceOperation = 'get' | 'search' | 'list'
@@ -24,7 +25,7 @@ export default class BaseService<T extends ShortcutResource> {
     }
 
     public async get(id: string | number): Promise<T> {
-        if ('get' ! in this.availableOperations) {
+        if (!this.availableOperations.includes('get')) {
             throw new Error('Operation not supported')
         }
         if (this.instances[id]) {
@@ -42,14 +43,11 @@ export default class BaseService<T extends ShortcutResource> {
     }
 
     public async getMany(ids: string[] | number[]): Promise<T[]> {
-        if ('get' ! in this.availableOperations) {
-            throw new Error('Operation not supported')
-        }
         return Promise.all(ids.map(id => this.get(id)))
     }
 
     public async list(): Promise<T[]> {
-        if ('list' ! in this.availableOperations) {
+        if (!this.availableOperations.includes('list')) {
             throw new Error('Operation not supported')
         }
         const response = await axios.get(this.baseUrl, {headers: this.headers})
@@ -62,6 +60,8 @@ export default class BaseService<T extends ShortcutResource> {
 }
 
 export class BaseSearchableService<T extends ShortcutResource> extends BaseService<T> {
+    public availableOperations: ServiceOperation[] = ['search']
+
     /**
      * Search for resources using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
      *
@@ -78,9 +78,6 @@ export class BaseSearchableService<T extends ShortcutResource> extends BaseServi
      * @param query
      */
     public async search(query: string): Promise<T[]> {
-        if ('search' ! in this.availableOperations) {
-            throw new Error('Operation not supported')
-        }
         const url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
         url.search = new URLSearchParams({query: query}).toString()
 

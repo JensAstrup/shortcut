@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {mock} from 'node:test'
 import BaseService from '../src/base-service'
 
 
@@ -24,6 +25,7 @@ describe('MockService', () => {
 
     beforeEach(() => {
         mockService = new MockService({headers: {Authorization: 'Bearer token'}})
+        mockService.availableOperations = ['get', 'list', 'search']
         jest.clearAllMocks()
     })
 
@@ -32,6 +34,7 @@ describe('MockService', () => {
         const mockResponse = {status: 200, data: mockData}
         axios.get.mockResolvedValue(mockResponse)
 
+        mockService.availableOperations = ['get']
         const resource = await mockService.get('1')
 
         expect(axios.get).toHaveBeenCalledWith(`${mockService.baseUrl}/1`, {headers: mockService.headers})
@@ -39,5 +42,39 @@ describe('MockService', () => {
         expect(resource).toEqual(mockData)
     })
 
-    // Similar structure for other tests
+    it('should throw an error if get method is not available on resource', async () => {
+        mockService.availableOperations = ['list']
+        expect(mockService.get('1')).rejects.toThrow('Operation not supported')
+    })
+
+    it('should get multiple resources', async () => {
+        const mockData = [{id: '1', name: 'Test Resource 1'}, {id: '2', name: 'Test Resource 2'}]
+        const mockResponse = {status: 200, data: mockData}
+        axios.get.mockResolvedValue(mockResponse)
+
+        mockService.availableOperations = ['get']
+        const resources = await mockService.getMany(['1', '2'])
+
+        expect(resources).toBeInstanceOf(Array)
+        expect(resources).toHaveLength(2)
+        expect(resources[0]).toBeInstanceOf(MockResource)
+        expect(resources[1]).toBeInstanceOf(MockResource)
+    })
+
+    it('should list out resources', async () => {
+        const mockData = [{id: '1', name: 'Test Resource 1'}, {id: '2', name: 'Test Resource 2'}]
+        const mockResponse = {status: 200, data: mockData}
+        axios.get.mockResolvedValue(mockResponse)
+
+        mockService.availableOperations = ['list']
+        const resources = await mockService.list()
+
+        expect(axios.get).toHaveBeenCalledWith(mockService.baseUrl, {headers: mockService.headers})
+        expect(resources).toBeInstanceOf(Array)
+        expect(resources).toHaveLength(2)
+        expect(resources[0]).toBeInstanceOf(MockResource)
+        expect(resources[1]).toBeInstanceOf(MockResource)
+        expect(resources).toEqual(mockData)
+    })
+
 })
