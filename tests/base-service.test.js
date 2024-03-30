@@ -77,4 +77,8 @@ describe('MockService', () => {
         expect(resources).toEqual(mockData)
     })
 
+    it('should throw an error if list method is not available on resource', () => {
+        mockService.availableOperations = ['get']
+        expect(mockService.list()).rejects.toThrow('Operation not supported')
+    })
 })
