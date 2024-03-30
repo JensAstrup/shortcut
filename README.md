@@ -81,7 +81,10 @@ const team = await client.teams.get('team-id');
 console.log(team);
 ````
 
-The syntax for all types is shared, so you can use the same methods for stories, iterations, members, workflows, and teams.
+The syntax for all types is shared, so you can use the same methods for stories, iterations,
+members, workflows, teams, etc.
+Some methods are specific to certain types, such as `comment` for stories and epics. Refer to the
+full documentation for more information.
 
 ## Contributing
 
