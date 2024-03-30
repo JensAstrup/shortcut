@@ -199,4 +199,23 @@ describe('Story', () => {
         const story = new Story({id: 1, comments: [{id: 1, text: 'Test comment'}]})
         expect(story.comments[0].text).toEqual('Test comment')
     })
+
+    it('should instantiate tasks', () => {
+        const story = new Story({id: 1, tasks: [{id: 1, description: 'Test task'}]})
+        expect(story.tasks[0].description).toEqual('Test task')
+    })
+
+    describe('addTasks method', () => {
+        it('should post task data and add new task to tasks property', async () => {
+            const taskData = {description: 'Test task'}
+            const expectedResponse = {data: taskData}
+            axios.post.mockResolvedValue(expectedResponse)
+
+            const story = new Story({id: 1, tasks: []})
+            await story.addTask('Test task')
+
+            expect(story.tasks[0].description).toEqual('Test task')
+            expect(axios.post).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/tasks`, {description: 'Test task'}, {headers: getHeaders()})
+        })
+    })
 })

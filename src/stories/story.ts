@@ -9,17 +9,6 @@ import {getHeaders} from '@sx/utils/headers'
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import WorkflowService from '@sx/workflows/workflows-service'
-import {
-    Branch,
-    Commit,
-    LinkedFile,
-    StoryCustomField,
-    StoryStats,
-    SyncedItem,
-    Task,
-    TypedStoryLink,
-    UploadedFile
-} from '@sx/stories/contracts/story-api-data'
 import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
 import TeamsService from '@sx/teams/teams-service'
@@ -30,6 +19,9 @@ import Label from '@sx/labels/label'
 import Team from '@sx/teams/team'
 import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
 import StoryComment from '@sx/stories/comment/story-comment'
+import Task from '@sx/stories/tasks/task'
+import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
+import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
 
 
 /**
@@ -46,6 +38,7 @@ export default class Story extends ShortcutResource {
         Object.assign(this, init)
         this.changedFields = []
         this.instantiateComments()
+        this.instantiateTasks()
     }
 
     get workflow() {
@@ -150,12 +143,19 @@ export default class Story extends ShortcutResource {
         this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
     }
 
+    private instantiateTasks() {
+        this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
+    }
+
     public async addTask(task: string): Promise<void> {
         const url = `${Story.baseUrl}/stories/${this.id}/tasks`
         const requestData = {description: task}
-        await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+        const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error adding task: ${error}`)
         })
+        const data: TaskApiData = response.data
+        const createdTask = convertApiFields(data) as Task
+        this.tasks.push(createdTask)
     }
 
 
@@ -163,14 +163,14 @@ export default class Story extends ShortcutResource {
     archived!: boolean
     blocked!: boolean
     blocker!: boolean
-    branches!: Branch[]
+    branches!: object[]
     comments!: StoryCommentInterface[] | StoryComment[]
-    commits!: Commit[]
+    commits!: object[]
     completed!: boolean
     completedAt!: Date | null
     completedAtOverride!: Date | null
     createdAt!: Date
-    customFields!: StoryCustomField[]
+    customFields!: object[]
     deadline!: Date | null
     description!: string
     entityType!: string
@@ -178,7 +178,7 @@ export default class Story extends ShortcutResource {
     estimate!: number | null
     externalId!: string | null
     externalLinks!: string[]
-    files!: UploadedFile[]
+    files!: object[]
     followerIds!: string[]
     groupId!: string | null
     groupMentionIds!: string[]
@@ -189,7 +189,7 @@ export default class Story extends ShortcutResource {
 
     /* The lead time in seconds of this story */
     leadTime!: number
-    linkedFiles!: LinkedFile[]
+    linkedFiles!: object[]
     memberMentionIds!: string[]
     mentionIds!: string[]
     movedAt!: Date | null
@@ -202,12 +202,12 @@ export default class Story extends ShortcutResource {
     started!: boolean
     startedAt!: Date | null
     startedAtOverride!: Date | null
-    stats!: StoryStats
-    storyLinks!: TypedStoryLink[]
+    stats!: object
+    storyLinks!: object[]
     storyTemplateId!: string | null
     storyType!: string
-    syncedItem!: SyncedItem
-    tasks!: Task[]
+    syncedItem!: object
+    tasks!: Task[] | TaskInterface[]
     unresolvedBlockerComments!: number[]
     updatedAt!: Date | null
     workflowId!: number
