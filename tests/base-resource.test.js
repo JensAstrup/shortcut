@@ -39,6 +39,14 @@ describe('ShortcutResource', () => {
             expect(resource.name).toBe('Updated Name')
         })
 
+        it('throws an error on update if operation is not available', async () => {
+            const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['create']
+            resource.name = 'Updated Name'
+
+            await expect(resource.save()).rejects.toThrow('Update operation not available for this resource')
+        })
+
         it('calls create if id does not exist', async () => {
             const resource = new ShortcutResource()
             resource.availableOperations = ['create']
@@ -51,6 +59,14 @@ describe('ShortcutResource', () => {
             expect(resource.id).toBe(123)
             expect(resource.name).toBe('New Name')
         })
+
+        it('throws an error on create if operation is not available', async () => {
+            const resource = new ShortcutResource()
+            resource.availableOperations = ['update']
+            resource.name = 'New Name'
+
+            await expect(resource.save()).rejects.toThrow('Create operation not available for this resource')
+        })
     })
 
     describe('delete method', () => {
@@ -62,6 +78,13 @@ describe('ShortcutResource', () => {
             await resource.delete()
 
             expect(axios.delete).toHaveBeenCalledWith(expect.any(String), {headers: mockHeaders})
+        })
+
+        it('throws an error if delete operation is not available', async () => {
+            const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['update']
+
+            await expect(resource.delete()).rejects.toThrow('Delete operation not available for this resource')
         })
 
         it('throws an error on delete failure', async () => {
