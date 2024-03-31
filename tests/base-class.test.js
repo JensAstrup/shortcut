@@ -29,6 +29,7 @@ describe('ShortcutResource', () => {
     describe('save method', () => {
         it('calls update if id exists', async () => {
             const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['update']
             resource.name = 'Updated Name'
             axios.put.mockResolvedValue({data: {snake_name: 'Updated Name'}})
 
@@ -40,6 +41,7 @@ describe('ShortcutResource', () => {
 
         it('calls create if id does not exist', async () => {
             const resource = new ShortcutResource()
+            resource.availableOperations = ['create']
             resource.name = 'New Name'
             axios.post.mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
 
@@ -54,6 +56,7 @@ describe('ShortcutResource', () => {
     describe('delete method', () => {
         it('sends a delete request for the resource', async () => {
             const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['delete']
             axios.delete.mockResolvedValue({})
 
             await resource.delete()
@@ -63,6 +66,7 @@ describe('ShortcutResource', () => {
 
         it('throws an error on delete failure', async () => {
             const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['delete']
             axios.delete.mockRejectedValue(new Error('Error deleting story'))
 
             await expect(resource.delete()).rejects.toThrow('Error deleting story')

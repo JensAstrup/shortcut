@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {before} from 'node:test'
 import Story from '../../src/stories/story'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
@@ -223,6 +224,66 @@ describe('Story', () => {
             const story = new Story({id: 1, tasks: []})
 
             await expect(story.addTask('Test task')).rejects.toThrow('Error adding task: Error: Network error')
+        })
+    })
+
+    describe('blocks method', () => {
+        it('should add blocking story with number argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.blocks(2)
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('blocks')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+
+        it('should add blocking story with story object argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.blocks(new Story({id: 2}))
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('blocks')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+    })
+
+    describe('duplicated method', () => {
+        it('should add duplicated story with number argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.duplicates(2)
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('duplicates')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+
+        it('should add duplicated story with story object argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.duplicates(new Story({id: 2}))
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('duplicates')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+    })
+
+    describe('relatedTo method', () => {
+        it('should add related story with number argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.relatesTo(2)
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('relates to')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+
+        it('should add related story with story object argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.relatesTo(new Story({id: 2}))
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('relates to')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
         })
     })
 })
