@@ -60,6 +60,20 @@ describe('ShortcutResource', () => {
             expect(resource.name).toBe('New Name')
         })
 
+        it('calls create if id does not exist and uses createFields', async () => {
+            const resource = new ShortcutResource()
+            resource.availableOperations = ['create']
+            resource.createFields = ['snake_name']
+            resource.name = 'New Name'
+            axios.post.mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
+
+            await resource.save()
+
+            expect(axios.post).toHaveBeenCalledWith(expect.any(String), expect.any(Object), {headers: mockHeaders})
+            expect(resource.id).toBe(123)
+            expect(resource.name).toBe('New Name')
+        })
+
         it('throws an error on create if operation is not available', async () => {
             const resource = new ShortcutResource()
             resource.availableOperations = ['update']
