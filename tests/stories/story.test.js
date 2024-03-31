@@ -206,6 +206,12 @@ describe('Story', () => {
         expect(story.tasks[0].description).toEqual('Test task')
     })
 
+    it('should instantiate story links', () => {
+        const story = new Story({id: 1, storyLinks: [{id: 1, verb: 'blocks', objectId: 2}]})
+        expect(story.storyLinks[0].verb).toEqual('blocks')
+        expect(story.storyLinks[0].objectId).toEqual(2)
+    })
+
     describe('addTasks method', () => {
         it('should post task data and add new task to tasks property', async () => {
             const taskData = {description: 'Test task'}
