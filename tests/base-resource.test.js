@@ -29,6 +29,7 @@ describe('ShortcutResource', () => {
     describe('save method', () => {
         it('calls update if id exists', async () => {
             const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['update']
             resource.name = 'Updated Name'
             axios.put.mockResolvedValue({data: {snake_name: 'Updated Name'}})
 
@@ -38,8 +39,17 @@ describe('ShortcutResource', () => {
             expect(resource.name).toBe('Updated Name')
         })
 
+        it('throws an error on update if operation is not available', async () => {
+            const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['create']
+            resource.name = 'Updated Name'
+
+            await expect(resource.save()).rejects.toThrow('Update operation not available for this resource')
+        })
+
         it('calls create if id does not exist', async () => {
             const resource = new ShortcutResource()
+            resource.availableOperations = ['create']
             resource.name = 'New Name'
             axios.post.mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
 
@@ -49,11 +59,34 @@ describe('ShortcutResource', () => {
             expect(resource.id).toBe(123)
             expect(resource.name).toBe('New Name')
         })
+
+        it('calls create if id does not exist and uses createFields', async () => {
+            const resource = new ShortcutResource()
+            resource.availableOperations = ['create']
+            resource.createFields = ['snake_name']
+            resource.name = 'New Name'
+            axios.post.mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
+
+            await resource.save()
+
+            expect(axios.post).toHaveBeenCalledWith(expect.any(String), expect.any(Object), {headers: mockHeaders})
+            expect(resource.id).toBe(123)
+            expect(resource.name).toBe('New Name')
+        })
+
+        it('throws an error on create if operation is not available', async () => {
+            const resource = new ShortcutResource()
+            resource.availableOperations = ['update']
+            resource.name = 'New Name'
+
+            await expect(resource.save()).rejects.toThrow('Create operation not available for this resource')
+        })
     })
 
     describe('delete method', () => {
         it('sends a delete request for the resource', async () => {
             const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['delete']
             axios.delete.mockResolvedValue({})
 
             await resource.delete()
@@ -61,8 +94,16 @@ describe('ShortcutResource', () => {
             expect(axios.delete).toHaveBeenCalledWith(expect.any(String), {headers: mockHeaders})
         })
 
+        it('throws an error if delete operation is not available', async () => {
+            const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['update']
+
+            await expect(resource.delete()).rejects.toThrow('Delete operation not available for this resource')
+        })
+
         it('throws an error on delete failure', async () => {
             const resource = new ShortcutResource({id: 123})
+            resource.availableOperations = ['delete']
             axios.delete.mockRejectedValue(new Error('Error deleting story'))
 
             await expect(resource.delete()).rejects.toThrow('Error deleting story')
