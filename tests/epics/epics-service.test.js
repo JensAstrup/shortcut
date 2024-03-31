@@ -1,3 +1,4 @@
+import {before} from 'node:test'
 import Epic from '../../src/epics/epic'
 import EpicsService from '../../src/epics/epics-service'
 import axios from 'axios'
@@ -12,8 +13,18 @@ jest.mock('../../src/utils/convert-fields', () => {
 
 })
 
-
 describe('Epics service', () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
+    it('should get workflow', () => {
+        axios.get.mockResolvedValue({data: {id: 1, name: 'Workflow 1'}})
+        const service = new EpicsService({headers: {}})
+        expect(service.getWorkflow()).resolves.toEqual({id: 1, name: 'Workflow 1'})
+        expect(axios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/epic-workflow', {headers: {}})
+    })
+
     it('should return an array of epics after searching', async () => {
         axios.get.mockResolvedValue({
             data: {
