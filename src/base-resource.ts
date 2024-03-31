@@ -64,6 +64,9 @@ export default class ShortcutResource<T = object> {
      * @throws {Error} - Throws an error if the HTTP request fails.
      */
     public async update(): Promise<void> {
+        if (!(this.availableOperations.includes('update'))) {
+            throw new Error('Update operation not available for this resource')
+        }
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
         const url = `${baseUrl}/${this.id}`
         const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
@@ -89,6 +92,9 @@ export default class ShortcutResource<T = object> {
      * @throws {Error} - Throws an error if the HTTP request fails.
      */
     public async create(): Promise<this> {
+        if (!(this.availableOperations.includes('create'))) {
+            throw new Error('Create operation not available for this resource')
+        }
         const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
         const body: Record<string, unknown> = {}
         Object.keys(this).forEach(key => {
@@ -123,6 +129,9 @@ export default class ShortcutResource<T = object> {
      * @throws {Error} - Throws an error if the HTTP request fails.
      */
     public async delete(): Promise<void> {
+        if (!(this.availableOperations.includes('delete'))) {
+            throw new Error('Delete operation not available for this resource')
+        }
         const url = `${this.baseUrl}/${this.id}`
         await axios.delete(url, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error deleting resource: ${error}`)

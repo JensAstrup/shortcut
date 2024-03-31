@@ -22,6 +22,8 @@ import StoryComment from '@sx/stories/comment/story-comment'
 import Task from '@sx/stories/tasks/task'
 import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
+import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
+import StoryLink from '@sx/stories/links/story-link'
 
 
 /**
@@ -39,6 +41,7 @@ export default class Story extends ShortcutResource {
         this.changedFields = []
         this.instantiateComments()
         this.instantiateTasks()
+        this.instantiateLinks()
     }
 
     get workflow() {
@@ -147,6 +150,10 @@ export default class Story extends ShortcutResource {
         this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
     }
 
+    private instantiateLinks() {
+        this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
+    }
+
     public async addTask(task: string): Promise<void> {
         const url = `${Story.baseUrl}/stories/${this.id}/tasks`
         const requestData = {description: task}
@@ -156,6 +163,24 @@ export default class Story extends ShortcutResource {
         const data: TaskApiData = response.data
         const createdTask = convertApiFields(data) as Task
         this.tasks.push(createdTask)
+    }
+
+    public async blocks(story: Story | number): Promise<void> {
+        const link: StoryLink = new StoryLink({objectId: this.id, verb: 'blocks', subjectId: story instanceof Story ? story.id : story})
+        await link.save()
+        this.storyLinks.push(link)
+    }
+
+    public async duplicates(story: Story | number): Promise<void> {
+        const link: StoryLink = new StoryLink({objectId: this.id, verb: 'duplicates', subjectId: story instanceof Story ? story.id : story})
+        await link.save()
+        this.storyLinks.push(link)
+    }
+
+    public async relatesTo(story: Story | number): Promise<void> {
+        const link: StoryLink = new StoryLink({objectId: this.id, verb: 'relates to', subjectId: story instanceof Story ? story.id : story})
+        await link.save()
+        this.storyLinks.push(link)
     }
 
 
@@ -203,7 +228,7 @@ export default class Story extends ShortcutResource {
     startedAt!: Date | null
     startedAtOverride!: Date | null
     stats!: object
-    storyLinks!: object[]
+    storyLinks!: StoryLinkInterface[] | StoryLink[]
     storyTemplateId!: string | null
     storyType!: string
     syncedItem!: object
