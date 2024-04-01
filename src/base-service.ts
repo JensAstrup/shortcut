@@ -89,7 +89,7 @@ export class BaseSearchableService<T extends ShortcutResource> extends BaseServi
         }
 
         const resourceData: BaseData[] = response.data.data ?? []
-        return resourceData.map((resource) => (convertApiFields(resource) as T))
+        return resourceData.map((resource) => this.factory(convertApiFields(resource)))
 
     }
 }
