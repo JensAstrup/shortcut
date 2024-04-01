@@ -1,5 +1,5 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import {Story} from '@sx/stories'
+import Story from '@sx/stories/story'
 import {getHeaders} from '@sx/utils/headers'
 import axios from 'axios'
 import {convertApiFields} from '@sx/utils/convert-fields'
