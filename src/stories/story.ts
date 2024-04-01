@@ -1,4 +1,4 @@
-import ShortcutResource from '@sx/base-resource'
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
@@ -6,20 +6,9 @@ import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 import axios from 'axios'
 import {getHeaders} from '@sx/utils/headers'
-import {StoryComment, StoryCommentData} from '@sx/stories/comment/story-comment'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import WorkflowService from '@sx/workflows/workflows-service'
-import {
-    Branch,
-    Commit,
-    LinkedFile,
-    StoryCustomField,
-    StoryStats,
-    SyncedItem,
-    Task,
-    TypedStoryLink,
-    UploadedFile
-} from '@sx/stories/contracts/story-api-data'
 import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
 import TeamsService from '@sx/teams/teams-service'
@@ -27,6 +16,14 @@ import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Label from '@sx/labels/label'
+import Team from '@sx/teams/team'
+import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
+import StoryComment from '@sx/stories/comment/story-comment'
+import Task from '@sx/stories/tasks/task'
+import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
+import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
+import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
+import StoryLink from '@sx/stories/links/story-link'
 
 
 /**
@@ -36,14 +33,20 @@ import Label from '@sx/labels/label'
  * - {@link StoriesService} for the service managing stories.
  */
 export default class Story extends ShortcutResource {
+    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
+
     constructor(init: StoryInterface | object) {
         super()
         Object.assign(this, init)
         this.changedFields = []
+        this.instantiateComments()
+        this.instantiateTasks()
+        this.instantiateLinks()
     }
 
     get workflow() {
-        return WorkflowService.getWorkflowState(this.workflowStateId)
+        const service = new WorkflowService({headers: getHeaders()})
+        return service.getWorkflowState(this.workflowStateId)
     }
 
     get iteration(): Promise<Iteration> {
@@ -58,7 +61,7 @@ export default class Story extends ShortcutResource {
      * Get the team assigned to the story, labelled as "Group" in the Shortcut API
      * @returns {Promise<Team>}
      */
-    get team() {
+    get team(): Promise<Team> {
         if (!this.groupId) {
             throw new Error('Story does not have a team')
         }
@@ -130,27 +133,69 @@ export default class Story extends ShortcutResource {
         return (new Date().getTime() - this.startedAt!.getTime()) / (1000 * 60 * 60)
     }
 
-    public async comment(comment: string): Promise<StoryComment | void> {
+    public async comment(comment: string): Promise<StoryComment> {
         const url = `${Story.baseUrl}/stories/${this.id}/comments`
         const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
             throw new Error(`Error creating comment: ${error}`)
         })
-        const data: StoryCommentData = response.data
+        const data: StoryCommentApiData = response.data
         return convertApiFields(data) as StoryComment
     }
+
+    private instantiateComments() {
+        this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
+    }
+
+    private instantiateTasks() {
+        this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
+    }
+
+    private instantiateLinks() {
+        this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
+    }
+
+    public async addTask(task: string): Promise<void> {
+        const url = `${Story.baseUrl}/stories/${this.id}/tasks`
+        const requestData = {description: task}
+        const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+            throw new Error(`Error adding task: ${error}`)
+        })
+        const data: TaskApiData = response.data
+        const createdTask = convertApiFields(data) as Task
+        this.tasks.push(createdTask)
+    }
+
+    public async blocks(story: Story | number): Promise<void> {
+        const link: StoryLink = new StoryLink({objectId: this.id, verb: 'blocks', subjectId: story instanceof Story ? story.id : story})
+        await link.save()
+        this.storyLinks.push(link)
+    }
+
+    public async duplicates(story: Story | number): Promise<void> {
+        const link: StoryLink = new StoryLink({objectId: this.id, verb: 'duplicates', subjectId: story instanceof Story ? story.id : story})
+        await link.save()
+        this.storyLinks.push(link)
+    }
+
+    public async relatesTo(story: Story | number): Promise<void> {
+        const link: StoryLink = new StoryLink({objectId: this.id, verb: 'relates to', subjectId: story instanceof Story ? story.id : story})
+        await link.save()
+        this.storyLinks.push(link)
+    }
+
 
     appUrl!: string
     archived!: boolean
     blocked!: boolean
     blocker!: boolean
-    branches!: Branch[]
-    comments!: StoryComment[]
-    commits!: Commit[]
+    branches!: object[]
+    comments!: StoryCommentInterface[] | StoryComment[]
+    commits!: object[]
     completed!: boolean
     completedAt!: Date | null
     completedAtOverride!: Date | null
     createdAt!: Date
-    customFields!: StoryCustomField[]
+    customFields!: object[]
     deadline!: Date | null
     description!: string
     entityType!: string
@@ -158,7 +203,7 @@ export default class Story extends ShortcutResource {
     estimate!: number | null
     externalId!: string | null
     externalLinks!: string[]
-    files!: UploadedFile[]
+    files!: object[]
     followerIds!: string[]
     groupId!: string | null
     groupMentionIds!: string[]
@@ -169,7 +214,7 @@ export default class Story extends ShortcutResource {
 
     /* The lead time in seconds of this story */
     leadTime!: number
-    linkedFiles!: LinkedFile[]
+    linkedFiles!: object[]
     memberMentionIds!: string[]
     mentionIds!: string[]
     movedAt!: Date | null
@@ -182,12 +227,12 @@ export default class Story extends ShortcutResource {
     started!: boolean
     startedAt!: Date | null
     startedAtOverride!: Date | null
-    stats!: StoryStats
-    storyLinks!: TypedStoryLink[]
+    stats!: object
+    storyLinks!: StoryLinkInterface[] | StoryLink[]
     storyTemplateId!: string | null
     storyType!: string
-    syncedItem!: SyncedItem
-    tasks!: Task[]
+    syncedItem!: object
+    tasks!: Task[] | TaskInterface[]
     unresolvedBlockerComments!: number[]
     updatedAt!: Date | null
     workflowId!: number

@@ -6,6 +6,8 @@ import IterationsService from '@sx/iterations/iterations-service'
 import TeamsService from '@sx/teams/teams-service'
 import MembersService from '@sx/members/members-service'
 import ObjectivesService from '@sx/objectives/objectives-service'
+import KeyResultsService from '@sx/key-results/key-results-service'
+import LabelsService from '@sx/labels/labels-service'
 
 export type ShortcutHeaders = { 'Shortcut-Token': string; 'Content-Type': string }
 
@@ -33,6 +35,8 @@ export default class Client {
     public members: MembersService
     public epics: EpicsService
     public objectives: ObjectivesService
+    public keyResults: KeyResultsService
+    public labels: LabelsService
 
     constructor(shortcutApiKey?: string) {
         if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
@@ -43,6 +47,8 @@ export default class Client {
         this.members = new MembersService({headers: this.headers})
         this.epics = new EpicsService({headers: this.headers})
         this.objectives = new ObjectivesService({headers: this.headers})
+        this.keyResults = new KeyResultsService({headers: this.headers})
+        this.labels = new LabelsService({headers: this.headers})
     }
 
 }

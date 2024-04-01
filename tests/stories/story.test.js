@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {before} from 'node:test'
 import Story from '../../src/stories/story'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
@@ -25,9 +26,12 @@ describe('Story', () => {
     describe('workflow getter', () => {
         it('should return workflow state by ID', () => {
             const story = new Story({workflowStateId: 1})
-            jest.spyOn(WorkflowService, 'getWorkflowState').mockReturnValue({id: 1, name: 'Unstarted'})
+            jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+                id: 1,
+                name: 'Unstarted'
+            })
             expect(story.workflow).toEqual({id: 1, name: 'Unstarted'})
-            expect(WorkflowService.getWorkflowState).toHaveBeenCalledWith(1)
+            expect(WorkflowService.prototype.getWorkflowState).toHaveBeenCalledWith(1)
         })
     })
 
@@ -44,7 +48,7 @@ describe('Story', () => {
             const story = new Story({iterationId: 1})
             const result = await story.iteration
             expect(result).toEqual(iteration)
-        });
+        })
     })
 
     describe('team getter', () => {
@@ -70,7 +74,10 @@ describe('Story', () => {
                 name: 'Test user 2'
             }]
             jest.spyOn(MembersService.prototype, 'getMany').mockReturnValue(users)
-            expect(story.owners).toEqual([{id: 1, name: 'Test user 1'}, {id: 2, name: 'Test user 2'}])
+            expect(story.owners).toEqual([{id: 1, name: 'Test user 1'}, {
+                id: 2,
+                name: 'Test user 2'
+            }])
         })
     })
 
@@ -138,13 +145,19 @@ describe('Story', () => {
 
 
         it('should throw an error if workflow state is finished', () => {
-            jest.spyOn(WorkflowService, 'getWorkflowState').mockReturnValue({id: 1, type: 'Finished'})
+            jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+                id: 1,
+                type: 'Finished'
+            })
             const story = new Story({id: 1, workflowStateId: 1})
             expect(story.timeInDevelopment()).rejects.toThrow('Story is already finished')
         })
 
         it('should throw an error if story does not have a started date', () => {
-            jest.spyOn(WorkflowService, 'getWorkflowState').mockReturnValue({id: 1, type: 'Started'})
+            jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+                id: 1,
+                type: 'Started'
+            })
             const story = new Story({id: 1, startedAt: null})
             expect(story.timeInDevelopment()).rejects.toThrow('Story is not started')
         })
@@ -180,6 +193,103 @@ describe('Story', () => {
             const story = new Story({id: 1}) // Adjust initial data as needed
 
             await expect(story.comment('Test comment')).rejects.toThrow('Error creating comment: Error: Network error')
+        })
+    })
+
+    it('should instantiate comments', () => {
+        const story = new Story({id: 1, comments: [{id: 1, text: 'Test comment'}]})
+        expect(story.comments[0].text).toEqual('Test comment')
+    })
+
+    it('should instantiate tasks', () => {
+        const story = new Story({id: 1, tasks: [{id: 1, description: 'Test task'}]})
+        expect(story.tasks[0].description).toEqual('Test task')
+    })
+
+    it('should instantiate story links', () => {
+        const story = new Story({id: 1, storyLinks: [{id: 1, verb: 'blocks', objectId: 2}]})
+        expect(story.storyLinks[0].verb).toEqual('blocks')
+        expect(story.storyLinks[0].objectId).toEqual(2)
+    })
+
+    describe('addTasks method', () => {
+        it('should post task data and add new task to tasks property', async () => {
+            const taskData = {description: 'Test task'}
+            const expectedResponse = {data: taskData}
+            axios.post.mockResolvedValue(expectedResponse)
+
+            const story = new Story({id: 1, tasks: []})
+            await story.addTask('Test task')
+
+            expect(story.tasks[0].description).toEqual('Test task')
+            expect(axios.post).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/tasks`, {description: 'Test task'}, {headers: getHeaders()})
+        })
+
+        it('should throw an error if the axios request fails', async () => {
+            axios.post.mockRejectedValue(new Error('Network error'))
+            const story = new Story({id: 1, tasks: []})
+
+            await expect(story.addTask('Test task')).rejects.toThrow('Error adding task: Error: Network error')
+        })
+    })
+
+    describe('blocks method', () => {
+        it('should add blocking story with number argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.blocks(2)
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('blocks')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+
+        it('should add blocking story with story object argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.blocks(new Story({id: 2}))
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('blocks')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+    })
+
+    describe('duplicated method', () => {
+        it('should add duplicated story with number argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.duplicates(2)
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('duplicates')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+
+        it('should add duplicated story with story object argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.duplicates(new Story({id: 2}))
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('duplicates')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+    })
+
+    describe('relatedTo method', () => {
+        it('should add related story with number argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.relatesTo(2)
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('relates to')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
+        })
+
+        it('should add related story with story object argument', async () => {
+            axios.post.mockResolvedValue({data: {id: 2}})
+            const story = new Story({id: 1, storyLinks: []})
+            await story.relatesTo(new Story({id: 2}))
+            expect(story.storyLinks[0].objectId).toEqual(1)
+            expect(story.storyLinks[0].verb).toEqual('relates to')
+            expect(story.storyLinks[0].subjectId).toEqual(2)
         })
     })
 })
