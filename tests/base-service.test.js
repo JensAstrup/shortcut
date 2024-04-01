@@ -1,10 +1,10 @@
 import axios from 'axios'
-import {mock} from 'node:test'
 import BaseService from '../src/base-service'
+import StoriesService from '../src/stories/stories-service'
+import Story from '../src/stories/story'
 
 
 jest.mock('axios')
-
 
 function MockResource(data) {
     Object.assign(this, data)
@@ -80,5 +80,26 @@ describe('MockService', () => {
     it('should throw an error if list method is not available on resource', () => {
         mockService.availableOperations = ['get']
         expect(mockService.list()).rejects.toThrow('Operation not supported')
+    })
+})
+
+describe('BaseSearchableService', () => {
+    let mockService
+
+    beforeEach(() => {
+        mockService = new StoriesService({headers: {Authorization: 'Bearer token'}})
+        mockService.availableOperations = ['search']
+        jest.clearAllMocks()
+    })
+
+    it('should return an instance of MockResource', async () => {
+        const mockData = {id: '1', name: 'Test Resource'}
+        const mockResponse = {status: 200, data: {data: [mockData]}}
+        axios.get.mockResolvedValue(mockResponse)
+
+        const resources = await mockService.search('test')
+
+        expect(axios.get).toHaveBeenCalledWith(`https://api.app.shortcut.com/api/v3/search/stories?query=test`, {headers: mockService.headers})
+        expect(resources[0]).toBeInstanceOf(Story)
     })
 })
