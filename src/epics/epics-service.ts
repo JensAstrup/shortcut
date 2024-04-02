@@ -4,9 +4,10 @@ import axios from 'axios'
 import EpicWorkflowApiData from '@sx/epics/workflows/contracts/epic-workflow-api-data'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import EpicWorkflowInterface from '@sx/epics/workflows/contracts/epic-workflow-interface'
+import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 
-export default class EpicsService extends BaseSearchableService<Epic> {
+export default class EpicsService extends BaseSearchableService<Epic, EpicInterface> {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/epics'
     protected factory = (data: object) => new Epic(data)
     public availableOperations: ServiceOperation[] = ['get', 'search', 'list']

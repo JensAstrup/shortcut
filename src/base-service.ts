@@ -2,18 +2,18 @@ import axios from 'axios'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import ShortcutResource from '@sx/base-resource'
 import BaseData from '@sx/base-data'
-import * as console from 'console'
+import BaseInterface from '@sx/base-interface'
 
 
 export type ServiceOperation = 'get' | 'search' | 'list'
 
 
-export default class BaseService<T extends ShortcutResource> {
+export default class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
     public baseUrl = ''
     public headers: Record<string, string>
     // @ts-expect-error This is set on child classes so has no intializer here
-    protected factory: (data: object) => T
-    protected instances: Record<string, T> = {}
+    protected factory: (data: Interface) => Resource
+    protected instances: Record<string, Resource> = {}
     /** Lists out the available operations for the resource, calling methods not in this list will result in an error */
     public availableOperations: ServiceOperation[] = []
 
@@ -24,7 +24,7 @@ export default class BaseService<T extends ShortcutResource> {
         this.headers = init.headers
     }
 
-    public async get(id: string | number): Promise<T> {
+    public async get(id: string | number): Promise<Resource> {
         if (!this.availableOperations.includes('get')) {
             throw new Error('Operation not supported')
         }
@@ -36,17 +36,17 @@ export default class BaseService<T extends ShortcutResource> {
         if (response.status >= 400) {
             throw new Error('HTTP error ' + response.status)
         }
-        const instanceData: object = convertApiFields(response.data)
+        const instanceData: Interface = convertApiFields(response.data)
         const instance = this.factory(instanceData)
         this.instances[id] = instance
         return instance
     }
 
-    public async getMany(ids: string[] | number[]): Promise<T[]> {
+    public async getMany(ids: string[] | number[]): Promise<Resource[]> {
         return Promise.all(ids.map(id => this.get(id)))
     }
 
-    public async list(): Promise<T[]> {
+    public async list(): Promise<Resource[]> {
         if (!this.availableOperations.includes('list')) {
             throw new Error('Operation not supported')
         }
@@ -59,7 +59,7 @@ export default class BaseService<T extends ShortcutResource> {
     }
 }
 
-export class BaseSearchableService<T extends ShortcutResource> extends BaseService<T> {
+export class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
     public availableOperations: ServiceOperation[] = ['search']
 
     /**
@@ -77,7 +77,7 @@ export class BaseSearchableService<T extends ShortcutResource> extends BaseServi
      * @throws Error if the HTTP status code is 400 or greater
      * @param query
      */
-    public async search(query: string): Promise<T[]> {
+    public async search(query: string): Promise<Resource[]> {
         const url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
         url.search = new URLSearchParams({query: query}).toString()
 

@@ -24,6 +24,8 @@ import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
 import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
 import StoryLink from '@sx/stories/links/story-link'
+import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story-custom-field-interface'
+import StoryCustomField from '@sx/stories/custom-fields/story-custom-field'
 
 
 /**
@@ -32,7 +34,7 @@ import StoryLink from '@sx/stories/links/story-link'
  * See also:
  * - {@link StoriesService} for the service managing stories.
  */
-export default class Story extends ShortcutResource {
+export default class Story extends ShortcutResource<StoryInterface> {
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
     constructor(init: StoryInterface | object) {
@@ -42,6 +44,7 @@ export default class Story extends ShortcutResource {
         this.instantiateComments()
         this.instantiateTasks()
         this.instantiateLinks()
+        this.instantiateCustomFields()
     }
 
     get workflow() {
@@ -154,6 +157,10 @@ export default class Story extends ShortcutResource {
         this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
     }
 
+    private instantiateCustomFields() {
+        this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
+    }
+
     public async addTask(task: string): Promise<void> {
         const url = `${Story.baseUrl}/stories/${this.id}/tasks`
         const requestData = {description: task}
@@ -195,7 +202,7 @@ export default class Story extends ShortcutResource {
     completedAt!: Date | null
     completedAtOverride!: Date | null
     createdAt!: Date
-    customFields!: object[]
+    customFields!: StoryCustomFieldInterface[] | StoryCustomField[]
     deadline!: Date | null
     description!: string
     entityType!: string

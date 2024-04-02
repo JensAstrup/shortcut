@@ -16,7 +16,7 @@ import ObjectivesService from '@sx/objectives/objectives-service'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 
-export default class Epic extends ShortcutResource {
+export default class Epic extends ShortcutResource<EpicInterface> {
     public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
     public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
         'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',
