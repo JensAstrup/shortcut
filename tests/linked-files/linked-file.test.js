@@ -1,5 +1,5 @@
 import LinkedFile from '../../src/linked-files/linked-file'
-import {StoriesService} from '../../src/stories/index'
+import StoriesService from '../../src/stories/stories-service'
 import Story from '../../src/stories/story'
 
 
