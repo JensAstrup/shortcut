@@ -5,6 +5,7 @@ import EpicsService from '@sx/epics/epics-service'
 import IterationsService from '@sx/iterations/iterations-service'
 import KeyResultsService from '@sx/key-results/key-results-service'
 import LabelsService from '@sx/labels/labels-service'
+import LinkedFilesService from '@sx/linked-files/linked-files-service'
 import MembersService from '@sx/members/members-service'
 import ObjectivesService from '@sx/objectives/objectives-service'
 import StoriesService from '@sx/stories/stories-service'
@@ -12,7 +13,7 @@ import TeamsService from '@sx/teams/teams-service'
 import WorkflowService from '@sx/workflows/workflows-service'
 
 
-export type ShortcutHeaders = { 'Shortcut-Token': string; 'Content-Type': string }
+export type ShortcutHeaders = { 'Content-Type': string; 'Shortcut-Token': string }
 
 
 export default class Client {
@@ -42,6 +43,7 @@ export default class Client {
     public keyResults: KeyResultsService
     public labels: LabelsService
     public customFields: CustomFieldsService
+    public linkedFiles: LinkedFilesService
 
     constructor(shortcutApiKey?: string) {
         if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
@@ -55,6 +57,7 @@ export default class Client {
         this.keyResults = new KeyResultsService({headers: this.headers})
         this.labels = new LabelsService({headers: this.headers})
         this.customFields = new CustomFieldsService({headers: this.headers})
+        this.linkedFiles = new LinkedFilesService({headers: this.headers})
     }
 
 }

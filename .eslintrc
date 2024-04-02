@@ -43,6 +43,7 @@
     "perfectionist/sort-union-types": "off",
     "perfectionist/sort-classes": "off",
     "perfectionist/sort-interfaces": "off",
+    "perfectionist/sort-objects": "off",
     "import/order": [
       "error",
       {

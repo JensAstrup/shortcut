@@ -36,9 +36,9 @@ describe('Story', () => {
     })
 
     describe('iteration getter', () => {
-        it('throws an error if story does not have an iteration', async () => {
-            const story = new Story({iterationId: null}) // Adjust initial data as needed
-            await expect(async () => story.iteration).rejects.toThrow('Story does not have an iteration')
+        it('returns null if story does not have an iteration', async () => {
+            const story = new Story({iterationId: null})
+            await expect(story.iteration).toBeNull()
         })
 
         it('returns an iteration if story has an iteration ID', async () => {
@@ -52,9 +52,9 @@ describe('Story', () => {
     })
 
     describe('team getter', () => {
-        it('should throw an error if no team ID is set', () => {
+        it('returns null if no team ID is set', () => {
             const story = new Story({groupId: null})
-            expect(() => story.team).toThrow('Story does not have a team')
+            expect(story.team).toBeNull()
         })
 
         it('should return the team object', () => {
@@ -82,9 +82,9 @@ describe('Story', () => {
     })
 
     describe('epic getter', () => {
-        it('should throw an error if no epic ID is set', () => {
+        it('returns null if no epic ID is set', () => {
             const story = new Story({epicId: null})
-            expect(() => story.epic).toThrow('Story does not have an epic')
+            expect(story.epic).toBeNull()
         })
         it('should return the epic object', () => {
             const epicData = {id: 1, name: 'Test epic'}
