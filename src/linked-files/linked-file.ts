@@ -5,9 +5,10 @@ import Story from '@sx/stories/story'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
+
 /**
  * @remarks
- * Related: {@link StoriesService} for the service managing stories.
+ * Related: {@link LinkedFilesService} for the service managing stories.
  *
  * @inheritDoc ShortcutResource
  */
