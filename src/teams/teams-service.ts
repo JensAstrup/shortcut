@@ -1,10 +1,12 @@
-import BaseService, {ServiceOperation} from '@sx/base-service'
-import Team from '@sx/teams/team'
 import axios from 'axios'
 
-export default class TeamsService extends BaseService<Team> {
+import BaseService, {ServiceOperation} from '@sx/base-service'
+import TeamInterface from '@sx/teams/contracts/team-interface'
+import Team from '@sx/teams/team'
+
+export default class TeamsService extends BaseService<Team, TeamInterface> {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/groups'
-    protected factory = (data: object) => new Team(data)
+    protected factory = (data: TeamInterface) => new Team(data)
     public static teams: Record<number, Team> = {}
     public availableOperations: ServiceOperation[] = ['get', 'list']
 

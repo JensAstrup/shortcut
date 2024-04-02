@@ -1,9 +1,10 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import Story from '@sx/stories/story'
-import {getHeaders} from '@sx/utils/headers'
 import axios from 'axios'
-import {convertApiFields} from '@sx/utils/convert-fields'
+
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
+import Story from '@sx/stories/story'
+import {convertApiFields} from '@sx/utils/convert-fields'
+import {getHeaders} from '@sx/utils/headers'
 
 export default class StoryComment extends ShortcutResource {
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']

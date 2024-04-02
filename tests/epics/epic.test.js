@@ -1,7 +1,8 @@
 import axios from 'axios'
+
 import Epic from '../../src/epics/epic'
-import TeamsService from '../../src/teams/teams-service'
 import ObjectivesService from '../../src/objectives/objectives-service'
+import TeamsService from '../../src/teams/teams-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
 

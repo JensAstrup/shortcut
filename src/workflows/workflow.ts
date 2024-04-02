@@ -1,11 +1,12 @@
 import ShortcutResource from '@sx/base-resource'
+import {WorkflowInterface} from '@sx/workflows/contracts/workflow-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 
 
 /**
  * @inheritDoc
  */
-export default class Workflow extends ShortcutResource {
+export default class Workflow extends ShortcutResource<WorkflowInterface> {
     constructor(init: object) {
         super()
         Object.assign(this, init)

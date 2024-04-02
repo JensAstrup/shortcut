@@ -1,5 +1,6 @@
-import camelToSnake from '@sx/utils/camel-to-snake'
 import axios from 'axios'
+
+import camelToSnake from '@sx/utils/camel-to-snake'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 
@@ -12,7 +13,7 @@ export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
  * Base class for all Shortcut resources. Provides methods for creating, updating, and deleting resources.
  * @group Story
  */
-export default class ShortcutResource<T = object> {
+export default class ShortcutResource<Interface = object> {
     [key: string]: unknown
 
     /**
@@ -39,7 +40,7 @@ export default class ShortcutResource<T = object> {
      * to be used when updating the resource.
      * @param init - An object containing the initial values for the resource.
      */
-    constructor(init?: T) {
+    constructor(init?: Interface) {
         if (init) {
             Object.assign(this, init)
         }

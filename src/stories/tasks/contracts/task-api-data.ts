@@ -1,6 +1,7 @@
 import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
+
 export default interface TaskApiData extends BaseData {
     complete: boolean
     completed_at: string | null

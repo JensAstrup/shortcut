@@ -1,6 +1,7 @@
-import Story from '../../src/stories/story'
-import StoriesService from '../../src/stories/stories-service'
 import axios from 'axios'
+
+import StoriesService from '../../src/stories/stories-service'
+import Story from '../../src/stories/story'
 import {convertApiFields} from '../../src/utils/convert-fields'
 
 

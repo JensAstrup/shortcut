@@ -1,7 +1,12 @@
+import axios from 'axios'
+
 import BaseData from '@sx/base-data'
 import ShortcutResource from '@sx/base-resource'
+import EpicInterface from '@sx/epics/contracts/epic-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
+import Objective from '@sx/objectives/objective'
+import ObjectivesService from '@sx/objectives/objectives-service'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
 import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-comment-api-data'
@@ -10,13 +15,9 @@ import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-c
 import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
-import axios from 'axios'
-import Objective from '@sx/objectives/objective'
-import ObjectivesService from '@sx/objectives/objectives-service'
-import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 
-export default class Epic extends ShortcutResource {
+export default class Epic extends ShortcutResource<EpicInterface> {
     public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
     public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
         'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',

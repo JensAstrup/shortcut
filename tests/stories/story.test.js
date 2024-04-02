@@ -1,12 +1,13 @@
 import axios from 'axios'
+
+import EpicsService from '../../src/epics/epics-service'
+import Iteration from '../../src/iterations/iteration'
+import MembersService from '../../src/members/members-service'
 import Story from '../../src/stories/story'
+import TeamsService from '../../src/teams/teams-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
-import Iteration from '../../src/iterations/iteration'
 import WorkflowService from '../../src/workflows/workflows-service'
-import TeamsService from '../../src/teams/teams-service'
-import MembersService from '../../src/members/members-service'
-import EpicsService from '../../src/epics/epics-service'
 
 
 jest.mock('axios', () => ({

@@ -1,29 +1,32 @@
+import axios from 'axios'
+
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
-import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
-import HistoryInterface from '@sx/stories/history/contracts/history-interface'
-import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
-import axios from 'axios'
-import {getHeaders} from '@sx/utils/headers'
-import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
-import {convertApiFields} from '@sx/utils/convert-fields'
-import WorkflowService from '@sx/workflows/workflows-service'
-import IterationsService from '@sx/iterations/iterations-service'
 import Iteration from '@sx/iterations/iteration'
-import TeamsService from '@sx/teams/teams-service'
+import IterationsService from '@sx/iterations/iterations-service'
+import Label from '@sx/labels/label'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
-import StoryInterface from '@sx/stories/contracts/story-interface'
-import Label from '@sx/labels/label'
-import Team from '@sx/teams/team'
 import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import StoryComment from '@sx/stories/comment/story-comment'
-import Task from '@sx/stories/tasks/task'
-import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
-import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
+import StoryInterface from '@sx/stories/contracts/story-interface'
+import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story-custom-field-interface'
+import StoryCustomField from '@sx/stories/custom-fields/story-custom-field'
+import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
+import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
 import StoryLink from '@sx/stories/links/story-link'
+import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
+import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
+import Task from '@sx/stories/tasks/task'
+import Team from '@sx/teams/team'
+import TeamsService from '@sx/teams/teams-service'
+import {convertApiFields} from '@sx/utils/convert-fields'
+import {getHeaders} from '@sx/utils/headers'
+import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
+import WorkflowService from '@sx/workflows/workflows-service'
 
 
 /**
@@ -32,7 +35,7 @@ import StoryLink from '@sx/stories/links/story-link'
  * See also:
  * - {@link StoriesService} for the service managing stories.
  */
-export default class Story extends ShortcutResource {
+export default class Story extends ShortcutResource<StoryInterface> {
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
     constructor(init: StoryInterface | object) {
@@ -42,6 +45,7 @@ export default class Story extends ShortcutResource {
         this.instantiateComments()
         this.instantiateTasks()
         this.instantiateLinks()
+        this.instantiateCustomFields()
     }
 
     get workflow() {
@@ -154,6 +158,10 @@ export default class Story extends ShortcutResource {
         this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
     }
 
+    private instantiateCustomFields() {
+        this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
+    }
+
     public async addTask(task: string): Promise<void> {
         const url = `${Story.baseUrl}/stories/${this.id}/tasks`
         const requestData = {description: task}
@@ -195,7 +203,7 @@ export default class Story extends ShortcutResource {
     completedAt!: Date | null
     completedAtOverride!: Date | null
     createdAt!: Date
-    customFields!: object[]
+    customFields!: StoryCustomFieldInterface[] | StoryCustomField[]
     deadline!: Date | null
     description!: string
     entityType!: string

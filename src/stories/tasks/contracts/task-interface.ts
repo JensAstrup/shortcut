@@ -1,6 +1,7 @@
 import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
+
 export default interface TaskInterface extends BaseInterface {
     complete: boolean
     completedAt: Date | null

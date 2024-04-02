@@ -1,13 +1,15 @@
-import axios from 'axios'
 import process from 'process'
+
+import axios from 'axios'
+
 import ShortcutResource from '../src/base-resource'
 
 
 jest.mock('axios', () => ({
+    delete: jest.fn(),
     get: jest.fn(),
     post: jest.fn(),
-    put: jest.fn(),
-    delete: jest.fn()
+    put: jest.fn()
 }))
 
 

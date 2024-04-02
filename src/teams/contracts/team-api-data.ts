@@ -1,18 +1,19 @@
 import BaseData from '@sx/base-data'
 
+
 export default interface TeamApiData extends BaseData {
-    appUrl: string
+    app_url: string
     archived: boolean
     color: string
-    colorKey: string
+    color_key: string
     description: string
-    displayIcon: string
-    entityType : string
+    display_icon: string
+    entity_type: string
     id: string
-    memberIds: number[]
-    mentionName: string
+    member_ids: number[]
+    mention_name: string
     name: string
-    numEpicsStarted: number
-    numStoriesStarted: number
-    workflowIds: number[]
+    num_epics_started: number
+    num_stories_started: number
+    workflow_ids: number[]
 }
