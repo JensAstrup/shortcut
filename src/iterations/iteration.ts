@@ -3,12 +3,13 @@ import IterationInterface, {
     IterationStats,
     Label
 } from '@sx/iterations/contracts/iteration-interface'
+import EpicInterface from '@sx/epics/contracts/epic-interface'
 
 
 /**
  * @InheritDoc
  */
-export default class Iteration extends ShortcutResource {
+export default class Iteration extends ShortcutResource<EpicInterface> {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
     public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']

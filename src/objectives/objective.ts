@@ -1,7 +1,8 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import UUID from '@sx/utils/uuid'
+import ObjectiveInterface from '@sx/objectives/contracts/objective-interface'
 
-export default class Objective extends ShortcutResource {
+export default class Objective extends ShortcutResource<ObjectiveInterface> {
     public baseUrl: string = 'https://api.shortcut.com/api/v3/objectives'
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 

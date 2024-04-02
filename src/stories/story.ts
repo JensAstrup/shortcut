@@ -32,7 +32,7 @@ import StoryLink from '@sx/stories/links/story-link'
  * See also:
  * - {@link StoriesService} for the service managing stories.
  */
-export default class Story extends ShortcutResource {
+export default class Story extends ShortcutResource<StoryInterface> {
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
     constructor(init: StoryInterface | object) {
