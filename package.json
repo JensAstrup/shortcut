@@ -18,7 +18,7 @@
     "build": "tsc && tscpaths -p tsconfig.json -s ./src -o ./lib && npm run reformatImports",
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
-    "test": "SHORTCUT_API_KEY=123 && jest",
+    "test": "jest",
     "docs": "npx typedoc"
   },
   "keywords": [],
