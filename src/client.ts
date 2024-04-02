@@ -8,7 +8,6 @@ import MembersService from '@sx/members/members-service'
 import ObjectivesService from '@sx/objectives/objectives-service'
 import KeyResultsService from '@sx/key-results/key-results-service'
 import LabelsService from '@sx/labels/labels-service'
-import CustomField from '@sx/custom-fields/custom-field'
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
 
 export type ShortcutHeaders = { 'Shortcut-Token': string; 'Content-Type': string }
