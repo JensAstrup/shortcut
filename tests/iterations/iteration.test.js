@@ -1,12 +1,24 @@
 import Iteration from '../../src/iterations/iteration'
+import Label from '../../src/labels/label'
+import Team from '../../src/teams/team'
+import TeamsService from '../../src/teams/teams-service'
 
-class Label {}
-class IterationStats {}
+
+
 
 describe('Iteration class', () => {
     it('should have the correct baseUrl static property', () => {
-        expect(Iteration.baseUrl).toBe('https://api.app.shortcut.com/api/v3/iterations');
-    });
+        expect(Iteration.baseUrl).toBe('https://api.app.shortcut.com/api/v3/iterations')
+    })
+
+    it('returns an array of Teams', async () => {
+        const team1 = new Team({id: 1, name: 'Team 1'})
+        const team2 = new Team({id: 2, name: 'Team 2'})
+        jest.spyOn(TeamsService.prototype, 'getMany').mockResolvedValue([team1, team2])
+        const iteration = new Iteration({groupIds: [1, 2]})
+        const teams = await iteration.teams
+        expect(teams).toEqual([team1, team2])
+    })
 
     it('should properly initialize with given properties', () => {
         const mockInitObject = {
@@ -19,27 +31,26 @@ describe('Iteration class', () => {
             groupMentionIds: ['gm1', 'gm2'],
             id: 123,
             labelIds: [1, 2],
-            labels: [new Label(), new Label()],
+            labels: [new Label({id: 1}), new Label({id: 2})],
             memberMentionIds: ['mm1', 'mm2'],
             mentionIds: ['m1', 'm2'],
             name: 'Iteration 1',
             startDate: new Date(),
-            stats: new IterationStats(),
             status: 'started',
-            updatedAt: new Date(),
-        };
+            updatedAt: new Date()
+        }
 
-        const iteration = new Iteration(mockInitObject);
+        const iteration = new Iteration(mockInitObject)
 
         Object.entries(mockInitObject).forEach(([key, value]) => {
-            expect(iteration[key]).toEqual(value);
-        });
-    });
+            expect(iteration[key]).toEqual(value)
+        })
+    })
 
     it('should have createFields static array with specific fields', () => {
-        const expectedFields = ['name', 'startDate', 'endDate', 'labels'];
-        const iteration = new Iteration({});
-        expect(iteration.createFields).toEqual(expect.arrayContaining(expectedFields));
-        expect(iteration.createFields.length).toBe(expectedFields.length);
-    });
-});
+        const expectedFields = ['name', 'startDate', 'endDate', 'labels']
+        const iteration = new Iteration({})
+        expect(iteration.createFields).toEqual(expect.arrayContaining(expectedFields))
+        expect(iteration.createFields.length).toBe(expectedFields.length)
+    })
+})

@@ -1,6 +1,10 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import IterationInterface, {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
+import LabelsService from '@sx/labels/labels-service'
+import Team from '@sx/teams/team'
+import TeamsService from '@sx/teams/teams-service'
+import {getHeaders} from '@sx/utils/headers'
 
 
 /**
@@ -10,6 +14,11 @@ export default class Iteration extends ShortcutResource<EpicInterface> {
     public static baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
     public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
+
+    get teams(): Promise<Team[]> {
+        const service = new TeamsService({headers: getHeaders()})
+        return service.getMany(this.groupIds)
+    }
 
     appUrl!: string
     createdAt!: Date
