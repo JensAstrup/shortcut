@@ -13,6 +13,7 @@ import Label from '@sx/labels/label'
 import KeyResult from '@sx/key-results/key-result'
 import LinkedFile from '@sx/linked-files/linked-file'
 import CustomField from '@sx/custom-fields/custom-field'
+import UploadedFile from '@sx/uploaded-files/uploaded-file'
 
 // Services
 import BaseService from '@sx/base-service'
@@ -27,6 +28,7 @@ import LabelsService from '@sx/labels/labels-service'
 import KeyResultsService from '@sx/key-results/key-results-service'
 import LinkedFilesService from '@sx/linked-files/linked-files-service'
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
+import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 
 // Interfaces
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
@@ -36,9 +38,10 @@ import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-
 import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
 import CreateLinkedFileData from '@sx/linked-files/contracts/create-linked-file-data'
 import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
+import UploadedFileInterface from '@sx/uploaded-files/interfaces/uploaded-file-interface'
 
 export default Client
-export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField}
+export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField, UploadedFile}
 export {
     BaseService,
     StoriesService,
@@ -51,7 +54,8 @@ export {
     LabelsService,
     KeyResultsService,
     LinkedFilesService,
-    CustomFieldsService
+    CustomFieldsService,
+    UploadedFilesService
 }
 export {
     ThreadedCommentInterface,
@@ -60,6 +64,7 @@ export {
     KeyResultValueInterface,
     LinkedFileInterface,
     CreateLinkedFileData,
-    CustomFieldInterface
+    CustomFieldInterface,
+    UploadedFileInterface
 }
 export {ShortcutResource}
