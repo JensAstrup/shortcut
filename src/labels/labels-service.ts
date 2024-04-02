@@ -1,6 +1,6 @@
 import BaseService, {ServiceOperation} from '@sx/base-service'
-import Label from '@sx/labels/label'
 import LabelInterface from '@sx/labels/contracts/label-interface'
+import Label from '@sx/labels/label'
 
 
 export default class LabelsService extends BaseService<Label, LabelInterface> {

@@ -1,16 +1,19 @@
-import EpicsService from '@sx/epics/epics-service'
 import * as process from 'process'
-import StoriesService from '@sx/stories/stories-service'
-import WorkflowService from '@sx/workflows/workflows-service'
+
+import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
+import EpicsService from '@sx/epics/epics-service'
 import IterationsService from '@sx/iterations/iterations-service'
-import TeamsService from '@sx/teams/teams-service'
-import MembersService from '@sx/members/members-service'
-import ObjectivesService from '@sx/objectives/objectives-service'
 import KeyResultsService from '@sx/key-results/key-results-service'
 import LabelsService from '@sx/labels/labels-service'
-import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
+import MembersService from '@sx/members/members-service'
+import ObjectivesService from '@sx/objectives/objectives-service'
+import StoriesService from '@sx/stories/stories-service'
+import TeamsService from '@sx/teams/teams-service'
+import WorkflowService from '@sx/workflows/workflows-service'
+
 
 export type ShortcutHeaders = { 'Shortcut-Token': string; 'Content-Type': string }
+
 
 export default class Client {
     get headers(): ShortcutHeaders {

@@ -1,8 +1,8 @@
 import BaseService, {ServiceOperation} from '@sx/base-service'
-import Workflow from '@sx/workflows/workflow'
 import {convertApiFields} from '@sx/utils/convert-fields'
-import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 import {WorkflowInterface} from '@sx/workflows/contracts/workflow-interface'
+import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
+import Workflow from '@sx/workflows/workflow'
 
 export const WORKFLOW_STATES: Record<number, WorkflowStateInterface> = {}
 

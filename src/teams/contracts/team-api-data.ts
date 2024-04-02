@@ -1,5 +1,6 @@
 import BaseData from '@sx/base-data'
 
+
 export default interface TeamApiData extends BaseData {
     app_url: string
     archived: boolean

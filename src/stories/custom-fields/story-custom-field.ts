@@ -1,10 +1,10 @@
 import ShortcutResource from '@sx/base-resource'
+import CustomField from '@sx/custom-fields/custom-field'
+import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story-custom-field-interface'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
-import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
-import CustomField from '@sx/custom-fields/custom-field'
 
 
 export default class StoryCustomField extends ShortcutResource<StoryInterface> {

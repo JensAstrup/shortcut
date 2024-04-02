@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import ShortcutResource from '@sx/base-resource'
 import Client from '@sx/client'
 import Iteration from '@sx/iterations/iteration'

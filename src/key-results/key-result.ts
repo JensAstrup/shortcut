@@ -1,7 +1,8 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import EpicInterface from '@sx/epics/contracts/epic-interface'
+import KeyResultInterface from '@sx/key-results/contracts/key-result-interface'
 
-export default class KeyResult extends ShortcutResource<EpicInterface> {
+
+export default class KeyResult extends ShortcutResource<KeyResultInterface> {
     public availableOperations: ResourceOperation[] = ['update']
 
     constructor(init: object) {

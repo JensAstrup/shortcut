@@ -1,6 +1,7 @@
+import axios from 'axios'
+
 import Objective from '../../src/objectives/objective'
 import ObjectivesService from '../../src/objectives/objectives-service'
-import axios from 'axios'
 import {convertApiFields} from '../../src/utils/convert-fields'
 
 

@@ -1,6 +1,6 @@
 import BaseInterface from '@sx/base-interface'
-import UUID from '@sx/utils/uuid'
 import CustomFieldEnumValueInterface from '@sx/custom-fields/contracts/custom-field-enum-value-interface'
+import UUID from '@sx/utils/uuid'
 
 
 export default interface CustomFieldInterface extends BaseInterface {

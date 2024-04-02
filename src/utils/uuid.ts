@@ -1,2 +1,3 @@
-type UUID = string;
-export default UUID;
+type UUID = string
+
+export default UUID

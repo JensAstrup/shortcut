@@ -1,6 +1,6 @@
 import BaseService, {ServiceOperation} from '@sx/base-service'
-import KeyResult from '@sx/key-results/key-result'
 import KeyResultInterface from '@sx/key-results/contracts/key-result-interface'
+import KeyResult from '@sx/key-results/key-result'
 
 
 export default class KeyResultsService extends BaseService<KeyResult, KeyResultInterface> {

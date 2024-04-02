@@ -1,5 +1,5 @@
-import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 import BaseData from '@sx/base-data'
+import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 
 export interface WorkflowApiData extends BaseData {
     auto_assign_owner: boolean;

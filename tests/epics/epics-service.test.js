@@ -1,6 +1,7 @@
+import axios from 'axios'
+
 import Epic from '../../src/epics/epic'
 import EpicsService from '../../src/epics/epics-service'
-import axios from 'axios'
 import {convertApiFields} from '../../src/utils/convert-fields'
 
 

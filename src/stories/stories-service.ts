@@ -1,6 +1,6 @@
-import Story from '@sx/stories/story'
 import {BaseSearchableService, ServiceOperation} from '@sx/base-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
+import Story from '@sx/stories/story'
 
 
 /**

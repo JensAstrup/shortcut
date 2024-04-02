@@ -1,6 +1,7 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import UUID from '@sx/utils/uuid'
 
+
 export default class Task extends ShortcutResource {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/stories/'
     public availableOperations: ResourceOperation[] = ['update', 'delete']
