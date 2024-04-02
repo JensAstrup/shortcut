@@ -1,5 +1,5 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import UploadedFileInterface from '@sx/uploaded-files/interfaces/uploaded-file-interface'
+import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 import UUID from '@sx/utils/uuid'
 
 export default class UploadedFile extends ShortcutResource<UploadedFileInterface> {
