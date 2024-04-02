@@ -13,6 +13,74 @@ It simplifies the process of making requests to the API by providing a set of ea
 3. Type conversions: Automatically converts API responses to JavaScript objects (such as Dates and API resources).
 4. Caching: Caches API responses when member or workflow data is requested, reducing subsequent requests.
 
+The structure of the client is designed to be intuitive and easy to use. Depending on your use case,
+it can help you reduce the amount of code you need to write in order to interact with the Shortcut
+API.
+
+### Example Usage
+
+```typescript
+const oneWeekAgo = new Date();
+oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+const client: Client = new Client()
+const stories: Story[] = await client.stories.search('team:engineering is:started')
+const outdatedStories: Story[] = stories.filter(story => story.updatedAt < oneWeekAgo)
+
+for (const story of outdatedStories) {
+    const comment = 'This story has not been updated in over a week. Please provide an update.'
+    await story.comment(comment)
+}
+````
+
+Using the standard Shortcut Client:
+
+```typescript
+const oneWeekAgo = new Date();
+oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+const shortcut = new ShortcutClient();
+const {data} = await shortcut.searchStories('team:engineering is:started');
+const outdatedStories = stories.filter(story => story.updated_at < oneWeekAgo)
+
+for (const story of outdatedStories) {
+    const comment = 'This story has not been updated in over a week. Please provide an update.'
+    await shortcut.createComment(story.id, {text: comment})
+}
+````
+
+Navigating between related resources is also simplified:
+
+```typescript
+const client: Client = new Client()
+const story: Story = await client.stories.get('story-id')
+const epic: Epic = await story.epic
+const owners: Member[] = await epic.owners
+const team: Team = await story.team
+````
+
+compared to the standard Shortcut Client:
+
+```typescript
+const shortcut = new ShortcutClient();
+const story = await shortcut.getStory(storyId);
+let epic, owners, team;
+
+if (story.epic_id) {
+    epic = await shortcut.getEpic(story.epic_id);
+}
+for (const ownerId of story.owner_ids) {
+    ownerDetails = await shortcut.getMember(ownerId);
+    owners.push(ownerDetails);
+}
+
+if (story.group_id) {
+    team = await shortcut.getGroup(story.group_id);
+}
+````
+
+```typescript
+
 ## Installation
 
 To use the Shortcut API Client in your project, you'll need to have Node.js 18+ installed. 
@@ -78,13 +146,15 @@ console.log(iterations);
 ### Creating an Iteration
 
 ```typescript
-
 const client: Client = new Client();
-const iteration: Iteration = await client.iterations.create({
+const startDate = new Date(2022, 1, 1);
+const endDate = new Date(2022, 1, 14);
+const iteration: Iteration = new Iteration({
     name: 'Sprint 1',
-    start_date: '2022-01-01',
-    end_date: '2022-01-14',
-});
+    start_date: startDate,
+    end_date: endDate,
+})
+await iteration.save()
 ````
 
 ### Delete a label
