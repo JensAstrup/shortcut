@@ -100,7 +100,7 @@ describe('BaseSearchableService', () => {
 
         const resources = await mockService.search('test')
 
-        expect(axios.get).toHaveBeenCalledWith(`https://api.app.shortcut.com/api/v3/search/stories?query=test`, {headers: mockService.headers})
+        expect(axios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/search/stories?query=test', {headers: mockService.headers})
         expect(resources[0]).toBeInstanceOf(Story)
     })
 })
