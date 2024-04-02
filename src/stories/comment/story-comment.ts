@@ -2,11 +2,13 @@ import axios from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
+import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 
-export default class StoryComment extends ShortcutResource {
+
+export default class StoryComment extends ShortcutResource<StoryCommentInterface> {
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
     constructor(init: object) {

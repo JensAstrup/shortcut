@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import BaseInterface from '@sx/base-interface'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
@@ -13,7 +14,7 @@ export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
  * Base class for all Shortcut resources. Provides methods for creating, updating, and deleting resources.
  * @group Story
  */
-export default class ShortcutResource<Interface = object> {
+export default class ShortcutResource<Interface = BaseInterface> {
     [key: string]: unknown
 
     /**
