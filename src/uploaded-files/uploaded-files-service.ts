@@ -1,5 +1,5 @@
 import BaseService, {ServiceOperation} from '@sx/base-service'
-import UploadedFileInterface from '@sx/uploaded-files/interfaces/uploaded-file-interface'
+import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 
 export default class UploadedFilesService extends BaseService<UploadedFile, UploadedFileInterface> {

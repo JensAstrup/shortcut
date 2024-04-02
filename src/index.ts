@@ -38,7 +38,7 @@ import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-
 import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
 import CreateLinkedFileData from '@sx/linked-files/contracts/create-linked-file-data'
 import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
-import UploadedFileInterface from '@sx/uploaded-files/interfaces/uploaded-file-interface'
+import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField, UploadedFile}
