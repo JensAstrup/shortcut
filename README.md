@@ -79,7 +79,6 @@ if (story.group_id) {
 }
 ````
 
-```typescript
 
 ## Installation
 
