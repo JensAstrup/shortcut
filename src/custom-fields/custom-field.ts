@@ -7,6 +7,12 @@ export default class CustomField extends ShortcutResource<CustomFieldInterface> 
     public baseUrl = 'https://api.app.shortcut.com/api/v3/custom-fields'
     public availableOperations: ResourceOperation[] = ['update', 'delete']
 
+    constructor(init: CustomFieldInterface) {
+        super()
+        Object.assign(this, init)
+        this.changedFields = []
+    }
+
     canonicalName!: string
     createdAt!: Date
     description!: string
