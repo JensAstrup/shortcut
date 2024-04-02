@@ -6,7 +6,11 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:perfectionist/recommended-natural",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -14,7 +18,10 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "perfectionist",
+    "@typescript-eslint",
+    "import"
   ],
   "rules": {
     "indent": [
@@ -32,6 +39,38 @@
     "semi": [
       "error",
       "never"
-    ]
+    ],
+    "perfectionist/sort-imports": "off",
+    "perfectionist/sort-union-types": "off",
+    "perfectionist/sort-classes": "off",
+    "perfectionist/sort-interfaces": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@sx/**",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "builtin"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/newline-after-import": "error"
   }
 }
