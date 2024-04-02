@@ -1,7 +1,6 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import IterationInterface, {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
-import LabelsService from '@sx/labels/labels-service'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
 import {getHeaders} from '@sx/utils/headers'
