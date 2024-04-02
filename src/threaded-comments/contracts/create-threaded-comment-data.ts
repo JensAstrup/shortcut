@@ -2,7 +2,7 @@ import BaseCreateInterface from '@sx/base-create-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface ThreadedCommentCreateData extends BaseCreateInterface {
+export default interface CreateThreadedCommentData extends BaseCreateInterface {
     authorId: UUID | null
     createdAt: Date | null
     externalId: string | null

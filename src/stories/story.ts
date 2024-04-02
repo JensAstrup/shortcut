@@ -30,10 +30,11 @@ import WorkflowService from '@sx/workflows/workflows-service'
 
 
 /**
+ * @remarks
+ * Related: {@link StoriesService} for the service managing stories.
+ *
  * @story
- * @inheritDoc
- * See also:
- * - {@link StoriesService} for the service managing stories.
+ * @inheritDoc ShortcutResource
  */
 export default class Story extends ShortcutResource<StoryInterface> {
     public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
