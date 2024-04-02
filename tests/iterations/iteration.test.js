@@ -1,6 +1,5 @@
 import Iteration from '../../src/iterations/iteration'
 
-class ShortcutResource {}
 class Label {}
 class IterationStats {}
 

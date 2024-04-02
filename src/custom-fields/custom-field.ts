@@ -1,7 +1,7 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import UUID from '@sx/utils/uuid'
 import CustomFieldEnumValueInterface from '@sx/custom-fields/contracts/custom-field-enum-value-interface'
 import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
+import UUID from '@sx/utils/uuid'
 
 export default class CustomField extends ShortcutResource<CustomFieldInterface> {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/custom-fields'

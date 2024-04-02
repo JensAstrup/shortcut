@@ -1,6 +1,6 @@
 import BaseInterface from '@sx/base-interface'
-import UUID from '@sx/utils/uuid'
 import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-interface'
+import UUID from '@sx/utils/uuid'
 
 export default interface KeyResultInterface extends BaseInterface {
     currentObservedValue: KeyResultValueInterface

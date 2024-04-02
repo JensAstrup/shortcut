@@ -1,9 +1,6 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import IterationInterface, {
-    IterationStats,
-    Label
-} from '@sx/iterations/contracts/iteration-interface'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
+import IterationInterface, {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
 
 
 /**

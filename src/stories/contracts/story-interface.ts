@@ -1,6 +1,6 @@
+import BaseInterface from '@sx/base-interface'
 import {PullRequestInterface} from '@sx/pull-requests/contracts/pull-request-interface'
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
-import BaseInterface from '@sx/base-interface'
 import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 
 export default interface StoryInterface extends BaseInterface {

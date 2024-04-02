@@ -1,9 +1,10 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import {getHeaders} from '@sx/utils/headers'
 import axios from 'axios'
+
+import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Story from '@sx/stories/story'
-import {convertApiFields} from '@sx/utils/convert-fields'
 import TeamInterface from '@sx/teams/contracts/team-interface'
+import {convertApiFields} from '@sx/utils/convert-fields'
+import {getHeaders} from '@sx/utils/headers'
 
 
 /**

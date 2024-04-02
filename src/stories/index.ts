@@ -1,4 +1,4 @@
-import Story from '@sx/stories/story'
 import StoriesService from '@sx/stories/stories-service'
+import Story from '@sx/stories/story'
 
-export {Story, StoriesService}
+export {StoriesService, Story}

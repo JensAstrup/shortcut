@@ -1,5 +1,6 @@
-import camelToSnake from '@sx/utils/camel-to-snake'
 import axios from 'axios'
+
+import camelToSnake from '@sx/utils/camel-to-snake'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 

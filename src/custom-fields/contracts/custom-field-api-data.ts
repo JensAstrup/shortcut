@@ -1,6 +1,6 @@
 import BaseData from '@sx/base-data'
-import UUID from '@sx/utils/uuid'
 import CustomFieldEnumValueApiData from '@sx/custom-fields/contracts/custom-field-enum-value-api-data'
+import UUID from '@sx/utils/uuid'
 
 
 export default interface CustomFieldApiData extends BaseData {

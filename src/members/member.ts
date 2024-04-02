@@ -1,6 +1,6 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import StoryInterface from '@sx/stories/contracts/story-interface'
 import MemberInterface from '@sx/members/contracts/member'
+import StoryInterface from '@sx/stories/contracts/story-interface'
 
 
 /**

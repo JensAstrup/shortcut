@@ -1,6 +1,6 @@
-import Iteration from '@sx/iterations/iteration'
 import {BaseSearchableService, ServiceOperation} from '@sx/base-service'
 import IterationInterface from '@sx/iterations/contracts/iteration-interface'
+import Iteration from '@sx/iterations/iteration'
 
 
 export default class IterationsService extends BaseSearchableService<Iteration, IterationInterface> {

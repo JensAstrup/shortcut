@@ -1,5 +1,6 @@
 import BaseInterface from '@sx/base-interface'
 
+
 export default interface TeamInterface extends BaseInterface {
     appUrl: string
     archived: boolean
