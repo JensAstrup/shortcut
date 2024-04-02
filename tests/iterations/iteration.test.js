@@ -4,7 +4,9 @@ import Team from '../../src/teams/team'
 import TeamsService from '../../src/teams/teams-service'
 
 
-
+jest.mock('../../src/utils/headers', () => ({
+    getHeaders: jest.fn().mockReturnValue({Authorization: 'Bearer token'})
+}))
 
 describe('Iteration class', () => {
     it('should have the correct baseUrl static property', () => {
