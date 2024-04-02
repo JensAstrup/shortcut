@@ -89,8 +89,7 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
         }
 
         const resourceData: BaseData[] = response.data.data ?? []
-        const interfaces = resourceData.map((resource) => (convertApiFields(resource) as Interface))
-        return interfaces.map((instance) => this.factory(instance))
+        return resourceData.map((resource) => this.factory(convertApiFields(resource)))
 
     }
 }
