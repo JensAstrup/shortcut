@@ -53,9 +53,9 @@ export default class Story extends ShortcutResource<StoryInterface> {
         return service.getWorkflowState(this.workflowStateId)
     }
 
-    get iteration(): Promise<Iteration> {
-        if (!this.iterationId) {
-            throw new Error('Story does not have an iteration')
+    get iteration(): Promise<Iteration> | null {
+        if (this.iterationId === null) {
+            return null
         }
         const iterationService = new IterationsService({headers: getHeaders()})
         return iterationService.get(this.iterationId)
@@ -65,9 +65,9 @@ export default class Story extends ShortcutResource<StoryInterface> {
      * Get the team assigned to the story, labelled as "Group" in the Shortcut API
      * @returns {Promise<Team>}
      */
-    get team(): Promise<Team> {
-        if (!this.groupId) {
-            throw new Error('Story does not have a team')
+    get team(): Promise<Team> | null {
+        if (this.groupId === null) {
+            return null
         }
         const service = new TeamsService({headers: getHeaders()})
         return service.get(this.groupId)
@@ -86,9 +86,9 @@ export default class Story extends ShortcutResource<StoryInterface> {
      * Get the epic of the story
      * @returns {Promise<Epic>}
      */
-    get epic(): Promise<Epic> {
-        if (!this.epicId) {
-            throw new Error('Story does not have an epic')
+    get epic(): Promise<Epic> | null {
+        if (this.epicId === null) {
+            return null
         }
         const service = new EpicsService({headers: getHeaders()})
         return service.get(this.epicId)
