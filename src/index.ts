@@ -11,6 +11,8 @@ import Epic from '@sx/epics/epic'
 import Objective from '@sx/objectives/objective'
 import Label from '@sx/labels/label'
 import KeyResult from '@sx/key-results/key-result'
+import LinkedFile from '@sx/linked-files/linked-file'
+import CustomField from '@sx/custom-fields/custom-field'
 
 // Services
 import BaseService from '@sx/base-service'
@@ -23,15 +25,20 @@ import EpicsService from '@sx/epics/epics-service'
 import ObjectivesService from '@sx/objectives/objectives-service'
 import LabelsService from '@sx/labels/labels-service'
 import KeyResultsService from '@sx/key-results/key-results-service'
+import LinkedFilesService from '@sx/linked-files/linked-files-service'
+import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
 
 // Interfaces
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
-import ThreadedCommentCreateData from '@sx/threaded-comments/contracts/threaded-comment-create-data'
+import CreateThreadedCommentData from '@sx/threaded-comments/contracts/create-threaded-comment-data'
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-interface'
+import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
+import CreateLinkedFileData from '@sx/linked-files/contracts/create-linked-file-data'
+import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
 
 export default Client
-export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult}
+export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField}
 export {
     BaseService,
     StoriesService,
@@ -42,12 +49,17 @@ export {
     EpicsService,
     ObjectivesService,
     LabelsService,
-    KeyResultsService
+    KeyResultsService,
+    LinkedFilesService,
+    CustomFieldsService
 }
 export {
     ThreadedCommentInterface,
-    ThreadedCommentCreateData,
+    CreateThreadedCommentData,
     StoryCommentInterface,
-    KeyResultValueInterface
+    KeyResultValueInterface,
+    LinkedFileInterface,
+    CreateLinkedFileData,
+    CustomFieldInterface
 }
 export {ShortcutResource}

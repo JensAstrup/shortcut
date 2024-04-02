@@ -10,7 +10,7 @@ import ObjectivesService from '@sx/objectives/objectives-service'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
 import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-comment-api-data'
-import ThreadedCommentCreateData from '@sx/threaded-comments/contracts/threaded-comment-create-data'
+import CreateThreadedCommentData from '@sx/threaded-comments/contracts/create-threaded-comment-data'
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
 import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
@@ -85,9 +85,9 @@ export default class Epic extends ShortcutResource<EpicInterface> {
      * @returns {Promise<ThreadedCommentInterface | void>}
      * {@link Epic.comment}
      *
-     * {@link ThreadedCommentCreateData}
+     * {@link CreateThreadedCommentData}
      */
-    public async addComment(comment: ThreadedCommentCreateData): Promise<ThreadedCommentInterface | void> {
+    public async addComment(comment: CreateThreadedCommentData): Promise<ThreadedCommentInterface | void> {
         const url = `${Epic.baseUrl}/${this.id}/comments`
         const requestData: BaseData = convertToApiFields(comment)
         const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
