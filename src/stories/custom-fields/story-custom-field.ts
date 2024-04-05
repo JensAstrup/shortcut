@@ -7,22 +7,23 @@ import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class StoryCustomField extends ShortcutResource<StoryInterface> {
-    public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
-    public availableOperations = []
+export default class StoryCustomField extends ShortcutResource<StoryInterface> implements StoryCustomFieldInterface {
+  public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
+  public availableOperations = []
 
-    constructor(init: StoryCustomFieldInterface) {
-        super()
-        Object.assign(this, init)
-        this.changedFields = []
-    }
+  constructor(init: StoryCustomFieldInterface) {
+    super()
+    Object.assign(this, init)
+    this.changedFields = []
+  }
 
-    get field(): Promise<CustomField> {
-        const service = new CustomFieldsService({headers: getHeaders()})
-        return service.get(this.fieldId)
-    }
+  get field(): Promise<CustomField> {
+    const service = new CustomFieldsService({headers: getHeaders()})
+    return service.get(this.fieldId)
+  }
 
-    fieldId!: UUID
-    value!: string
-    valueId!: UUID
+  fieldId!: UUID
+  value!: string
+  valueId!: UUID
+  id: UUID | number
 }

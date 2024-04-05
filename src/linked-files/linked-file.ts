@@ -12,37 +12,37 @@ import UUID from '@sx/utils/uuid'
  *
  * @inheritDoc ShortcutResource
  */
-export default class LinkedFile extends ShortcutResource<LinkedFileInterface> {
-    public baseUrl = 'https://api.app.shortcut.com/api/v3/linked-files'
-    public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
-    public createFields = ['contentType', 'description', 'name', 'size', 'storyId', 'type', 'uploaderId', 'url']
+export default class LinkedFile extends ShortcutResource<LinkedFileInterface> implements LinkedFileInterface {
+  public baseUrl = 'https://api.app.shortcut.com/api/v3/linked-files'
+  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
+  public createFields = ['contentType', 'description', 'name', 'size', 'storyId', 'type', 'uploaderId', 'url']
 
-    constructor(init: LinkedFileInterface) {
-        super(init)
-        Object.assign(this, init)
-        this.changedFields = []
-    }
+  constructor(init: LinkedFileInterface) {
+    super(init)
+    Object.assign(this, init)
+    this.changedFields = []
+  }
 
-    /**
-     * Gets all stories that have linked this file
-     */
-    get stories(): Promise<Story[]> {
-        const service = new StoriesService({headers: getHeaders()})
-        return service.getMany(this.storyIds)
-    }
+  /**
+   * Gets all stories that have linked this file
+   */
+  get stories(): Promise<Story[]> {
+    const service = new StoriesService({headers: getHeaders()})
+    return service.getMany(this.storyIds)
+  }
 
-    contentType!: string
-    createdAt!: Date
-    description!: string
-    entityType!: string
-    groupMentionIds!: UUID[]
-    id!: number
-    memberMentionIds!: UUID[]
-    name!: string
-    size!: number | null
-    storyIds!: number[]
-    thumbnailUrl!: string | null
-    type!: string
-    updatedAt!: Date
-    url!: string
+  contentType!: string
+  createdAt!: Date
+  description!: string
+  entityType!: string
+  groupMentionIds!: UUID[]
+  id!: number
+  memberMentionIds!: UUID[]
+  name!: string
+  size!: number | null
+  storyIds!: number[]
+  thumbnailUrl!: string | null
+  type!: string
+  updatedAt!: Date
+  url!: string
 }

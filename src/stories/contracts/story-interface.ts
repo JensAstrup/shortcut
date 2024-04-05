@@ -16,7 +16,7 @@ export default interface StoryInterface extends BaseInterface {
     completedAtOverride: Date | null
     createdAt: Date
     customFields: object[]
-    cycleTime: number
+    cycleTime: () => number
     deadline: Date | null
     description: string
     entityType: string
