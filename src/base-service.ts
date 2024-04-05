@@ -12,7 +12,6 @@ export type ServiceOperation = 'get' | 'search' | 'list'
 export default class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
     public baseUrl = ''
     public headers: Record<string, string>
-    // @ts-expect-error This is set on child classes so has no intializer here
     protected factory: (data: Interface) => Resource
     protected instances: Record<string, Resource> = {}
     /** Lists out the available operations for the resource, calling methods not in this list will result in an error */

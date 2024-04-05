@@ -3,7 +3,7 @@ import CustomFieldEnumValueInterface from '@sx/custom-fields/contracts/custom-fi
 import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
 import UUID from '@sx/utils/uuid'
 
-export default class CustomField extends ShortcutResource<CustomFieldInterface> {
+export default class CustomField extends ShortcutResource<CustomFieldInterface> implements CustomFieldInterface {
     public baseUrl = 'https://api.app.shortcut.com/api/v3/custom-fields'
     public availableOperations: ResourceOperation[] = ['update', 'delete']
 
