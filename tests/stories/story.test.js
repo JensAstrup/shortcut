@@ -112,21 +112,21 @@ describe('Story', () => {
     })
 
     describe('cycleTime method', () => {
-        it('should throw an error if start date is not set', () => {
+        it(' should throw an error if start date is not set', () => {
             const story = new Story({id: 1, startedAt: null, completedAt: null})
-            expect(story.cycleTime()).rejects.toThrow('Story does not have a cycle time')
+            expect(() => story.cycleTime()).toThrow('Story does not have a cycle time')
         })
 
         it('should throw an error if completed date is not set', () => {
             const story = new Story({id: 1, startedAt: new Date('2021-01-01')})
-            expect(() => story.cycleTime()).rejects.toThrow('Story does not have a cycle time')
+            expect(() => story.cycleTime()).toThrow('Story does not have a cycle time')
         })
 
         it('should return the cycle time', () => {
             const startedAt = new Date('2021-01-01')
             const completedAt = new Date('2021-01-05')
             const story = new Story({id: 1, startedAt: startedAt, completedAt: completedAt})
-            expect(story.cycleTime()).resolves.toEqual(4 * 24)
+            expect(story.cycleTime()).toEqual(4 * 24)
         })
     })
 
