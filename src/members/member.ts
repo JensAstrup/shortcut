@@ -1,5 +1,5 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import MemberInterface from '@sx/members/contracts/member'
+import MemberInterface, {MemberState} from '@sx/members/contracts/member'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 
 
@@ -17,7 +17,7 @@ export default class Member extends ShortcutResource<MemberInterface> implements
   id!: string
   profile!: object
   role!: string
-  state!: 'disabled' | 'full' | 'imported' | 'partial'
+  state!: MemberState
   updatedAt!: string
 
   public baseUrl = 'https://api.app.shortcut.com/api/v3/members'

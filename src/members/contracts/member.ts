@@ -1,7 +1,14 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export default interface MemberInterface extends BaseInterface {
+enum MemberState{
+    DISABLED = 'disabled',
+    FULL = 'full',
+    IMPORTED = 'imported',
+    PARTIAL = 'partial'
+}
+
+interface MemberInterface extends BaseInterface {
     createdAt: string
     disabled: boolean
     entityType: string
@@ -9,6 +16,9 @@ export default interface MemberInterface extends BaseInterface {
     id: string
     profile: object
     role: string
-    state: 'disabled' | 'full' | 'imported' | 'partial'
+    state: MemberState
     updatedAt: string
 }
+
+export default MemberInterface
+export {MemberState}
