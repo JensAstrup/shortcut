@@ -1,6 +1,7 @@
 import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
+
 export default interface UploadedFileApiData extends BaseData {
     content_type: string
     created_at: string
