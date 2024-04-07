@@ -1,5 +1,6 @@
 import BaseInterface from '@sx/base-interface'
 
+
 export interface Label {
 }
 

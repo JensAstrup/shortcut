@@ -1,5 +1,6 @@
 import BaseData from '@sx/base-data'
 
+
 export default interface MemberApiData extends BaseData {
     created_at: string
     disabled: boolean

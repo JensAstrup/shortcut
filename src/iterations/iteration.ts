@@ -1,5 +1,4 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import EpicInterface from '@sx/epics/contracts/epic-interface'
 import IterationInterface, {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
