@@ -1,3 +1,4 @@
+import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import * as process from 'process'
 
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
@@ -44,6 +45,7 @@ export default class Client {
   public labels: LabelsService
   public customFields: CustomFieldsService
   public linkedFiles: LinkedFilesService
+  public uploadedFiles: UploadedFilesService
 
   constructor(shortcutApiKey?: string) {
     if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
@@ -58,6 +60,7 @@ export default class Client {
     this.labels = new LabelsService({headers: this.headers})
     this.customFields = new CustomFieldsService({headers: this.headers})
     this.linkedFiles = new LinkedFilesService({headers: this.headers})
+    this.uploadedFiles = new UploadedFilesService({headers: this.headers})
   }
 
 }
