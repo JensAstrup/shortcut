@@ -8,7 +8,7 @@ enum MemberState{
     PARTIAL = 'partial'
 }
 
-export default interface MemberInterface extends BaseInterface {
+interface MemberInterface extends BaseInterface {
     createdAt: string
     disabled: boolean
     entityType: string
@@ -19,3 +19,6 @@ export default interface MemberInterface extends BaseInterface {
     state: MemberState
     updatedAt: string
 }
+
+export default MemberInterface
+export {MemberState}
