@@ -31,9 +31,6 @@ export default class UploadedFilesService extends BaseService<UploadedFile, Uplo
 
     try {
       const response = await axios.post(this.baseUrl, formData, {headers})
-      console.log(response.status)
-
-      console.log(response.data)
       const data = response.data as UploadedFileApiData
       const uploadedFile = convertApiFields(data) as UploadedFileInterface
       return this.factory(uploadedFile)
