@@ -1,77 +1,65 @@
-import FormData from 'form-data'
-import fetch from 'node-fetch'
+import axios from 'axios'
+import AxiosMockAdapter from 'axios-mock-adapter'
 
-import UploadedFile from '../../src/uploaded-files/uploaded-file'
-import UploadedFilesService from '../../src/uploaded-files/uploaded-files-service'
+import Story from '@sx/stories/story'
+import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
+import UploadedFile from '@sx/uploaded-files/uploaded-file'
+import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 
 
-jest.mock('node-fetch', () => jest.fn())
-jest.mock('form-data')
+const axiosMock = new AxiosMockAdapter(axios)
+const service = new UploadedFilesService({headers: {'Shortcut-Token': 'test-token'}})
 
 describe('UploadedFilesService', () => {
-  let service: UploadedFilesService
-
-  beforeEach(() => {
-    service = new UploadedFilesService({headers: {'Shortcut-Token': 'test-token'}});
-    (fetch as unknown as jest.Mock).mockClear();
-    (FormData as unknown as jest.Mock).mockClear();
-    (FormData.prototype.append as jest.Mock).mockClear()
+  afterEach(() => {
+    axiosMock.reset()
+    jest.clearAllMocks()
   })
-
   it('uploads a single file successfully', async () => {
-    const mockFile = new File(['test'], 'testfile.png', {type: 'image/png'})
-    const fakeResponse = Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve({id: 123, url: 'http://example.com/file.png'}),
-    });
-    (fetch as unknown as jest.Mock).mockReturnValue(fakeResponse)
+    const file = Buffer.from('123')
+    const mockResponse = {id: 1, name: 'test.txt', url: 'http://example.com/test.txt'}
+    axiosMock.onPost(service.baseUrl).reply(200, mockResponse)
 
-    const result = await service.upload(mockFile)
+    const result = await service.upload(file)
 
-    expect(fetch).toHaveBeenCalledWith(service.baseUrl, expect.objectContaining({
-      method: 'POST',
-      body: expect.any(FormData),
-      headers: expect.objectContaining({
-        'Shortcut-Token': expect.any(String)
-      })
-    }))
-    expect(FormData.prototype.append).toHaveBeenCalledWith('file0', mockFile, {filename: mockFile.name})
-    expect(result).toBeInstanceOf(UploadedFile)
+    expect(result).toEqual(new UploadedFile(mockResponse as unknown as UploadedFileInterface))
   })
 
-  it('uploads multiple files successfully', async () => {
-    const mockFiles = [
-      new File(['test'], 'testfile1.png', {type: 'image/png'}),
-      new File(['test'], 'testfile2.png', {type: 'image/png'}),
-    ]
-    const fakeResponse = Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve({id: 123, url: 'http://example.com/file.png'}),
-    });
-    (fetch as unknown as jest.Mock).mockReturnValue(fakeResponse)
 
-    const result = await service.upload(mockFiles)
+  it('uploads a file to a story successfully', async () => {
+    const file = Buffer.from('fileContent')
+    const story = new Story({id: 1, name: 'Test Story'})
+    const mockResponse = {id: 1, name: 'test.txt', url: 'http://example.com/test.txt'}
+    axiosMock.onPost(service.baseUrl).reply(200, mockResponse)
 
-    expect(fetch).toHaveBeenCalledWith(service.baseUrl, expect.objectContaining({
-      method: 'POST',
-      body: expect.any(FormData),
-      headers: expect.objectContaining({
-        'Shortcut-Token': expect.any(String)
-      })
-    }))
-    expect(FormData.prototype.append).toHaveBeenCalledWith('file0', mockFiles[0], {filename: mockFiles[0].name})
-    expect(FormData.prototype.append).toHaveBeenCalledWith('file1', mockFiles[1], {filename: mockFiles[1].name})
-    expect(result).toBeInstanceOf(UploadedFile)
+    const result = await service.upload(file, story)
+
+    expect(result).toEqual(new UploadedFile(mockResponse as unknown as UploadedFileInterface))
   })
 
-  it('throws an error when the server responds with an error', async () => {
-    const mockFile = new File(['test'], 'testfile.png', {type: 'image/png'})
-    const fakeResponse = Promise.resolve({
-      ok: false,
-      text: () => Promise.resolve('Failed to upload due to server error'),
-    });
-    (fetch as unknown as jest.Mock).mockReturnValue(fakeResponse)
+  it('uploads to a file with a story number successfully', async () => {
+    const file = Buffer.from('fileContent')
+    const story = 1
+    const mockResponse = {id: 1, name: 'test.txt', url: 'http://example.com/test.txt'}
+    axiosMock.onPost(service.baseUrl).reply(200, mockResponse)
 
-    await expect(service.upload(mockFile)).rejects.toThrow('Failed to upload file')
+    const result = await service.upload(file, story)
+
+    expect(result).toEqual(new UploadedFile(mockResponse as unknown as UploadedFileInterface))
   })
+
+  it('throws an error when the upload fails', async () => {
+    const file = Buffer.from('fileContent')
+    axiosMock.onPost(service.baseUrl).reply(500)
+
+    await expect(service.upload(file)).rejects.toThrow('Failed to upload file')
+  })
+
+  it('throws an error when the upload fails with a request error', async () => {
+    const file = Buffer.from('fileContent')
+    axiosMock.onPost(service.baseUrl).networkError()
+
+    await expect(service.upload(file)).rejects.toThrow('Failed to upload file: Error: Network Error')
+  })
+
 })

@@ -64,6 +64,7 @@ const config = {
 
   // A path to a module which exports an async function that is triggered once after all test suites
   // globalTeardown: undefined,
+  setupFilesAfterEnv: ['./tests/setup.ts'],
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
@@ -93,7 +94,7 @@ const config = {
     '^@sx/(.*)$': '<rootDir>/src/$1'
   },
   roots: ['<rootDir>/src', '<rootDir>/tests'],
-  testMatch: ['**/tests/*', '**/?(*.)+(spec|test).(js|ts)'],
+  testMatch: ['**/?(*.)+(spec|test).(js|ts)'],
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
