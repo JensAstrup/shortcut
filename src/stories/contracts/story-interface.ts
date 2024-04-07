@@ -3,6 +3,7 @@ import {PullRequestInterface} from '@sx/pull-requests/contracts/pull-request-int
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 
+
 export default interface StoryInterface extends BaseInterface {
     appUrl: string
     archived: boolean
