@@ -1,5 +1,6 @@
 import BaseInterface from '@sx/base-interface'
 
+
 export default interface LabelInterface extends BaseInterface {
     appUrl: string
     archived: boolean

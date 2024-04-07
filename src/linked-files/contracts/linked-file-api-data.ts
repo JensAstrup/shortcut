@@ -1,5 +1,6 @@
 import UUID from '@sx/utils/uuid'
 
+
 export default interface LinkedFileApiData {
     content_type: string
     created_at: string

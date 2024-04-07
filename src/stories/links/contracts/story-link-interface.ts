@@ -1,5 +1,6 @@
 import BaseInterface from '@sx/base-interface'
 
+
 export default interface StoryLinkInterface extends BaseInterface {
     createdAt: string
     entityType: string

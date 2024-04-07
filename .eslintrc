@@ -71,6 +71,11 @@
         }
       }
     ],
-    "import/newline-after-import": "error"
+    "import/newline-after-import": [
+      "error",
+      {
+        "count": 2
+      }
+    ]
   }
 }
