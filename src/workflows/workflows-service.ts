@@ -4,6 +4,7 @@ import {WorkflowInterface} from '@sx/workflows/contracts/workflow-interface'
 import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
 import Workflow from '@sx/workflows/workflow'
 
+
 export const WORKFLOW_STATES: Record<number, WorkflowStateInterface> = {}
 
 export default class WorkflowService extends BaseService<Workflow, WorkflowInterface> {
@@ -31,7 +32,7 @@ export default class WorkflowService extends BaseService<Workflow, WorkflowInter
     }
 
     public async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
-        if(Object.keys(WORKFLOW_STATES).length === 0) {
+        if (Object.keys(WORKFLOW_STATES).length === 0) {
             await this.getWorkflowStates()
         }
         return WORKFLOW_STATES[id]

@@ -1,5 +1,6 @@
 import BaseData from '@sx/base-data'
 
+
 export interface WorkflowStateApiData extends BaseData {
     [index: string]: unknown;
 

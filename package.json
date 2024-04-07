@@ -19,7 +19,9 @@
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
     "test": "jest",
-    "docs": "npx typedoc"
+    "docs": "npx typedoc",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "",
