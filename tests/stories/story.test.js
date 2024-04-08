@@ -9,6 +9,7 @@ import UploadedFilesService from '../../src/uploaded-files/uploaded-files-servic
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
 import WorkflowService from '../../src/workflows/workflows-service'
+import Label from '../../src/labels/label'
 
 
 jest.mock('axios', () => ({
@@ -22,6 +23,28 @@ describe('Story', () => {
   process.env.SHORTCUT_API_KEY = 'token'
   beforeEach(() => {
     axios.post.mockClear()
+  })
+
+  it('should instantiate comments', () => {
+    const story = new Story({id: 1, comments: [{id: 1, text: 'Test comment'}]})
+    expect(story.comments[0].text).toEqual('Test comment')
+  })
+
+  it('should instantiate tasks', () => {
+    const story = new Story({id: 1, tasks: [{id: 1, description: 'Test task'}]})
+    expect(story.tasks[0].description).toEqual('Test task')
+  })
+
+  it('should instantiate story links', () => {
+    const story = new Story({id: 1, storyLinks: [{id: 1, verb: 'blocks', objectId: 2}]})
+    expect(story.storyLinks[0].verb).toEqual('blocks')
+    expect(story.storyLinks[0].objectId).toEqual(2)
+  })
+
+  it('should instantiate story labels', () => {
+    const story = new Story({id: 1, labels: [{id: 1, name: 'Test label'}]})
+    expect(story.labels[0].name).toEqual('Test label')
+    expect(story.labels[0]).toBeInstanceOf(Label)
   })
 
   describe('workflow getter', () => {
@@ -114,11 +137,13 @@ describe('Story', () => {
       expect(story.history()).rejects.toThrow('Error fetching history: Error: Network error')
     })
 
-    it('should return the story history', () => {
+    it('should return the story history', async () => {
       const story = new Story({id: 1})
-      const history = [{id: 1, name: 'Test history'}]
+      const history = [{id: 1}]
       axios.get.mockResolvedValue({data: history})
-      expect(story.history()).resolves.toEqual(history)
+      const storyHistory = await story.history()
+      console.log(storyHistory)
+      expect(storyHistory[0]).toMatchObject(history[0])
       expect(axios.get).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/history`, {headers: getHeaders()})
     })
   })
@@ -299,19 +324,4 @@ describe('Story', () => {
     })
   })
 
-})
-it('should instantiate comments', () => {
-  const story = new Story({id: 1, comments: [{id: 1, text: 'Test comment'}]})
-  expect(story.comments[0].text).toEqual('Test comment')
-})
-
-it('should instantiate tasks', () => {
-  const story = new Story({id: 1, tasks: [{id: 1, description: 'Test task'}]})
-  expect(story.tasks[0].description).toEqual('Test task')
-})
-
-it('should instantiate story links', () => {
-  const story = new Story({id: 1, storyLinks: [{id: 1, verb: 'blocks', objectId: 2}]})
-  expect(story.storyLinks[0].verb).toEqual('blocks')
-  expect(story.storyLinks[0].objectId).toEqual(2)
 })
