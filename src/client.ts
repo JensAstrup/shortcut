@@ -1,4 +1,3 @@
-
 import * as process from 'process'
 
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
