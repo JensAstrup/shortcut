@@ -136,7 +136,6 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     const historyData: HistoryApiData[] = response.data
     return historyData.map((history) => {
       const historyInterface = convertApiFields(history) as HistoryInterface
-      console.log(historyInterface)
       return new History(historyInterface)
     })
   }
