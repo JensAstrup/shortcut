@@ -1,9 +1,9 @@
 import BaseInterface from '@sx/base-interface'
-import HistoryActionInterface from '@sx/stories/history/contracts/history-action-interface'
+import HistoryActionInterface from '@sx/stories/history/actions/contracts/history-action-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface HistoryInterface extends BaseInterface {
+interface HistoryInterface extends BaseInterface {
     actions: HistoryActionInterface[]
     changedAt: Date
     externalId: string
@@ -14,3 +14,4 @@ export default interface HistoryInterface extends BaseInterface {
     version: string
     webhookId: string
 }
+export default HistoryInterface

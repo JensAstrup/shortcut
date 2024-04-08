@@ -17,6 +17,7 @@ import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story
 import StoryCustomField from '@sx/stories/custom-fields/story-custom-field'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
 import HistoryInterface from '@sx/stories/history/contracts/history-interface'
+import History from '@sx/stories/history/history'
 import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
 import StoryLink from '@sx/stories/links/story-link'
 import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
@@ -50,6 +51,27 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     this.instantiateTasks()
     this.instantiateLinks()
     this.instantiateCustomFields()
+    this.instantiateLabels()
+  }
+
+  private instantiateComments() {
+    this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
+  }
+
+  private instantiateTasks() {
+    this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
+  }
+
+  private instantiateLinks() {
+    this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
+  }
+
+  private instantiateCustomFields() {
+    this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
+  }
+
+  private instantiateLabels() {
+    this.labels = this.labels?.map((label) => new Label(label))
   }
 
   get workflow(): Promise<WorkflowStateInterface> {
@@ -106,13 +128,17 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     return service.get(this.epicId)
   }
 
-  public async history(): Promise<HistoryInterface[]> {
+  public async history(): Promise<History[]> {
     const url = `${Story.baseUrl}/stories/${this.id}/history`
     const response = await axios.get(url, {headers: getHeaders()}).catch((error) => {
       throw new Error(`Error fetching history: ${error}`)
     })
     const historyData: HistoryApiData[] = response.data
-    return historyData.map((history) => convertApiFields(history) as HistoryInterface)
+    return historyData.map((history) => {
+      const historyInterface = convertApiFields(history) as HistoryInterface
+      console.log(historyInterface)
+      return new History(historyInterface)
+    })
   }
 
   /**
@@ -204,76 +230,60 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     this.storyLinks.push(link)
   }
 
-  private instantiateComments() {
-    this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
-  }
 
-  private instantiateTasks() {
-    this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
-  }
-
-  private instantiateLinks() {
-    this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
-  }
-
-  private instantiateCustomFields() {
-    this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
-  }
-
-
-  appUrl!: string
-  archived!: boolean
-  blocked!: boolean
-  blocker!: boolean
-  branches!: object[]
-  comments!: StoryCommentInterface[] | StoryComment[]
-  commits!: object[]
-  completed!: boolean
-  completedAt!: Date | null
-  completedAtOverride!: Date | null
-  createdAt!: Date
-  customFields!: StoryCustomFieldInterface[] | StoryCustomField[]
-  deadline!: Date | null
-  description!: string
-  entityType!: string
-  epicId!: number | null
-  estimate!: number | null
-  externalId!: string | null
-  externalLinks!: string[]
-  files!: object[]
-  followerIds!: string[]
-  groupId!: string | null
-  groupMentionIds!: string[]
-  id!: number
-  iterationId!: number | null
-  labelIds!: number[]
-  labels!: Label[]
+  appUrl: string
+  archived: boolean
+  blocked: boolean
+  blocker: boolean
+  branches: object[]
+  comments: StoryCommentInterface[] | StoryComment[]
+  commits: object[]
+  completed: boolean
+  completedAt: Date | null
+  completedAtOverride: Date | null
+  createdAt: Date
+  customFields: StoryCustomFieldInterface[] | StoryCustomField[]
+  deadline: Date | null
+  description: string
+  entityType: string
+  epicId: number | null
+  estimate: number | null
+  externalId: string | null
+  externalLinks: string[]
+  files: object[]
+  followerIds: string[]
+  groupId: string | null
+  groupMentionIds: string[]
+  id: number
+  iterationId: number | null
+  labelIds: number[]
+  labels: Label[]
 
   /* The lead time in seconds of this story */
-  leadTime!: number
-  linkedFiles!: object[]
-  memberMentionIds!: string[]
-  mentionIds!: string[]
-  movedAt!: Date | null
+  leadTime: number
+  linkedFiles: object[]
+  memberMentionIds: string[]
+  mentionIds: string[]
+  movedAt: Date | null
   name!: string
-  ownerIds!: string[]
-  position!: number
-  previousIterationIds!: number[]
-  projectId!: number | null
-  requestedById!: string
-  started!: boolean
-  startedAt!: Date | null
-  startedAtOverride!: Date | null
-  stats!: object
-  storyLinks!: StoryLinkInterface[] | StoryLink[]
-  storyTemplateId!: string | null
-  storyType!: string
-  syncedItem!: object
-  tasks!: Task[] | TaskInterface[]
-  unresolvedBlockerComments!: number[]
-  updatedAt!: Date | null
-  workflowId!: number
-  workflowStateId!: number
+  ownerIds: string[]
+  position: number
+  previousIterationIds: number[]
+  projectId: number | null
+  requestedById: string
+  started: boolean
+  startedAt: Date | null
+  startedAtOverride: Date | null
+  stats: object
+  storyLinks: StoryLinkInterface[] | StoryLink[]
+  storyTemplateId: string | null
+  storyType: string
+  syncedItem: object
+  tasks: Task[] | TaskInterface[]
+  unresolvedBlockerComments: number[]
+  updatedAt: Date | null
+  workflowId: number
+  workflowStateId: number
   pullRequests: PullRequestInterface[]
 }
 

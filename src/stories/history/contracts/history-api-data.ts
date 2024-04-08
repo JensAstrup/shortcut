@@ -1,5 +1,5 @@
 import BaseData from '@sx/base-data'
-import HistoryActionApiData from '@sx/stories/history/contracts/history-action-api-data'
+import HistoryActionApiData from '@sx/stories/history/actions/contracts/history-action-api-data'
 import UUID from '@sx/utils/uuid'
 
 
