@@ -36,6 +36,17 @@ describe('Story', () => {
     })
   })
 
+  describe('state method', () => {
+    it('should return workflow state by ID', async () => {
+      const story = new Story({workflowStateId: 1})
+      jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+        id: 1,
+        type: 'Unstarted'
+      })
+      expect(await story.state()).toEqual('Unstarted')
+    })
+  })
+
   describe('iteration getter', () => {
     it('returns null if story does not have an iteration', async () => {
       const story = new Story({iterationId: null})
