@@ -1,4 +1,4 @@
-import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
+
 import * as process from 'process'
 
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
@@ -9,8 +9,10 @@ import LabelsService from '@sx/labels/labels-service'
 import LinkedFilesService from '@sx/linked-files/linked-files-service'
 import MembersService from '@sx/members/members-service'
 import ObjectivesService from '@sx/objectives/objectives-service'
+import RepositoriesService from '@sx/repositories/repositories-service'
 import StoriesService from '@sx/stories/stories-service'
 import TeamsService from '@sx/teams/teams-service'
+import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import WorkflowService from '@sx/workflows/workflows-service'
 
 
@@ -46,6 +48,7 @@ export default class Client {
   public customFields: CustomFieldsService
   public linkedFiles: LinkedFilesService
   public uploadedFiles: UploadedFilesService
+  public repositories: RepositoriesService
 
   constructor(shortcutApiKey?: string) {
     if (shortcutApiKey) this.shortcutApiKey = shortcutApiKey
@@ -61,6 +64,7 @@ export default class Client {
     this.customFields = new CustomFieldsService({headers: this.headers})
     this.linkedFiles = new LinkedFilesService({headers: this.headers})
     this.uploadedFiles = new UploadedFilesService({headers: this.headers})
+    this.repositories = new RepositoriesService({headers: this.headers})
   }
 
 }
