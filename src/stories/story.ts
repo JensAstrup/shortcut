@@ -1,3 +1,5 @@
+import UploadedFile from '@sx/uploaded-files/uploaded-file'
+import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import axios from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
@@ -148,20 +150,9 @@ export default class Story extends ShortcutResource<StoryInterface> implements S
     return convertApiFields(data) as StoryComment
   }
 
-  private instantiateComments() {
-    this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
-  }
-
-  private instantiateTasks() {
-    this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
-  }
-
-  private instantiateLinks() {
-    this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
-  }
-
-  private instantiateCustomFields() {
-    this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
+  public async addFile(file: Buffer): Promise<UploadedFile> {
+    const service = new UploadedFilesService({headers: getHeaders()})
+    return service.upload(file, this)
   }
 
   public async addTask(task: string): Promise<void> {
@@ -203,6 +194,22 @@ export default class Story extends ShortcutResource<StoryInterface> implements S
     })
     await link.save()
     this.storyLinks.push(link)
+  }
+
+  private instantiateComments() {
+    this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
+  }
+
+  private instantiateTasks() {
+    this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
+  }
+
+  private instantiateLinks() {
+    this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
+  }
+
+  private instantiateCustomFields() {
+    this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
   }
 
 
