@@ -1,5 +1,3 @@
-import UploadedFile from '@sx/uploaded-files/uploaded-file'
-import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import axios from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
@@ -26,9 +24,11 @@ import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 import Task from '@sx/stories/tasks/task'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
+import UploadedFile from '@sx/uploaded-files/uploaded-file'
+import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
-import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
+import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflows/contracts/workflow-state-interface'
 import WorkflowService from '@sx/workflows/workflows-service'
 
 
@@ -39,7 +39,7 @@ import WorkflowService from '@sx/workflows/workflows-service'
  * @story
  * @inheritDoc ShortcutResource
  */
-export default class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
+class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   constructor(init: StoryInterface | object) {
@@ -52,9 +52,17 @@ export default class Story extends ShortcutResource<StoryInterface> implements S
     this.instantiateCustomFields()
   }
 
-  get workflow() {
+  get workflow(): Promise<WorkflowStateInterface> {
     const service = new WorkflowService({headers: getHeaders()})
     return service.getWorkflowState(this.workflowStateId)
+  }
+
+  /**
+   * Get the state of the story, i.e. Finished, Started, Unstarted
+   */
+  async state(): Promise<WorkflowStateType> {
+    const workflow = await this.workflow
+    return workflow.type
   }
 
   get iteration(): Promise<Iteration> | null {
@@ -268,3 +276,5 @@ export default class Story extends ShortcutResource<StoryInterface> implements S
   workflowStateId!: number
   pullRequests: PullRequestInterface[]
 }
+
+export default Story
