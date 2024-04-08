@@ -2,7 +2,14 @@ import BaseInterface from '@sx/base-interface'
 import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-interface'
 import UUID from '@sx/utils/uuid'
 
-export default interface KeyResultInterface extends BaseInterface {
+
+enum KeyResultType {
+    BOOLEAN = 'boolean',
+    NUMERIC = 'numeric',
+    PERCENT = 'percent'
+}
+
+interface KeyResultInterface extends BaseInterface {
     currentObservedValue: KeyResultValueInterface
     currentTargetValue: KeyResultValueInterface
     id: UUID
@@ -10,5 +17,8 @@ export default interface KeyResultInterface extends BaseInterface {
     name: string
     objectiveId: number
     progress: number
-    type: 'boolean' | 'numeric' | 'percent'
+    type: KeyResultType
 }
+
+export default KeyResultInterface
+export {KeyResultType}

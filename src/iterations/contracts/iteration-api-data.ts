@@ -1,5 +1,5 @@
-import {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
 import BaseData from '@sx/base-data'
+import {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
 
 
 export interface IterationApiData extends BaseData {

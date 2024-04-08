@@ -1,7 +1,14 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export interface WorkflowStateInterface extends BaseInterface {
+enum WorkflowStateType {
+    FINISHED = 'Finished',
+    STARTED = 'Started',
+    UNSTARTED = 'Unstarted'
+
+}
+
+interface WorkflowStateInterface extends BaseInterface {
     [index: string]: unknown
 
     color: string // Assuming color is a hex string (e.g., "#FFFFFF")
@@ -13,7 +20,10 @@ export interface WorkflowStateInterface extends BaseInterface {
     numStories: number
     numStoryTemplates: number
     position: number
-    type: 'Unstarted' | 'Started' | 'Finished'
+    type: WorkflowStateType
     updatedAt: Date
     verb: string | null
 }
+
+export default WorkflowStateInterface
+export { WorkflowStateType }

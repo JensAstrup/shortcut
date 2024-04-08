@@ -1,6 +1,7 @@
 import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
+
 export default interface ObjectiveApiData extends BaseData {
     app_url: string
     archived: boolean

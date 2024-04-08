@@ -1,30 +1,31 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import MemberInterface from '@sx/members/contracts/member'
+import MemberInterface, {MemberProfile, MemberState} from '@sx/members/contracts/member'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 
 
 /**
  * @inheritDoc
  */
-export default class Member extends ShortcutResource<MemberInterface> {
-    public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
-    public availableOperations: ResourceOperation[] = []
+export default class Member extends ShortcutResource<MemberInterface> implements MemberInterface {
+  public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+  public availableOperations: ResourceOperation[] = []
 
-    createdAt!: string
-    disabled!: boolean
-    entityType!: string
-    groupIds!: string[]
-    id!: string
-    profile!: object
-    role!: string
-    state!: 'disabled' | 'full' | 'imported' | 'partial'
-    updatedAt!: string
+  createdAt: string
+  disabled: boolean
+  entityType: string
+  groupIds: string[]
+  id: string
+  name: string
+  profile: MemberProfile
+  role: string
+  state: MemberState
+  updatedAt: string
 
-    public baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+  public baseUrl = 'https://api.app.shortcut.com/api/v3/members'
 
-    constructor(init: StoryInterface | object) {
-        super()
-        Object.assign(this, init)
-        this.changedFields = []
-    }
+  constructor(init: StoryInterface | object) {
+    super()
+    Object.assign(this, init)
+    this.changedFields = []
+  }
 }

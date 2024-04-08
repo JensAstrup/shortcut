@@ -1,12 +1,19 @@
 import BaseInterface from '@sx/base-interface'
 
+
 export interface Label {
 }
 
 export interface IterationStats {
 }
 
-export default interface IterationInterface extends BaseInterface {
+enum IterationStatus {
+    DONE = 'done',
+    STARTED = 'started',
+    UNSTARTED = 'unstarted'
+}
+
+interface IterationInterface extends BaseInterface {
     appUrl: string;
     createdAt: Date;
     endDate: Date;
@@ -22,6 +29,9 @@ export default interface IterationInterface extends BaseInterface {
     name: string;
     startDate: Date;
     stats: IterationStats;
-    status: 'unstarted' | 'started' | 'done';
+    status: IterationStatus
     updatedAt: Date;
 }
+
+export default IterationInterface
+export {IterationStatus}

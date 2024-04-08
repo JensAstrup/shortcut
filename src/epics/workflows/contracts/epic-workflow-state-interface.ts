@@ -1,5 +1,6 @@
 import BaseInterface from '@sx/base-interface'
 
+
 export default interface EpicWorkflowStateInterface extends BaseInterface {
     color: string
     createdAt: Date
