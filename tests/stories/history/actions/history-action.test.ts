@@ -7,7 +7,7 @@ import HistoryActionInterface, {HistoryActionEnum} from '@sx/stories/history/act
 import HistoryAction from '@sx/stories/history/actions/history-action'
 
 
-jest.mock('../../../utils/headers', () => ({
+jest.mock('../../../../src/utils/headers', () => ({
   getHeaders: jest.fn().mockReturnValue({Authorization: 'Bearer token'})
 }))
 
