@@ -1,13 +1,15 @@
-import HistoryAction from '@sx/stories/history/actions/history-action'
-import HistoryActionInterface, {HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
-import MembersService from '@sx/members/members-service'
-import MemberApiData from '@sx/members/contracts/member-api-data'
-import MemberInterface, {MemberState} from '@sx/members/contracts/member'
-import UUID from '@sx/utils/uuid'
-import LabelsService from '@sx/labels/labels-service'
-import LabelInterface from '@sx/labels/contracts/label-interface'
-import Member from '@sx/members/member'
 import Label from '@sx/labels/label'
+import LabelsService from '@sx/labels/labels-service'
+import {MemberState} from '@sx/members/contracts/member'
+import Member from '@sx/members/member'
+import MembersService from '@sx/members/members-service'
+import HistoryActionInterface, {HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
+import HistoryAction from '@sx/stories/history/actions/history-action'
+
+
+jest.mock('../../src/utils/headers', () => ({
+  getHeaders: jest.fn().mockReturnValue({Authorization: 'Bearer token'})
+}))
 
 
 describe('History Action', () => {
