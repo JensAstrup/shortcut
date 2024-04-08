@@ -1,8 +1,8 @@
 import BaseData from '@sx/base-data'
-import {WorkflowStateInterface} from '@sx/workflows/contracts/workflow-state-interface'
+import WorkflowStateInterface from '@sx/workflows/contracts/workflow-state-interface'
 
 
-export interface WorkflowApiData extends BaseData {
+interface WorkflowApiData extends BaseData {
     auto_assign_owner: boolean;
     created_at: Date;
     default_state_id: number;
@@ -15,3 +15,5 @@ export interface WorkflowApiData extends BaseData {
     teamId: number;
     updated_at: Date;
 }
+
+export default WorkflowApiData
