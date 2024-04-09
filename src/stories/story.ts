@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
@@ -31,6 +29,7 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflows/contracts/workflow-state-interface'
 import WorkflowService from '@sx/workflows/workflows-service'
+import axios from 'axios'
 
 
 /**
@@ -180,7 +179,9 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
-    return convertApiFields(data) as StoryComment
+    const interfaceData = convertApiFields(data)
+
+    return new StoryComment(interfaceData)
   }
 
   public async addFile(file: Buffer): Promise<UploadedFile> {
@@ -195,7 +196,8 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
       throw new Error(`Error adding task: ${error}`)
     })
     const data: TaskApiData = response.data
-    const createdTask = convertApiFields(data) as Task
+    const interfaceData = convertApiFields(data)
+    const createdTask = new Task(interfaceData)
     this.tasks.push(createdTask)
   }
 

@@ -2,6 +2,7 @@ import axios from 'axios'
 
 import EpicsService from '../../src/epics/epics-service'
 import Iteration from '../../src/iterations/iteration'
+import Label from '../../src/labels/label'
 import MembersService from '../../src/members/members-service'
 import Story from '../../src/stories/story'
 import TeamsService from '../../src/teams/teams-service'
@@ -9,7 +10,6 @@ import UploadedFilesService from '../../src/uploaded-files/uploaded-files-servic
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
 import WorkflowService from '../../src/workflows/workflows-service'
-import Label from '../../src/labels/label'
 
 
 jest.mock('axios', () => ({
@@ -221,7 +221,7 @@ describe('Story', () => {
       const story = new Story({id: 1})
       const result = await story.comment('Test comment')
 
-      expect(result).toEqual(convertApiFields(commentData))
+      expect(result).toMatchObject(convertApiFields(commentData))
       expect(axios.post).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/comments`, {text: 'Test comment'}, {headers: getHeaders()})
     })
 
