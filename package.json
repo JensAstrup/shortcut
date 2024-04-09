@@ -46,7 +46,8 @@
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-jest": "^0.0.1",
     "tscpaths": "^0.0.9",
-    "typedoc-plugin-coverage": "^3.1.0"
+    "typedoc-plugin-coverage": "^3.1.0",
+    "typescript": "^5.4.4"
   },
   "dependencies": {
     "axios": "^1.6.7",
