@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
@@ -29,7 +31,6 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflows/contracts/workflow-state-interface'
 import WorkflowService from '@sx/workflows/workflows-service'
-import axios from 'axios'
 
 
 /**
