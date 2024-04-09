@@ -39,6 +39,7 @@
       "error",
       "never"
     ],
+    "brace-style": ["error", "stroustrup"],
     "perfectionist/sort-imports": "off",
     "perfectionist/sort-union-types": "off",
     "perfectionist/sort-classes": "off",
