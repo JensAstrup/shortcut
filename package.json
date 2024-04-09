@@ -36,6 +36,7 @@
     "@types/node-fetch": "^2.6.11",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
+    "axios-mock-adapter": "^1.22.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-perfectionist": "^2.7.0",
@@ -49,7 +50,6 @@
   },
   "dependencies": {
     "axios": "^1.6.7",
-    "axios-mock-adapter": "^1.22.0",
     "formdata-node": "^6.0.3"
   }
 }
