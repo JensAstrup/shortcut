@@ -1,7 +1,6 @@
 import BaseCreateInterface from '@sx/base-create-interface'
 import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
-import ShortcutResource from '@sx/base-resource'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import isValidDatetimeFormat from '@sx/utils/is-valid-datetime-format'
 import snakeToCamel from '@sx/utils/snake-to-camel'
@@ -9,11 +8,12 @@ import snakeToCamel from '@sx/utils/snake-to-camel'
 
 type AnyObject = Record<string, unknown>
 
-export function convertApiFields<Input extends BaseData, Resource extends ShortcutResource | BaseInterface>(object: Input): Resource {
+function convertApiFields<Input extends BaseData, Resource extends BaseInterface>(object: Input): Resource {
   const convertObject = (obj: BaseData | BaseData[]): AnyObject | Array<object> => {
     if (Array.isArray(obj)) {
       return obj.map(item => convertObject(item)) // Recursively process each item in the array
-    } else if (obj !== null && typeof obj === 'object') {
+    }
+    else if (obj !== null && typeof obj === 'object') {
       const newObj: AnyObject = {}
       Object.keys(obj).forEach(key => {
         const camelKey = snakeToCamel(key)
@@ -21,12 +21,14 @@ export function convertApiFields<Input extends BaseData, Resource extends Shortc
         if (isValidDatetimeFormat(value as string)) {
 
           newObj[camelKey] = new Date(value as string)
-        } else {
+        }
+        else {
           newObj[camelKey] = typeof obj[key] === 'object' ? convertObject(obj[key] as AnyObject) : obj[key]
         }
       })
       return newObj
-    } else {
+    }
+    else {
       return obj
     }
   }
@@ -34,7 +36,7 @@ export function convertApiFields<Input extends BaseData, Resource extends Shortc
   return convertObject(object) as Resource
 }
 
-export function convertToApiFields<Input extends BaseCreateInterface, U extends BaseData>(object: Input): U {
+function convertToApiFields<Input extends BaseCreateInterface, U extends BaseData>(object: Input): U {
   const convertObject = (obj: BaseCreateInterface | BaseCreateInterface[]): AnyObject | Array<object> => {
     if (Array.isArray(obj)) {
       return obj.map(item => convertObject(item)) // Recursively process each item in the array
@@ -60,3 +62,5 @@ export function convertToApiFields<Input extends BaseCreateInterface, U extends 
 
   return convertObject(object) as U
 }
+
+export {convertApiFields, convertToApiFields}

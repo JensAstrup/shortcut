@@ -180,7 +180,9 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
-    return convertApiFields(data) as StoryComment
+    const interfaceData = convertApiFields(data)
+
+    return new StoryComment(interfaceData)
   }
 
   public async addFile(file: Buffer): Promise<UploadedFile> {
@@ -195,7 +197,8 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
       throw new Error(`Error adding task: ${error}`)
     })
     const data: TaskApiData = response.data
-    const createdTask = convertApiFields(data) as Task
+    const interfaceData = convertApiFields(data)
+    const createdTask = new Task(interfaceData)
     this.tasks.push(createdTask)
   }
 
