@@ -19,37 +19,7 @@ API.
 
 ### Example Usage
 
-```typescript
-const oneWeekAgo = new Date();
-oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-const client: Client = new Client()
-const stories: Story[] = await client.stories.search('team:engineering is:started')
-const outdatedStories: Story[] = stories.filter(story => story.updatedAt < oneWeekAgo)
-
-for (const story of outdatedStories) {
-    const comment = 'This story has not been updated in over a week. Please provide an update.'
-    await story.comment(comment)
-}
-````
-
-Using the standard Shortcut Client:
-
-```typescript
-const oneWeekAgo = new Date();
-oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-const shortcut = new ShortcutClient();
-const {data} = await shortcut.searchStories('team:engineering is:started');
-const outdatedStories = stories.filter(story => story.updated_at < oneWeekAgo)
-
-for (const story of outdatedStories) {
-    const comment = 'This story has not been updated in over a week. Please provide an update.'
-    await shortcut.createComment(story.id, {text: comment})
-}
-````
-
-Navigating between related resources is also simplified:
+Navigating between related resources is simplified:
 
 ```typescript
 const client: Client = new Client()
@@ -76,6 +46,38 @@ for (const ownerId of story.owner_ids) {
 
 if (story.group_id) {
     team = await shortcut.getGroup(story.group_id);
+}
+````
+
+And taking actions on resources is intuitive, here's how you leave a comment on a story:
+
+```typescript
+const oneWeekAgo = new Date();
+oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+const client: Client = new Client()
+const stories: Story[] = await client.stories.search('team:engineering is:started')
+const outdatedStories: Story[] = stories.filter(story => story.updatedAt < oneWeekAgo)
+
+for (const story of outdatedStories) {
+    const comment = 'This story has not been updated in over a week. Please provide an update.'
+    await story.comment(comment)
+}
+````
+
+Using the standard Shortcut Client:
+
+```typescript
+const oneWeekAgo = new Date();
+oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+const shortcut = new ShortcutClient();
+const {data} = await shortcut.searchStories('team:engineering is:started');
+const outdatedStories = stories.filter(story => new Date(story.updated_at) < oneWeekAgo)
+
+for (const story of outdatedStories) {
+    const comment = 'This story has not been updated in over a week. Please provide an update.'
+    await shortcut.createComment(story.id, {text: comment})
 }
 ````
 
