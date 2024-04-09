@@ -25,7 +25,8 @@ export default class Client {
         'Content-Type': 'application/json',
         'Shortcut-Token': this.shortcutApiKey
       }
-    } else if (!process.env.SHORTCUT_API_KEY) throw new Error('Shortcut API Key not found')
+    }
+    else if (!process.env.SHORTCUT_API_KEY) throw new Error('Shortcut API Key not found')
     return {
       'Content-Type': 'application/json',
       'Shortcut-Token': process.env.SHORTCUT_API_KEY

@@ -120,7 +120,8 @@ export default class ShortcutResource<Interface = BaseInterface> {
     public async save(): Promise<void> {
       if (this.id) {
         await this.update()
-      } else {
+      }
+      else {
         await this.create()
       }
     }
