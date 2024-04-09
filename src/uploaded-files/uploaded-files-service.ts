@@ -34,7 +34,8 @@ export default class UploadedFilesService extends BaseService<UploadedFile, Uplo
       const data = response.data as UploadedFileApiData
       const uploadedFile = convertApiFields(data) as UploadedFileInterface
       return this.factory(uploadedFile)
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error('Failed to upload file: ' + error)
     }
   }
