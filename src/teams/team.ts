@@ -1,6 +1,8 @@
 import axios from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import Member from '@sx/members/member'
+import MembersService from '@sx/members/members-service'
 import Story from '@sx/stories/story'
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import {convertApiFields} from '@sx/utils/convert-fields'
@@ -19,6 +21,11 @@ export default class Team extends ShortcutResource<TeamInterface> implements Tea
     super()
     Object.assign(this, init)
     this.changedFields = []
+  }
+
+  get members(): Promise<Member[]>{
+    const service = new MembersService({headers: getHeaders()})
+    return service.getMany(this.memberIds)
   }
 
   get stories() {
