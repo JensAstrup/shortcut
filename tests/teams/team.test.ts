@@ -16,11 +16,11 @@ describe('Team', () => {
 
   beforeAll(() => {
     originalToken = process.env.SHORTCUT_TOKEN
-    process.env.SHORTCUT_TOKEN = 'token'
+    process.env.SHORTCUT_API_KEY = 'token'
   })
 
   afterAll(() => {
-    process.env.SHORTCUT_TOKEN = originalToken
+    process.env.SHORTCUT_API_KEY = originalToken
   })
 
   it('should get stories', async () => {
