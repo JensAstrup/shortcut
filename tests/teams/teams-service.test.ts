@@ -1,7 +1,7 @@
 import axios from 'axios'
+import AxiosMockAdapter from 'axios-mock-adapter'
 
 import TeamsService from '@sx/teams/teams-service'
-import AxiosMockAdapter from 'axios-mock-adapter'
 
 
 const axiosMock = new AxiosMockAdapter(axios)
@@ -37,7 +37,7 @@ describe('TeamsService', () => {
 
   it('should get a team by name', async () => {
     const service = new TeamsService({headers: {}})
-    axiosMock.onGet().reply(200,  [{id: '1', name: 'Team 1'}, {id: '2', name: 'Team 2'}])
+    axiosMock.onGet().reply(200, [{id: '1', name: 'Team 1'}, {id: '2', name: 'Team 2'}])
     const team = await service.getByName('Team 2')
     expect(team?.name).toBe('Team 2')
   })
