@@ -15,6 +15,12 @@ export default class Team extends ShortcutResource<TeamInterface> implements Tea
   public createFields: string[] = ['name', 'mentionName']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
+  constructor(init: TeamInterface) {
+    super()
+    Object.assign(this, init)
+    this.changedFields = []
+  }
+
   get stories() {
     return this.getStories()
   }
@@ -26,7 +32,6 @@ export default class Team extends ShortcutResource<TeamInterface> implements Tea
     })
     const storiesData: Record<string, unknown>[] = response.data.data ?? []
     return storiesData.map((story) => new Story(convertApiFields(story)))
-
   }
 
   appUrl!: string
