@@ -1,8 +1,8 @@
-import Member from '@sx/members/member'
 import process from 'process'
 
 import axios from 'axios'
 
+import Member from '@sx/members/member'
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import Team from '@sx/teams/team'
 
