@@ -55,6 +55,7 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, unknown>[] = response.data ?? []
+
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
       let id: string = resource.id as string

@@ -15,10 +15,7 @@ export default class TeamsService extends BaseService<Team, TeamInterface> {
    * Enables the teams feature for the workspace.
    */
   public async enable(): Promise<boolean> {
-    const response = await axios.post(`${this.baseUrl}/enable`, {}, {headers: this.headers})
-    if (response.status >= 400) {
-      throw new Error('HTTP error ' + response.status)
-    }
+    await axios.post(`${this.baseUrl}/enable`, {}, {headers: this.headers})
     return true
   }
 
@@ -26,10 +23,7 @@ export default class TeamsService extends BaseService<Team, TeamInterface> {
    * Disables the teams feature for the workspace.
    */
   public async disable(): Promise<boolean> {
-    const response = await axios.post(`${this.baseUrl}/disable`, {}, {headers: this.headers})
-    if (response.status >= 400) {
-      throw new Error('HTTP error ' + response.status)
-    }
+    await axios.post(`${this.baseUrl}/disable`, {}, {headers: this.headers})
     return true
   }
 
