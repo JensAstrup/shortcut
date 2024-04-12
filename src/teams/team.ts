@@ -12,7 +12,7 @@ import {getHeaders} from '@sx/utils/headers'
 /**
  * @inheritDoc
  */
-export default class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
+class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
   public static baseUrl = 'https://api.app.shortcut.com/api/v3/groups' // Shortcut renamed groups to teams
   public createFields: string[] = ['name', 'mentionName']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
@@ -56,3 +56,5 @@ export default class Team extends ShortcutResource<TeamInterface> implements Tea
   numStoriesStarted!: number
   workflowIds!: number[]
 }
+
+export default Team

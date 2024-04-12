@@ -1,3 +1,4 @@
+import Member from '@sx/members/member'
 import process from 'process'
 
 import axios from 'axios'
@@ -21,12 +22,26 @@ describe('Team', () => {
 
   afterAll(() => {
     process.env.SHORTCUT_API_KEY = originalToken
+    jest.clearAllMocks()
+    jest.restoreAllMocks()
+  })
+
+  it('should get members', async () => {
+    const team = new Team({id: '1', memberIds: [1, 2]} as TeamInterface)
+    axios.get = jest.fn()
+      .mockResolvedValue({data: {id: '1', name: 'Member 1'}, status: 200})
+      .mockResolvedValue({data: {id: '2', name: 'Member 2'}, status: 200})
+
+    const members = await team.members
+
+    expect(members).toHaveLength(2)
+    expect(members[0]).toBeInstanceOf(Member)
   })
 
   it('should get stories', async () => {
     const team = new Team({id: '1'} as TeamInterface)
     const storiesData = [{id: '1', name: 'Story 1'}, {id: '2', name: 'Story 2'}]
-    axios.get = jest.fn().mockResolvedValue({data: {data: storiesData}})
+    axios.get = jest.fn().mockResolvedValue({data: {data: storiesData}, status: 200})
 
     const stories = await team.getStories()
 
