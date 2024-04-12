@@ -27,6 +27,9 @@ const story: Story = await client.stories.get('story-id')
 const epic: Epic = await story.epic
 const owners: Member[] = await epic.owners
 const team: Team = await story.team
+
+// Now with that team, we can navigate easily to the team's members
+const members: Member[] = await team.members
 ````
 
 compared to the standard Shortcut Client:
@@ -80,6 +83,8 @@ for (const story of outdatedStories) {
     await shortcut.createComment(story.id, {text: comment})
 }
 ````
+
+
 
 
 ## Installation
