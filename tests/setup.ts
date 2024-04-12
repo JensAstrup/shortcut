@@ -1,3 +1,6 @@
+import process from 'process'
+
+
 beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {
   })
@@ -5,6 +8,7 @@ beforeEach(() => {
   })
   jest.spyOn(console, 'warn').mockImplementation(() => {
   })
+  process.env.SHORTCUT_API_KEY = 'token'
 })
 
 afterEach(() => {
