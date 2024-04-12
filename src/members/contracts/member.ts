@@ -16,6 +16,7 @@ interface MemberProfile {
   gravatarHash: string,
   id: UUID,
   isOwner: boolean,
+  mentionName: string,
   name: string,
   twoFactorAuthEnabled: boolean
 }

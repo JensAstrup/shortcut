@@ -1,3 +1,12 @@
+import process from 'process'
+
+
+const originalEnv = {...process.env}
+
+beforeAll(() => {
+  process.env.SHORTCUT_API_KEY = 'token'
+})
+
 beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {
   })
@@ -9,4 +18,8 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.restoreAllMocks()
+})
+
+afterAll(() => {
+  process.env = originalEnv
 })

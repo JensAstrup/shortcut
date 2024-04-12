@@ -1,6 +1,6 @@
 {
   "name": "shortcut-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -20,7 +20,7 @@
     "prepublishOnly": "npm run build",
     "test": "jest",
     "docs": "npx typedoc",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint --ext ts src tests",
     "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [],
@@ -36,6 +36,7 @@
     "@types/node-fetch": "^2.6.11",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
+    "axios-mock-adapter": "^1.22.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-perfectionist": "^2.7.0",
@@ -45,11 +46,10 @@
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-jest": "^0.0.1",
     "tscpaths": "^0.0.9",
-    "typedoc-plugin-coverage": "^3.1.0"
+    "typedoc-plugin-coverage": "^3.1.0",
+    "typescript": "^5.4.4"
   },
   "dependencies": {
-    "axios": "^1.6.7",
-    "axios-mock-adapter": "^1.22.0",
-    "formdata-node": "^6.0.3"
+    "axios": "^1.6.7"
   }
 }

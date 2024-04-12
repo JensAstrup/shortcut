@@ -19,6 +19,41 @@ API.
 
 ### Example Usage
 
+Navigating between related resources is simplified:
+
+```typescript
+const client: Client = new Client()
+const story: Story = await client.stories.get('story-id')
+const epic: Epic = await story.epic
+const owners: Member[] = await epic.owners
+const team: Team = await story.team
+
+// Now with that team, we can navigate easily to the team's members
+const members: Member[] = await team.members
+````
+
+compared to the standard Shortcut Client:
+
+```typescript
+const shortcut = new ShortcutClient();
+const story = await shortcut.getStory(storyId);
+let epic, owners, team;
+
+if (story.epic_id) {
+    epic = await shortcut.getEpic(story.epic_id);
+}
+for (const ownerId of story.owner_ids) {
+    ownerDetails = await shortcut.getMember(ownerId);
+    owners.push(ownerDetails);
+}
+
+if (story.group_id) {
+    team = await shortcut.getGroup(story.group_id);
+}
+````
+
+And taking actions on resources is intuitive, here's how you leave a comment on a story:
+
 ```typescript
 const oneWeekAgo = new Date();
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -41,7 +76,7 @@ oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
 const shortcut = new ShortcutClient();
 const {data} = await shortcut.searchStories('team:engineering is:started');
-const outdatedStories = stories.filter(story => story.updated_at < oneWeekAgo)
+const outdatedStories = stories.filter(story => new Date(story.updated_at) < oneWeekAgo)
 
 for (const story of outdatedStories) {
     const comment = 'This story has not been updated in over a week. Please provide an update.'
@@ -49,35 +84,7 @@ for (const story of outdatedStories) {
 }
 ````
 
-Navigating between related resources is also simplified:
 
-```typescript
-const client: Client = new Client()
-const story: Story = await client.stories.get('story-id')
-const epic: Epic = await story.epic
-const owners: Member[] = await epic.owners
-const team: Team = await story.team
-````
-
-compared to the standard Shortcut Client:
-
-```typescript
-const shortcut = new ShortcutClient();
-const story = await shortcut.getStory(storyId);
-let epic, owners, team;
-
-if (story.epic_id) {
-    epic = await shortcut.getEpic(story.epic_id);
-}
-for (const ownerId of story.owner_ids) {
-    ownerDetails = await shortcut.getMember(ownerId);
-    owners.push(ownerDetails);
-}
-
-if (story.group_id) {
-    team = await shortcut.getGroup(story.group_id);
-}
-````
 
 
 ## Installation

@@ -4,6 +4,7 @@ import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import UUID from '@sx/utils/uuid'
 
 
 export type ServiceOperation = 'get' | 'search' | 'list'
@@ -42,7 +43,7 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
     return instance
   }
 
-  public async getMany(ids: string[] | number[]): Promise<Resource[]> {
+  public async getMany(ids: UUID[] | number[]): Promise<Resource[]> {
     return Promise.all(ids.map(id => this.get(id)))
   }
 
@@ -55,7 +56,17 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, unknown>[] = response.data ?? []
-    return instancesData.map((instance) => this.factory(convertApiFields(instance)))
+
+    const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
+    this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
+      let id: string = resource.id as string
+      if(!isNaN(Number(resource.id))) {
+        id = Number(resource.id).toString()
+      }
+      acc[id] = resource
+      return acc
+    }, {})
+    return resources
   }
 }
 

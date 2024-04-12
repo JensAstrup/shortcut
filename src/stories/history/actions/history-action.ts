@@ -8,7 +8,7 @@ import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-class HistoryAction extends ShortcutResource<HistoryActionInterface> implements HistoryActionInterface{
+class HistoryAction extends ShortcutResource<HistoryActionInterface> implements HistoryActionInterface {
   public availableOperations: ResourceOperation[] = []
 
   constructor(init: HistoryActionInterface) {
@@ -23,7 +23,8 @@ class HistoryAction extends ShortcutResource<HistoryActionInterface> implements 
   get owners(): Promise<Member[]> {
     if (!this.ownerIds) {
       return Promise.resolve([])
-    } else {
+    }
+    else {
       const service = new MembersService({headers: getHeaders()})
       return service.getMany(this.ownerIds)
     }

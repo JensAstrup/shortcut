@@ -1,6 +1,9 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import MemberInterface, {MemberProfile, MemberState} from '@sx/members/contracts/member'
 import StoryInterface from '@sx/stories/contracts/story-interface'
+import Team from '@sx/teams/team'
+import TeamsService from '@sx/teams/teams-service'
+import {getHeaders} from '@sx/utils/headers'
 
 
 /**
@@ -27,5 +30,10 @@ export default class Member extends ShortcutResource<MemberInterface> implements
     super()
     Object.assign(this, init)
     this.changedFields = []
+  }
+
+  get teams(): Promise<Team[]> {
+    const service = new TeamsService({headers: getHeaders()})
+    return service.getMany(this.groupIds)
   }
 }
