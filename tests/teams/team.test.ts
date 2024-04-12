@@ -1,8 +1,10 @@
+import process from 'process'
+
 import axios from 'axios'
 
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import Team from '@sx/teams/team'
-import process from 'process'
+
 
 
 jest.mock('axios', () => ({
