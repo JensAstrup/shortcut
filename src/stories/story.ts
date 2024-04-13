@@ -1,3 +1,4 @@
+import FlatHistory from '@sx/stories/history/flat-history'
 import axios from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
@@ -29,7 +30,7 @@ import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {getHeaders} from '@sx/utils/headers'
-import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflows/contracts/workflow-state-interface'
+import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowService from '@sx/workflows/workflows-service'
 
 
@@ -138,6 +139,20 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
       const historyInterface = convertApiFields(history) as HistoryInterface
       return new History(historyInterface)
     })
+  }
+
+  /**
+   * Get the history of workflow changes for the story as a flat array. See {@link FlatHistory} for the structure of the flat history.
+   * This is useful for making calculations or determining when specific events occurred as it reduces the complexity of the history data.
+   * Note however that there is additional network overhead in fetching the history data. There is an initial request to fetch all workflow history,
+   * and each subsequent {@link Member} is fetched individually.
+   */
+  public async WorkflowHistory(): Promise<FlatHistory[]> {
+    const history = await this.history()
+    const flatHistories = await Promise.all(history.map(async (history) => {
+      return await history.getWorkflowHistory()
+    }))
+    return flatHistories.flat()
   }
 
   /**
