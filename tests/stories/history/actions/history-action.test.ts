@@ -21,7 +21,7 @@ describe('History Action', () => {
       action: HistoryActionEnum.CREATE,
       name: 'story',
       storyType: 'story',
-      changes: {}
+      changes: [{someField: {new: 'new', old: 'old'}}]
     }
     const historyAction = new HistoryAction(actionData)
     const owners = await historyAction.owners
@@ -36,7 +36,7 @@ describe('History Action', () => {
       action: HistoryActionEnum.CREATE,
       name: 'story',
       storyType: 'story',
-      changes: {},
+      changes: [{someField: {new: 'new', old: 'old'}}],
       ownerIds: ['1']
     }
     const historyAction = new HistoryAction(actionData)
@@ -75,7 +75,7 @@ describe('History Action', () => {
       action: HistoryActionEnum.CREATE,
       name: 'story',
       storyType: 'story',
-      changes: {}
+      changes: [{someField: {new: 'new', old: 'old'}}]
     }
     const historyAction = new HistoryAction(actionData)
     const labels = await historyAction.labels
@@ -90,7 +90,7 @@ describe('History Action', () => {
       action: HistoryActionEnum.CREATE,
       name: 'story',
       storyType: 'story',
-      changes: {},
+      changes: [{someField: {new: 'new', old: 'old'}}],
       labelIds: [1]
     }
     const historyAction = new HistoryAction(actionData)

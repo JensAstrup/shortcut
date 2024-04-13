@@ -19,13 +19,13 @@ describe('History', () => {
       action: HistoryActionEnum.CREATE,
       name: 'story',
       storyType: 'story',
-      changes: {}
+      changes: [{someField: {new: 'new', old: 'old'}}]
     }
     const history = new History({
       changedAt: new Date(),
       externalId: '',
       memberId: '',
-      primaryId: undefined,
+      primaryId: 1,
       references: [],
       version: '',
       webhookId: '',
@@ -43,13 +43,13 @@ describe('History', () => {
       action: HistoryActionEnum.CREATE,
       name: 'story',
       storyType: 'story',
-      changes: {}
+      changes: [{someField: {new: 'new', old: 'old'}}]
     }
     const history = new History({
       changedAt: new Date(),
       externalId: '',
       memberId: '',
-      primaryId: undefined,
+      primaryId: 2,
       references: [],
       version: '',
       webhookId: '',
@@ -60,6 +60,6 @@ describe('History', () => {
     axiosMock.onGet().reply(200, memberData)
     const member = await history.member
     expect(member).toBeInstanceOf(Member)
-    expect(member.id).toBe('1')
+    expect(member?.id).toBe('1')
   })
 })
