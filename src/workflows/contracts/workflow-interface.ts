@@ -3,17 +3,17 @@ import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state
 
 
 interface WorkflowInterface extends BaseInterface {
-    autoAssignOwner: boolean;
-    createdAt: Date;
-    defaultStateId: number;
-    description: string;
-    entityType: string;
-    id: number;
-    name: string;
-    projectIds: number[];
-    states: WorkflowStateInterface[];
-    teamId: number;
-    updatedAt: Date;
+  autoAssignOwner: boolean;
+  createdAt: Date;
+  defaultStateId: number;
+  description: string;
+  entityType: string;
+  id: number;
+  name: string;
+  projectIds: number[];
+  states: WorkflowStateInterface[];
+  teamId: number;
+  updatedAt: Date;
 }
 
 export default WorkflowInterface
