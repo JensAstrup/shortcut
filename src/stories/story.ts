@@ -147,7 +147,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
    * Note however that there is additional network overhead in fetching the history data. There is an initial request to fetch all workflow history,
    * and each subsequent {@link Member} is fetched individually.
    */
-  public async WorkflowHistory(): Promise<FlatHistory[]> {
+  public async workflowHistory(): Promise<FlatHistory[]> {
     const history = await this.history()
     const flatHistories = await Promise.all(history.map(async (history) => {
       return await history.getWorkflowHistory()
