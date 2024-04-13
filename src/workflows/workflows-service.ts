@@ -8,7 +8,7 @@ import Workflow from '@sx/workflows/workflow'
 
 const WORKFLOW_STATES: Record<number, WorkflowStateInterface> = {}
 
-class WorkflowService extends BaseService<Workflow, WorkflowInterface> {
+class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/workflows'
   protected factory = (data: WorkflowInterface) => new Workflow(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
@@ -40,5 +40,5 @@ class WorkflowService extends BaseService<Workflow, WorkflowInterface> {
   }
 }
 
-export default WorkflowService
+export default WorkflowsService
 export {WORKFLOW_STATES}
