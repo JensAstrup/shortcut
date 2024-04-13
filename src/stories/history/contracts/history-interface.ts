@@ -9,7 +9,7 @@ interface HistoryInterface extends BaseInterface {
     externalId: string
     id: UUID
     memberId: UUID
-    primaryId: undefined
+    primaryId: number
     references: []
     version: string
     webhookId: string

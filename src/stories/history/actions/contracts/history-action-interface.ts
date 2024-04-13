@@ -15,6 +15,14 @@ enum HistoryActionEnum{
     UPDATE = 'update',
 }
 
+interface HistoryActionChangeInterface {
+    [key: string]: string | number | object | undefined
+    new?: string | number
+    old?: string | number
+    adds?: number[]
+    removes?: number[]
+}
+
 interface HistoryActionInterface extends BaseInterface {
     action: HistoryActionEnum
     appUrl: string
@@ -42,8 +50,8 @@ interface HistoryActionInterface extends BaseInterface {
     subjectStoryLinkIds?: number[]
     taskIds?: number[]
     workflowStateId?: number
-    changes: Record<string, string | number | boolean>
+    changes: Array<{[key:string]: HistoryActionChangeInterface, workflowStateId: HistoryActionChangeInterface}>
 }
 
 export default HistoryActionInterface
-export { HistoryActionEnum }
+export { HistoryActionChangeInterface, HistoryActionEnum }
