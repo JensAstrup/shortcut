@@ -50,7 +50,7 @@ interface HistoryActionInterface extends BaseInterface {
     subjectStoryLinkIds?: number[]
     taskIds?: number[]
     workflowStateId?: number
-    changes: Array<{[key:string]: HistoryActionChangeInterface, workflowStateId: HistoryActionChangeInterface}>
+    changes: Array<{[key:string]: HistoryActionChangeInterface | undefined, workflowStateId?: HistoryActionChangeInterface}>
 }
 
 export default HistoryActionInterface
