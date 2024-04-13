@@ -3,7 +3,6 @@ import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/con
 import WorkflowState from '@sx/workflow-states/workflow-state'
 import WorkflowStatesService from '@sx/workflow-states/workflow-states-service'
 import Workflow from '@sx/workflows/workflow'
-import WorkflowService from '@sx/workflows/workflows-service'
 import WorkflowsService from '@sx/workflows/workflows-service'
 
 
@@ -24,7 +23,7 @@ describe('Workflow States Service', () => {
       description: 'test',
       verb: 'test',
     } as WorkflowStateInterface
-    jest.spyOn(WorkflowService.prototype, 'list').mockResolvedValue([{
+    jest.spyOn(WorkflowsService.prototype, 'list').mockResolvedValue([{
       id: 1,
       name: 'Test Workflow',
       states: [workflowStateInterface],
@@ -32,6 +31,16 @@ describe('Workflow States Service', () => {
     const workflowStateService = new WorkflowStatesService({headers: getHeaders()})
     const workflowState = await workflowStateService.get(1)
     expect(workflowState).toEqual(new WorkflowState(workflowStateInterface))
+  })
+
+  it('should throw an error if workflow state is not found', async () => {
+    jest.spyOn(WorkflowsService.prototype, 'list').mockResolvedValue([{
+      id: 1,
+      name: 'Test Workflow',
+      states: [],
+    }] as object as Workflow[])
+    const workflowStateService = new WorkflowStatesService({headers: getHeaders()})
+    await expect(workflowStateService.get(2)).rejects.toThrow('Workflow state with id 2 not found')
   })
 
   it('should get many workflow states', async () => {
@@ -50,7 +59,7 @@ describe('Workflow States Service', () => {
       description: 'test',
       verb: 'test',
     } as WorkflowStateInterface
-    jest.spyOn(WorkflowService.prototype, 'list').mockResolvedValue([{
+    jest.spyOn(WorkflowsService.prototype, 'list').mockResolvedValue([{
       id: 1,
       name: 'Test Workflow',
       states: [workflowStateInterface],
