@@ -32,7 +32,7 @@ export default class Member extends ShortcutResource<MemberInterface> implements
     this.changedFields = []
   }
 
-  get teams(): Promise<Team[]> {
+  get teams(): Promise<Array<Team>> {
     const service = new TeamsService({headers: getHeaders()})
     return service.getMany(this.groupIds)
   }
