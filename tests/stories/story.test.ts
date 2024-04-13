@@ -4,6 +4,7 @@ import EpicsService from '@sx/epics/epics-service'
 import Label from '@sx/labels/label'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
+import History from '@sx/stories/history/history'
 import Story from '@sx/stories/story'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
@@ -130,23 +131,34 @@ describe('Story', () => {
     })
   })
 
-  // describe('history method', () => {
-  //   it('should throw an error if request fails', () => {
-  //     const story = new Story({id: 1})
-  //     axiosMock.onGet().reply(500)
-  //     expect(story.history()).rejects.toThrow('Error fetching history: Error: Network error')
-  //   })
-  //
-  //   it('should return the story history', async () => {
-  //     const story = new Story({id: 1})
-  //     const history = [{id: 1}]
-  //     axiosMock.onGet().reply(200, {data: history})
-  //     const storyHistory = await story.history()
-  //     console.log(storyHistory)
-  //     expect(storyHistory[0]).toMatchObject(history[0])
-  //     expect(axios.get).toHaveBeenCalledWith(`${Story.baseUrl}/stories/${story.id}/history`, {headers: getHeaders()})
-  //   })
-  // })
+  describe('history method', () => {
+    it('should throw an error if request fails', () => {
+      const story = new Story({id: 1})
+      axiosMock.onGet().reply(500)
+      expect(story.history()).rejects.toThrow('Error fetching history: Error: Request failed with status code 500')
+    })
+
+    it('should return the story history', async () => {
+      const story = new Story({id: 1})
+      const history = [{id: 1}]
+      axiosMock.onGet().reply(200, history)
+      const storyHistory = await story.history()
+      console.log(storyHistory)
+      expect(storyHistory[0]).toMatchObject(history[0])
+    })
+  })
+
+  describe('workflowHistory method', () => {
+    it('should return the story workflow history', async () => {
+      const story = new Story({id: 1})
+      const getWorkflowHistory = jest.fn().mockResolvedValue([{id: 1} as object as WorkflowStateInterface])
+      const history = [{id: 1, getWorkflowHistory: getWorkflowHistory}]
+      jest.spyOn(Story.prototype, 'history').mockResolvedValue(history as object as Promise<History[]>)
+      axiosMock.onGet().reply(200, history)
+      await story.workflowHistory()
+      expect(getWorkflowHistory).toHaveBeenCalled()
+    })
+  })
 
   describe('cycleTime method', () => {
     it(' should throw an error if start date is not set', () => {
