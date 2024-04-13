@@ -1,5 +1,7 @@
-import Epic from '@sx/epics/epic'
+import axios from 'axios'
+import AxiosMockAdapter from 'axios-mock-adapter'
 
+import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
 import Label from '@sx/labels/label'
 import Member from '@sx/members/member'
@@ -9,12 +11,9 @@ import Story from '@sx/stories/story'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
-import {getHeaders} from '@sx/utils/headers'
 import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowState from '@sx/workflow-states/workflow-state'
 import WorkflowService from '@sx/workflows/workflows-service'
-import axios from 'axios'
-import AxiosMockAdapter from 'axios-mock-adapter'
 
 
 const axiosMock = new AxiosMockAdapter(axios)

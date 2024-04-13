@@ -1,14 +1,14 @@
-import historyAction from '@sx/stories/history/actions/history-action'
-import ResourceConverter from '@sx/utils/convert-to-resource'
-import WorkflowState from '@sx/workflow-states/workflow-state'
 import axios from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter'
 
 import MemberInterface from '@sx/members/contracts/member'
 import Member from '@sx/members/member'
 import HistoryActionInterface, {HistoryActionChangeInterface, HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
+import historyAction from '@sx/stories/history/actions/history-action'
 import HistoryAction from '@sx/stories/history/actions/history-action'
 import History from '@sx/stories/history/history'
+import ResourceConverter from '@sx/utils/convert-to-resource'
+import WorkflowState from '@sx/workflow-states/workflow-state'
 
 
 const axiosMock = new AxiosMockAdapter(axios)
