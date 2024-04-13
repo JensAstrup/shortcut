@@ -1,4 +1,3 @@
-import FlatHistory from '@sx/stories/history/flat-history'
 import axios from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
@@ -18,6 +17,7 @@ import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story
 import StoryCustomField from '@sx/stories/custom-fields/story-custom-field'
 import HistoryApiData from '@sx/stories/history/contracts/history-api-data'
 import HistoryInterface from '@sx/stories/history/contracts/history-interface'
+import FlatHistory from '@sx/stories/history/flat-history'
 import History from '@sx/stories/history/history'
 import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
 import StoryLink from '@sx/stories/links/story-link'

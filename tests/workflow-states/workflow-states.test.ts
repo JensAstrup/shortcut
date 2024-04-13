@@ -1,6 +1,7 @@
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowState from '@sx/workflow-states/workflow-state'
 
+
 describe('WorkflowState', () => {
   it('should instantiate', () => {
     const workflowData: WorkflowStateInterface = {

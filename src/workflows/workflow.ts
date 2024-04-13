@@ -1,6 +1,6 @@
 import ShortcutResource from '@sx/base-resource'
-import WorkflowInterface from '@sx/workflows/contracts/workflow-interface'
 import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
+import WorkflowInterface from '@sx/workflows/contracts/workflow-interface'
 
 
 /**
