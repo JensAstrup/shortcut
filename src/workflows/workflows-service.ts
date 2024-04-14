@@ -1,13 +1,14 @@
 import BaseService, {ServiceOperation} from '@sx/base-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {WorkflowStateApiData} from '@sx/workflow-states/contracts/workflow-state-api-data'
+import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowInterface from '@sx/workflows/contracts/workflow-interface'
-import WorkflowStateInterface from '@sx/workflows/contracts/workflow-state-interface'
 import Workflow from '@sx/workflows/workflow'
 
 
 const WORKFLOW_STATES: Record<number, WorkflowStateInterface> = {}
 
-class WorkflowService extends BaseService<Workflow, WorkflowInterface> {
+class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/workflows'
   protected factory = (data: WorkflowInterface) => new Workflow(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
@@ -17,7 +18,7 @@ class WorkflowService extends BaseService<Workflow, WorkflowInterface> {
     const workflowStates: WorkflowStateInterface[] = this.extractWorkflowStates(workflows)
 
     for (const state of workflowStates) {
-      WORKFLOW_STATES[state.id] = convertApiFields(state) as WorkflowStateInterface
+      WORKFLOW_STATES[state.id] = convertApiFields(state as unknown as WorkflowStateApiData) as WorkflowStateInterface
     }
 
     return workflowStates
@@ -39,5 +40,5 @@ class WorkflowService extends BaseService<Workflow, WorkflowInterface> {
   }
 }
 
-export default WorkflowService
+export default WorkflowsService
 export {WORKFLOW_STATES}

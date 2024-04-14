@@ -3,10 +3,9 @@ import MemberInterface, {MemberProfile, MemberState} from '@sx/members/contracts
 import Member from '@sx/members/member'
 
 
-export default class MembersService extends BaseService<Member, MemberInterface> implements MemberInterface {
+class MembersService extends BaseService<Member, MemberInterface> implements MemberInterface {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/members'
   protected factory = (data: object) => new Member(data)
-  public static members: Record<number, Member> = {}
   public availableOperations: ServiceOperation[] = ['get', 'list']
 
   createdAt: string
@@ -20,3 +19,5 @@ export default class MembersService extends BaseService<Member, MemberInterface>
   updatedAt: string
 
 }
+
+export default MembersService

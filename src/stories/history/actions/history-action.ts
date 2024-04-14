@@ -3,7 +3,7 @@ import Label from '@sx/labels/label'
 import LabelsService from '@sx/labels/labels-service'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
-import HistoryActionInterface, {HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
+import HistoryActionInterface, {HistoryActionChangeInterface, HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
@@ -43,7 +43,7 @@ class HistoryAction extends ShortcutResource<HistoryActionInterface> implements 
 
   action: HistoryActionEnum
   appUrl: string
-  changes: Record<string, string | number | boolean>
+  changes:  Array<{[key:string]: HistoryActionChangeInterface, workflowStateId: HistoryActionChangeInterface}>
   entityType: string
   id: number
   name: string

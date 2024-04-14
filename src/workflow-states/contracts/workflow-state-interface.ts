@@ -9,7 +9,6 @@ enum WorkflowStateType {
 }
 
 interface WorkflowStateInterface extends BaseInterface {
-    [index: string]: unknown
 
     color: string // Assuming color is a hex string (e.g., "#FFFFFF")
     createdAt: Date

@@ -1,5 +1,5 @@
 import BaseData from '@sx/base-data'
-import WorkflowStateInterface from '@sx/workflows/contracts/workflow-state-interface'
+import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
 
 
 interface WorkflowApiData extends BaseData {
