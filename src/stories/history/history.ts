@@ -1,5 +1,3 @@
-import * as console from 'node:console'
-
 import ShortcutResource from '@sx/base-resource'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
