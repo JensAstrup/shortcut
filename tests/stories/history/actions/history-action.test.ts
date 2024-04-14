@@ -13,6 +13,28 @@ jest.mock('../../../../src/utils/headers', () => ({
 
 
 describe('History Action', () => {
+
+  it('should construct a new instance', () => {
+    const actionData: HistoryActionInterface = {
+      id: 1,
+      appUrl: 'test.com',
+      entityType: 'story',
+      action: HistoryActionEnum.CREATE,
+      name: 'story',
+      storyType: 'story',
+      changes: [{someField: {new: 'new', old: 'old'}}]
+    }
+    const historyAction = new HistoryAction(actionData)
+    expect(historyAction).toBeInstanceOf(HistoryAction)
+    expect(historyAction.id).toEqual(1)
+    expect(historyAction.appUrl).toEqual('test.com')
+    expect(historyAction.entityType).toEqual('story')
+    expect(historyAction.action).toEqual(HistoryActionEnum.CREATE)
+    expect(historyAction.name).toEqual('story')
+    expect(historyAction.storyType).toEqual('story')
+    expect(historyAction.changes).toEqual([{someField: {new: 'new', old: 'old'}}])
+  })
+
   it('should return an empty array if ownerIds is not defined', async () => {
     const actionData: HistoryActionInterface = {
       id: 1,
