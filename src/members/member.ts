@@ -1,5 +1,6 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import MemberInterface, {MemberProfile, MemberState} from '@sx/members/contracts/member'
+import MemberInterface, {MemberState} from '@sx/members/contracts/member'
+import {MemberProfile} from '@sx/members/contracts/member-profile'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
@@ -9,7 +10,7 @@ import {getHeaders} from '@sx/utils/headers'
 /**
  * @inheritDoc
  */
-export default class Member extends ShortcutResource<MemberInterface> implements MemberInterface {
+class Member extends ShortcutResource<MemberInterface> implements MemberInterface {
   public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
   public availableOperations: ResourceOperation[] = []
 
@@ -32,8 +33,10 @@ export default class Member extends ShortcutResource<MemberInterface> implements
     this.changedFields = []
   }
 
-  get teams(): Promise<Team[]> {
+  get teams(): Promise<Array<Team>> {
     const service = new TeamsService({headers: getHeaders()})
     return service.getMany(this.groupIds)
   }
 }
+
+export default Member

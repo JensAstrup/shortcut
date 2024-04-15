@@ -1,5 +1,5 @@
 import BaseInterface from '@sx/base-interface'
-import UUID from '@sx/utils/uuid'
+import {MemberProfile} from '@sx/members/contracts/member-profile'
 
 
 enum MemberState {
@@ -7,18 +7,6 @@ enum MemberState {
   FULL = 'full',
   IMPORTED = 'imported',
   PARTIAL = 'partial'
-}
-
-interface MemberProfile {
-  deactivated: boolean,
-  displayIcon: string,
-  emailAddress: string,
-  gravatarHash: string,
-  id: UUID,
-  isOwner: boolean,
-  mentionName: string,
-  name: string,
-  twoFactorAuthEnabled: boolean
 }
 
 interface MemberInterface extends BaseInterface {
@@ -34,4 +22,4 @@ interface MemberInterface extends BaseInterface {
 }
 
 export default MemberInterface
-export {MemberProfile, MemberState}
+export {MemberState}
