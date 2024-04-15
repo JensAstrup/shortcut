@@ -1,3 +1,4 @@
+import WorkspaceInterface from '@sx/workspace/contracts/workspace'
 import axios, {AxiosResponse} from 'axios'
 
 import BaseService, {ServiceOperation} from '@sx/base-service'
@@ -17,7 +18,9 @@ class MembersService extends BaseService<Member, MemberInterface> {
     const apiUrl: string = 'https://api.app.shortcut.com/api/v3/member'
     const response: AxiosResponse = await axios.get(apiUrl, {headers: this.headers})
     const memberData = response.data as MemberProfileApiData
-    return convertApiFields(memberData) as MemberProfile
+    const profile: MemberProfile = convertApiFields(memberData) as MemberProfile
+    profile.workspace = convertApiFields(memberData.workspace2) as WorkspaceInterface
+    return profile
   }
 
 }

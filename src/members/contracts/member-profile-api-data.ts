@@ -1,6 +1,6 @@
 import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
-import Workspace from '@sx/workspace/contracts/workspace'
+import WorkspaceApiData from '@sx/workspace/contracts/workspace-api-data'
 
 
 interface MemberProfileApiData extends BaseData {
@@ -13,7 +13,7 @@ interface MemberProfileApiData extends BaseData {
   mention_name: string,
   name: string,
   two_factor_auth_enabled: boolean
-  workspace: Workspace
+  workspace2: WorkspaceApiData
 }
 
 export default MemberProfileApiData
