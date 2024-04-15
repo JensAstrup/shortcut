@@ -1,4 +1,3 @@
-import WorkspaceInterface from '@sx/workspace/contracts/workspace'
 import axios, {AxiosResponse} from 'axios'
 
 import BaseService, {ServiceOperation} from '@sx/base-service'
@@ -7,6 +6,7 @@ import {MemberProfile} from '@sx/members/contracts/member-profile'
 import MemberProfileApiData from '@sx/members/contracts/member-profile-api-data'
 import Member from '@sx/members/member'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import WorkspaceInterface from '@sx/workspace/contracts/workspace'
 
 
 class MembersService extends BaseService<Member, MemberInterface> {
@@ -14,7 +14,12 @@ class MembersService extends BaseService<Member, MemberInterface> {
   protected factory = (data: object) => new Member(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
 
-  async getAuthenticatedMember(): Promise<MemberProfile> {
+  async getAuthenticatedMember(): Promise<Member>{
+    const profile: MemberProfile = await this.getAuthenticatedMemberProfile()
+    return await this.get(profile.id)
+  }
+
+  async getAuthenticatedMemberProfile(): Promise<MemberProfile> {
     const apiUrl: string = 'https://api.app.shortcut.com/api/v3/member'
     const response: AxiosResponse = await axios.get(apiUrl, {headers: this.headers})
     const memberData = response.data as MemberProfileApiData
