@@ -16,7 +16,7 @@
   },
   "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
-    "build": "rm -rf lib && npm run compile:esm && npm run compile:cjs && npm run replace-paths && npm run rename:esm && npm run rename:cjs && npm run reformatImports",
+    "build": "rm -rf dist && npm run compile:esm && npm run compile:cjs && npm run replace-paths && npm run rename:esm && npm run rename:cjs && npm run reformatImports",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "compile:cjs": "tsc -p tsconfig.cjs.json",
     "rename:esm": "renamer --path-element ext --find js --replace mjs './dist/esm/**/*.js'",
