@@ -1,22 +1,30 @@
 {
   "name": "shortcut-api",
-  "version": "1.2.3",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "version": "1.2.4",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "files": [
-    "lib"
+    "dist"
   ],
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js"
-    }
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "type": "module",
   "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
-    "build": "rm -rf lib && tsc && tscpaths -p tsconfig.json -s ./src -o ./lib && npm run reformatImports",
-    "reformatImports": "node ./scripts/reformat-imports.js",
+    "build": "rm -rf dist && npm run compile:esm && npm run compile:cjs && npm run replace-paths && npm run rename:esm && npm run rename:cjs && npm run reformat-imports:esm && npm run reformat-imports:cjs",
+    "compile:esm": "tsc -p tsconfig.esm.json",
+    "compile:cjs": "tsc -p tsconfig.cjs.json",
+    "rename:esm": "renamer --path-element ext --find js --replace mjs './dist/esm/**/*.js'",
+    "rename:cjs": "renamer --path-element ext --find js --replace cjs './dist/cjs/**/*.js'",
+    "replace-paths": "tscpaths -p tsconfig.esm.json -s ./src -o ./dist/esm && tscpaths -p tsconfig.cjs.json -s ./src -o ./dist/cjs",
+    "reformat-imports:esm": "node scripts/reformat-esm-imports.js",
+    "reformat-imports:cjs": "node scripts/reformat-cjs-imports.js",
     "prepublishOnly": "npm run build",
     "test": "jest",
     "docs": "npx typedoc",
@@ -41,6 +49,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-perfectionist": "^2.7.0",
     "jest": "^29.7.0",
+    "renamer": "^5.0.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
