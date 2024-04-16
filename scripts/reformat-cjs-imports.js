@@ -12,7 +12,7 @@ function appendJsExtension(file) {
   const updatedContent = content.replace(/require\(['"]([^'"]+)['"]\)/g, (match, p1) => {
     // Append .js to relative paths if missing and not already ending with .js or .json
     if (p1.startsWith('.') && !p1.endsWith('.js') && !p1.endsWith('.json')) {
-      return `require('${p1}.js')`
+      return `require('${p1}.cjs')`
     }
     return match
   })
