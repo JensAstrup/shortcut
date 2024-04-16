@@ -1,6 +1,10 @@
-// Convert imports to require statements:
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
+import {fileURLToPath} from 'url'
+
+
+const __filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(__filename)
 
 
 function addJsExtension(file) {
@@ -22,7 +26,7 @@ function processDirectory(directory) {
     if (dirent.isDirectory()) {
       processDirectory(fullPath)
     }
-    else if (dirent.isFile() && (dirent.name.endsWith('.mjs') || dirent.name.endsWith('.cjs'))) {
+    else if (dirent.isFile() && dirent.name.endsWith('.mjs')) {
       addJsExtension(fullPath)
     }
   })
@@ -30,9 +34,8 @@ function processDirectory(directory) {
 
 // The directory containing your compiled JavaScript files.
 // Adjust this path as necessary.
-let compiledDir = path.join(__dirname, '../dist/esm')
-processDirectory(compiledDir)
-compiledDir = path.join(__dirname, '../dist/cjs')
+const compiledDir = path.join(dirname, '../dist/esm')
+
 processDirectory(compiledDir)
 
 console.log('Import paths have been fixed.')
