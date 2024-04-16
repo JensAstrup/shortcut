@@ -14,7 +14,6 @@
     },
     "./package.json": "./package.json"
   },
-  "type": "module",
   "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
     "build": "rm -rf lib && npm run compile && npm run replace-paths && npm run reformatImports",
