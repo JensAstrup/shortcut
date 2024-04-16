@@ -22,7 +22,7 @@ function processDirectory(directory) {
     if (dirent.isDirectory()) {
       processDirectory(fullPath)
     }
-    else if (dirent.isFile() && dirent.name.endsWith('.js')) {
+    else if (dirent.isFile() && (dirent.name.endsWith('.mjs') || dirent.name.endsWith('.cjs'))) {
       addJsExtension(fullPath)
     }
   })
