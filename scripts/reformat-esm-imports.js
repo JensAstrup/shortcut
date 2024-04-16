@@ -12,7 +12,7 @@ function addJsExtension(file) {
   const updatedContent = content.replace(/from\s+['"]([^'"]+)['"]/g, (match, p1) => {
     // Don't modify node_modules imports or absolute paths or URLs
     if (p1.startsWith('.') && !p1.endsWith('.js') && !p1.endsWith('.json')) {
-      return `from '${p1}.js'`
+      return `from '${p1}.mjs'`
     }
     return match
   })
