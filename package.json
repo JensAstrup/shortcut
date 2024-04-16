@@ -16,7 +16,8 @@
   "type": "module",
   "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
-    "build": "rm -rf lib && npm run compile && tscpaths -p tsconfig.base.json -s ./src -o ./lib && npm run reformatImports",
+    "build": "rm -rf lib && npm run compile && npm run replace-paths && npm run reformatImports",
+    "replace-paths": "tscpaths -p tsconfig.esm.json -s ./src -o ./dist/esm && tscpaths -p tsconfig.cjs.json -s ./src -o ./dist/cjs",
     "compile": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
