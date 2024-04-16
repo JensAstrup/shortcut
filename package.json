@@ -9,16 +9,17 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
     },
     "./package.json": "./package.json"
   },
   "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
-    "build": "rm -rf lib && npm run compile && npm run replace-paths && npm run reformatImports",
+    "build": "rm -rf lib && npm run compile:esm && npm run compile:cjs && npm run replace-paths && npm run reformatImports",
+    "compile:esm": "tsc -p tsconfig.esm.json && renamer --path-element ext --find js --replace mjs './dist/esm/**/*.js'",
+    "compile:cjs": "tsc -p tsconfig.cjs.json && renamer --path-element ext --find js --replace cjs './dist/cjs/**/*.js'",
     "replace-paths": "tscpaths -p tsconfig.esm.json -s ./src -o ./dist/esm && tscpaths -p tsconfig.cjs.json -s ./src -o ./dist/cjs",
-    "compile": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
     "test": "jest",
