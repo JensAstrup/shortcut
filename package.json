@@ -1,21 +1,23 @@
 {
   "name": "shortcut-api",
   "version": "1.2.3",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/esm/index.d.ts",
   "files": [
-    "lib"
+    "dist"
   ],
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js"
-    }
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "type": "module",
   "description": "An API Wrapper for Shortcut, using an object oriented approach to interact with the Shortcut API",
   "scripts": {
-    "build": "rm -rf lib && tsc && tscpaths -p tsconfig.json -s ./src -o ./lib && npm run reformatImports",
+    "build": "rm -rf lib && npm run compile && tscpaths -p tsconfig.base.json -s ./src -o ./lib && npm run reformatImports",
+    "compile": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "reformatImports": "node ./scripts/reformat-imports.js",
     "prepublishOnly": "npm run build",
     "test": "jest",
