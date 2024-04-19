@@ -3,6 +3,7 @@ import axios from 'axios'
 import Epic from '../../src/epics/epic'
 import EpicsService from '../../src/epics/epics-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
+import mocked = jest.mocked
 
 
 jest.mock('axios')
@@ -10,8 +11,8 @@ jest.mock('../../src/utils/convert-fields', () => {
   return {
     convertApiFields: jest.fn().mockImplementation((fields) => fields)
   }
-
 })
+const mockedAxios = mocked(axios)
 
 describe('Epics service', () => {
   beforeEach(() => {
@@ -19,14 +20,14 @@ describe('Epics service', () => {
   })
 
   it('should get workflow', () => {
-    axios.get.mockResolvedValue({data: {id: 1, name: 'Workflow 1'}})
+    mockedAxios.get.mockResolvedValue({data: {id: 1, name: 'Workflow 1'}})
     const service = new EpicsService({headers: {}})
     expect(service.getWorkflow()).resolves.toEqual({id: 1, name: 'Workflow 1'})
-    expect(axios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/epic-workflow', {headers: {}})
+    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/epic-workflow', {headers: {}})
   })
 
   it('should return an array of epics after searching', async () => {
-    axios.get.mockResolvedValue({
+    mockedAxios.get.mockResolvedValue({
       data: {
         data: [{id: 1, name: 'Epic 1', created_at: '2021-01-01T00:00:00Z'},
           {id: 2, name: 'Epic 2', created_at: '2021-01-02T00:00:00Z'}]
@@ -53,7 +54,7 @@ describe('Epics service', () => {
   })
 
   it('should handle an empty response', () => {
-    axios.get.mockResolvedValue({
+    mockedAxios.get.mockResolvedValue({
       status: 200,
       data: []
     })
@@ -62,7 +63,7 @@ describe('Epics service', () => {
   })
 
   it('should throw an error if response is 400 or greater', () => {
-    axios.get.mockResolvedValue({
+    mockedAxios.get.mockResolvedValue({
       status: 400,
       data: {error: 'An error occurred'}
     })
