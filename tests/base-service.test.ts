@@ -3,7 +3,6 @@ import axios from 'axios'
 import BaseInterface from '../src/base-interface'
 import ShortcutResource from '../src/base-resource'
 import BaseService, {BaseSearchableService, ServiceOperation} from '../src/base-service'
-import Story from '../src/stories/story'
 
 import mocked = jest.mocked
 
