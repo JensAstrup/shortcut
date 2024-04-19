@@ -86,11 +86,17 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
    * ```
    *
    * @throws Error if the HTTP status code is 400 or greater
-   * @param query
+   * @param query - The search query to use
+   * @param next - The next page token to use for pagination
    */
-  public async search(query: string): Promise<Resource[]> {
+  public async search(query: string, next?: string): Promise<{ next?: string, results: Resource[] }>{
     const url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
-    url.search = new URLSearchParams({query: query}).toString()
+    if (next) {
+      url.search = new URLSearchParams({page: next, query}).toString()
+    }
+    else {
+      url.search = new URLSearchParams({query: query}).toString()
+    }
 
     const response = await axios.get(url.toString(), {headers: this.headers})
 
@@ -98,9 +104,12 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
       throw new Error('HTTP error ' + response.status)
 
     }
-
+    const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
-    return resourceData.map((resource) => this.factory(convertApiFields(resource)))
+    return {
+      results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
+      next: nextPage
+    }
 
   }
 }

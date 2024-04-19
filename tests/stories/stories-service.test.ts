@@ -42,7 +42,7 @@ describe('Stories service', () => {
     // Since we're comparing instances of Story, either ensure Story's equality check is appropriate
     // or compare based on a property that should be equal, like IDs or names.
     expectedStories.forEach((expectedStory, index) => {
-      expect(stories[index]).toEqual(expect.objectContaining({
+      expect(stories.results[index]).toEqual(expect.objectContaining({
         id: expectedStory.id,
         name: expectedStory.name
       }))
