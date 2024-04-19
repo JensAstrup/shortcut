@@ -10,13 +10,13 @@ jest.mock('../../src/utils/convert-fields', () => {
   return {
     convertApiFields: jest.fn().mockImplementation((fields) => fields)
   }
-
 })
+const mockedAxios = jest.mocked(axios)
 
 
 describe('Objectives service', () => {
   it('should return an array of objectives after searching', async () => {
-    axios.get.mockResolvedValue({
+    mockedAxios.get.mockResolvedValue({
       data: {
         data: [{id: 1, name: 'Objective 1', created_at: '2021-01-01T00:00:00Z'},
           {id: 2, name: 'Objective 2', created_at: '2021-01-02T00:00:00Z'}]
@@ -43,7 +43,7 @@ describe('Objectives service', () => {
   })
 
   it('should throw an error if the axios request returns a status of 400', async () => {
-    axios.get.mockResolvedValue({status: 400})
+    mockedAxios.get.mockResolvedValue({status: 400})
     const service = new ObjectivesService({headers: {}})
 
     await expect(service.search('objective')).rejects.toThrow('HTTP error 400')
