@@ -23,6 +23,7 @@
     "import"
   ],
   "rules": {
+    "dot-notation": "error",
     "indent": [
       "error",
       2
