@@ -10,7 +10,6 @@ describe('convertApiFields', () => {
 
   test('converts datetime strings to Date objects', () => {
     const input = {date_time: '2020-01-01T00:00:00Z'}
-    // @ts-expect-error - Forcing output type here for testing purposes
     const output: Record<string, Date> = convertApiFields(input)
     expect(output.dateTime).toBeInstanceOf(Date)
     expect(output.dateTime.toISOString()).toBe('2020-01-01T00:00:00.000Z')

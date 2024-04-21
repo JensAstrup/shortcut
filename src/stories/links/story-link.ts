@@ -13,12 +13,12 @@ export default class StoryLink extends ShortcutResource<StoryLinkInterface> impl
     this.changedFields = []
   }
 
-  createdAt!: string
-  entityType!: string
-  id!: number
-  objectId!: number
-  subjectId!: number
-  type!: string
-  updatedAt!: string
-  verb!: 'blocks' | 'duplicates' | 'relates to'
+  createdAt: string
+  entityType: string
+  id: number
+  objectId: number
+  subjectId: number
+  type: string
+  updatedAt: string
+  verb: 'blocks' | 'duplicates' | 'relates to'
 }
