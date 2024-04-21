@@ -52,7 +52,7 @@
     "renamer": "^5.0.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "@jens_astrup/tscpaths": "^0.0.10",
+    "@jens_astrup/tscpaths": "^0.0.11",
     "tsconfig-paths-jest": "^0.0.1",
     "tscpaths": "^0.0.9",
     "typedoc-plugin-coverage": "^3.1.0",
