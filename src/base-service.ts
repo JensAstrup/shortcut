@@ -90,9 +90,9 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
    * @param next - The next page token to use for pagination
    */
   public async search(query: string, next?: string): Promise<{ next?: string, results: Resource[] }>{
-    const url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
+    let url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
     if (next) {
-      url.search = new URLSearchParams({page: next, query}).toString()
+      url = new URL(`https://api.app.shortcut.com${next}`)
     }
     else {
       url.search = new URLSearchParams({query: query}).toString()
