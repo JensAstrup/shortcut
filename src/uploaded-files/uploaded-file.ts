@@ -13,19 +13,19 @@ export default class UploadedFile extends ShortcutResource<UploadedFileInterface
     this.changedFields = []
   }
 
-  contentType!: string
-  createdAt!: Date
-  description!: string | null
-  entityType!: string
-  externalId!: string | null
-  filename!: string
-  groupMentionIds!: UUID[]
-  id!: number
-  memberMentionIds!: UUID[]
-  name!: string
-  size!: number
-  storyIds!: number[]
-  thumbnailUrl!: string | null
-  updatedAt!: Date | null
-  uploaderId!: UUID
+  contentType: string
+  createdAt: Date
+  description: string | null
+  entityType: string
+  externalId: string | null
+  filename: string
+  groupMentionIds: UUID[]
+  id: number
+  memberMentionIds: UUID[]
+  name: string
+  size: number
+  storyIds: number[]
+  thumbnailUrl: string | null
+  updatedAt: Date | null
+  uploaderId: UUID
 }

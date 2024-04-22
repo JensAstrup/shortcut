@@ -18,23 +18,23 @@ class Iteration extends ShortcutResource<IterationInterface> implements Iteratio
     return service.getMany(this.groupIds)
   }
 
-  appUrl!: string
-  createdAt!: Date
-  endDate!: Date
-  entityType!: string
-  followerIds!: string[]
-  groupIds!: string[]
-  groupMentionIds!: string[]
-  id!: number
-  labelIds!: number[]
-  labels!: Label[]
-  memberMentionIds!: string[]
-  mentionIds!: string[]
-  name!: string
-  startDate!: Date
-  stats!: IterationStats
-  status!: IterationStatus
-  updatedAt!: Date
+  appUrl: string
+  createdAt: Date
+  endDate: Date
+  entityType: string
+  followerIds: string[]
+  groupIds: string[]
+  groupMentionIds: string[]
+  id: number
+  labelIds: number[]
+  labels: Label[]
+  memberMentionIds: string[]
+  mentionIds: string[]
+  name: string
+  startDate: Date
+  stats: IterationStats
+  status: IterationStatus
+  updatedAt: Date
 
   constructor(init: IterationInterface | object) {
     super()

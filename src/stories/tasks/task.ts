@@ -14,17 +14,17 @@ export default class Task extends ShortcutResource {
     this.baseUrl = `https://api.app.shortcut.com/api/v3/stories/${this.storyId}/tasks`
   }
 
-  complete!: boolean
-  completedAt!: Date | null
-  createdAt!: Date
-  description!: string
-  entityType!: string
-  externalId!: string | null
-  groupMemberId!: UUID[]
-  id!: number
-  memberMentionIds!: UUID[]
-  ownerIds!: UUID[]
-  position!: number
-  storyId!: number
-  updatedAt!: Date
+  complete: boolean
+  completedAt: Date | null
+  createdAt: Date
+  description: string
+  entityType: string
+  externalId: string | null
+  groupMemberId: UUID[]
+  id: number
+  memberMentionIds: UUID[]
+  ownerIds: UUID[]
+  position: number
+  storyId: number
+  updatedAt: Date
 }

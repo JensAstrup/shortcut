@@ -56,16 +56,16 @@ export default class StoryComment extends ShortcutResource<StoryCommentInterface
     return convertApiFields(data) as StoryComment
   }
 
-  authorId!: string
-  createdAt!: Date
-  deleted!: boolean
-  id!: number
-  memberMentionIds!: string[]
-  parentId!: number | null
+  authorId: string
+  createdAt: Date
+  deleted: boolean
+  id: number
+  memberMentionIds: string[]
+  parentId: number | null
   story?: Story | null
-  storyId!: number
-  text!: string | null
-  updatedAt!: Date
+  storyId: number
+  text: string | null
+  updatedAt: Date
   appUrl: string
   blocker: boolean
   entityType: string
