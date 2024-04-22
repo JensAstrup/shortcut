@@ -41,20 +41,20 @@ class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
     return storiesData.map((story) => new Story(convertApiFields(story)))
   }
 
-  appUrl!: string
-  archived!: boolean
-  color!: string
-  colorKey!: string
-  description!: string
-  displayIcon!: string
-  entityType !: string
-  id!: string
-  memberIds!: number[]
-  mentionName!: string
-  name!: string
-  numEpicsStarted!: number
-  numStoriesStarted!: number
-  workflowIds!: number[]
+  appUrl: string
+  archived: boolean
+  color: string
+  colorKey: string
+  description: string
+  displayIcon: string
+  entityType : string
+  id: string
+  memberIds: number[]
+  mentionName: string
+  name: string
+  numEpicsStarted: number
+  numStoriesStarted: number
+  workflowIds: number[]
 }
 
 export default Team

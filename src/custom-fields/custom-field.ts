@@ -14,16 +14,16 @@ export default class CustomField extends ShortcutResource<CustomFieldInterface> 
     this.changedFields = []
   }
 
-  canonicalName!: string
-  createdAt!: Date
-  description!: string
-  enabled!: boolean
-  entityType!: string
-  fieldType!: string
-  iconSetIdentifier!: string
-  id!: UUID
-  name!: string
-  position!: number
-  updatedAt!: Date
-  values!: CustomFieldEnumValueInterface[]
+  canonicalName: string
+  createdAt: Date
+  description: string
+  enabled: boolean
+  entityType: string
+  fieldType: string
+  iconSetIdentifier: string
+  id: UUID
+  name: string
+  position: number
+  updatedAt: Date
+  values: CustomFieldEnumValueInterface[]
 }

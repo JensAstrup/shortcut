@@ -1,8 +1,13 @@
 import BaseCreateData from '@sx/base-create-data'
 
 
+/**
+ * Use this interface when creating a new story, any fields not included in this interface will be ignored.
+ * Any fields that can be undefined on this interface are optional.
+ * @group Story
+ */
 export default interface CreateStoryData extends BaseCreateData {
-    name: string; // Required
+    name: string;
     archived?: boolean;
     comments?: [];
     completed_at_override?: Date;

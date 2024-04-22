@@ -13,15 +13,15 @@ export default class Workflow extends ShortcutResource<WorkflowInterface> implem
     this.changedFields = []
   }
 
-  autoAssignOwner!: boolean
-  createdAt!: Date
-  defaultStateId!: number
-  description!: string
-  entityType!: string
-  id!: number
-  name!: string
-  projectIds!: number[]
-  states!: WorkflowStateInterface[]
-  teamId!: number
-  updatedAt!: Date
+  autoAssignOwner: boolean
+  createdAt: Date
+  defaultStateId: number
+  description: string
+  entityType: string
+  id: number
+  name: string
+  projectIds: number[]
+  states: WorkflowStateInterface[]
+  teamId: number
+  updatedAt: Date
 }

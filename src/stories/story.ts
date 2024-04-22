@@ -282,7 +282,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   memberMentionIds: string[]
   mentionIds: string[]
   movedAt: Date | null
-  name!: string
+  name: string
   ownerIds: string[]
   position: number
   previousIterationIds: number[]

@@ -22,8 +22,8 @@ export default class StoryCustomField extends ShortcutResource<StoryInterface> i
     return service.get(this.fieldId)
   }
 
-  fieldId!: UUID
-  value!: string
-  valueId!: UUID
+  fieldId: UUID
+  value: string
+  valueId: UUID
   id: UUID | number
 }

@@ -3,11 +3,16 @@ import AxiosMockAdapter from 'axios-mock-adapter'
 
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
+import IterationInterface from '@sx/iterations/contracts/iteration-interface'
+import Iteration from '@sx/iterations/iteration'
+import IterationsService from '@sx/iterations/iterations-service'
 import Label from '@sx/labels/label'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import History from '@sx/stories/history/history'
 import Story from '@sx/stories/story'
+import Team from '@sx/teams/team'
+import TeamsService from '@sx/teams/teams-service'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
@@ -70,36 +75,36 @@ describe('Story', () => {
     })
   })
 
-  // describe('iteration getter', () => {
-  //   it('returns null if story does not have an iteration', async () => {
-  //     const story = new Story({iterationId: null})
-  //     await expect(story.iteration).toBeNull()
-  //   })
-  //
-  //   it('returns an iteration if story has an iteration ID', async () => {
-  //     const iterationData = {id: 1, name: 'Test iteration'}
-  //     const iteration = new Iteration(iterationData)
-  //     axiosMock.onGet().reply(200, {data: iterationData})
-  //     const story = new Story({iterationId: 1})
-  //     const result = await story.iteration
-  //     expect(result).toEqual(iteration)
-  //   })
-  // })
-  //
-  // describe('team getter', () => {
-  //   it('returns null if no team ID is set', () => {
-  //     const story = new Story({groupId: null})
-  //     expect(story.team).toBeNull()
-  //   })
-  //
-  //   it('should return the team object', () => {
-  //     const teamData = {id: 1, name: 'Test team'} as object as Team
-  //     jest.spyOn(TeamsService.prototype, 'get').mockReturnValue(teamData as object as Promise<Team>)
-  //     const story = new Story({groupId: 1})
-  //     expect(story.team).toEqual(teamData)
-  //     expect(TeamsService.prototype.get).toHaveBeenCalledWith(1)
-  //   })
-  // })
+  describe('iteration getter', () => {
+    it('returns null if story does not have an iteration', async () => {
+      const story = new Story({iterationId: null})
+      await expect(story.iteration).toBeNull()
+    })
+
+    it('returns an iteration if story has an iteration ID', async () => {
+      const iterationData: IterationInterface = {id: 1, name: 'Test iteration'} as unknown as IterationInterface
+      const iteration: Iteration = new Iteration(iterationData)
+      jest.spyOn(IterationsService.prototype, 'get').mockResolvedValue(iteration)
+      const story = new Story({iterationId: 1})
+      const result = await story.iteration
+      expect(result).toEqual(iteration)
+    })
+  })
+
+  describe('team getter', () => {
+    it('returns null if no team ID is set', () => {
+      const story = new Story({groupId: null})
+      expect(story.team).toBeNull()
+    })
+
+    it('should return the team object', () => {
+      const teamData = {id: 1, name: 'Test team'} as object as Team
+      jest.spyOn(TeamsService.prototype, 'get').mockReturnValue(teamData as object as Promise<Team>)
+      const story = new Story({groupId: 1})
+      expect(story.team).toEqual(teamData)
+      expect(TeamsService.prototype.get).toHaveBeenCalledWith(1)
+    })
+  })
 
   describe('owner getter', () => {
     it('should return an array of members', () => {
