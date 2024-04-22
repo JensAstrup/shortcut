@@ -4,7 +4,7 @@ import Label from '@sx/labels/label'
 
 
 export default class LabelsService extends BaseService<Label, LabelInterface> {
-  public baseUrl: string = 'https://api.shortcut.com/api/v3/labels'
+  public baseUrl: string = 'https://api.app.shortcut.com/api/v3/labels'
   protected factory = (data: object) => new Label(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
 }
