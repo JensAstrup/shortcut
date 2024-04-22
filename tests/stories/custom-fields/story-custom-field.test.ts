@@ -1,9 +1,8 @@
+import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
 import CustomField from '@sx/custom-fields/custom-field'
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
+import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story-custom-field-interface'
 import StoryCustomField from '@sx/stories/custom-fields/story-custom-field'
-import CustomFieldEnumValueInterface from '../../../src/custom-fields/contracts/custom-field-enum-value-interface'
-import CustomFieldInterface from '../../../src/custom-fields/contracts/custom-field-interface'
-import StoryCustomFieldInterface from '../../../src/stories/custom-fields/contracts/story-custom-field-interface'
 
 
 jest.mock('../../../src/utils/headers', () => ({
