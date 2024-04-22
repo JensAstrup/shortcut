@@ -4,7 +4,7 @@ import UUID from '@sx/utils/uuid'
 
 
 export default class Objective extends ShortcutResource<ObjectiveInterface> implements ObjectiveInterface {
-  public baseUrl: string = 'https://api.shortcut.com/api/v3/objectives'
+  public baseUrl: string = 'https://api.app.shortcut.com/api/v3/objectives'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
   constructor(init: object) {
