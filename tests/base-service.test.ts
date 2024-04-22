@@ -143,9 +143,9 @@ describe('BaseSearchableService', () => {
     const mockResponse = {status: 200, data: {data: [mockData], next: 'https://api.app.shortcut.com/api/v3/search/stories?query=test&page=2'}}
     mockedAxios.get.mockResolvedValue(mockResponse)
 
-    const resources = await mockService.search('test', 'token')
+    const resources = await mockService.search('test', '/token')
 
-    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/search/stories?page=token&query=test', {headers: mockService.headers})
+    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/token', {headers: mockService.headers})
     expect(resources.results[0]).toBeInstanceOf(MockResource)
   })
 })
