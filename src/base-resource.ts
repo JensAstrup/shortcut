@@ -19,9 +19,9 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
 
   /**
    * @internal
-   * Fields that have been changed, used to determine what to update
+   * Fields that have been changed, used to determine what to update. It is not recommended to access this property directly.
    */
-  protected changedFields: string[] = []
+  public changedFields: string[] = []
   /**
    *  Fields that are used when creating a new resource
    */
