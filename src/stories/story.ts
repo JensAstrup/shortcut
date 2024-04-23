@@ -42,6 +42,7 @@ import WorkflowService from '@sx/workflows/workflows-service'
  * @inheritDoc ShortcutResource
  */
 class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
+  public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/stories'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   constructor(init: StoryInterface | object) {
@@ -130,7 +131,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   }
 
   public async history(): Promise<History[]> {
-    const url = `${Story.baseUrl}/stories/${this.id}/history`
+    const url = `${Story.baseUrl}/${this.id}/history`
     const response = await axios.get(url, {headers: getHeaders()}).catch((error) => {
       throw new Error(`Error fetching history: ${error}`)
     })
@@ -190,7 +191,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   }
 
   public async comment(comment: string): Promise<StoryComment> {
-    const url = `${Story.baseUrl}/stories/${this.id}/comments`
+    const url = `${Story.baseUrl}/${this.id}/comments`
     const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
       throw new Error(`Error creating comment: ${error}`)
     })
@@ -206,7 +207,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   }
 
   public async addTask(task: string): Promise<void> {
-    const url = `${Story.baseUrl}/stories/${this.id}/tasks`
+    const url = `${Story.baseUrl}/${this.id}/tasks`
     const requestData = {description: task}
     const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
       throw new Error(`Error adding task: ${error}`)

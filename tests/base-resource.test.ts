@@ -2,7 +2,7 @@ import process from 'process'
 
 import axios from 'axios'
 
-import ShortcutResource from '@sx/base-resource'
+import Story from '../src/stories/story'
 
 
 jest.mock('axios')
@@ -21,14 +21,14 @@ describe('ShortcutResource', () => {
   describe('constructor and Proxy setup', () => {
     it('initializes with provided object', () => {
       const init = {name: 'Test'}
-      const resource = new ShortcutResource(init)
+      const resource = new Story(init)
       expect(resource.name).toBe('Test')
     })
   })
 
   describe('save method', () => {
     it('calls update if id exists', async () => {
-      const resource = new ShortcutResource({id: 123})
+      const resource = new Story({id: 123})
       resource.availableOperations = ['update']
       resource.name = 'Updated Name'
       mockedAxios.put.mockResolvedValue({data: {snake_name: 'Updated Name'}})
@@ -40,7 +40,7 @@ describe('ShortcutResource', () => {
     })
 
     it('throws an error on update if operation is not available', async () => {
-      const resource = new ShortcutResource({id: 123})
+      const resource = new Story({id: 123})
       resource.availableOperations = ['create']
       resource.name = 'Updated Name'
 
@@ -48,7 +48,7 @@ describe('ShortcutResource', () => {
     })
 
     it('calls create if id does not exist', async () => {
-      const resource = new ShortcutResource()
+      const resource = new Story({})
       resource.availableOperations = ['create']
       resource.name = 'New Name'
       mockedAxios.post.mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
@@ -61,7 +61,7 @@ describe('ShortcutResource', () => {
     })
 
     it('calls create if id does not exist and uses createFields', async () => {
-      const resource = new ShortcutResource()
+      const resource = new Story({})
       resource.availableOperations = ['create']
       resource.createFields = ['snake_name']
       resource.name = 'New Name'
@@ -75,7 +75,7 @@ describe('ShortcutResource', () => {
     })
 
     it('throws an error on create if operation is not available', async () => {
-      const resource = new ShortcutResource()
+      const resource = new Story({})
       resource.availableOperations = ['update']
       resource.name = 'New Name'
 
@@ -85,7 +85,7 @@ describe('ShortcutResource', () => {
 
   describe('delete method', () => {
     it('sends a delete request for the resource', async () => {
-      const resource = new ShortcutResource({id: 123})
+      const resource = new Story({id: 123})
       resource.availableOperations = ['delete']
       mockedAxios.delete.mockResolvedValue({})
 
@@ -95,14 +95,14 @@ describe('ShortcutResource', () => {
     })
 
     it('throws an error if delete operation is not available', async () => {
-      const resource = new ShortcutResource({id: 123})
+      const resource = new Story({id: 123})
       resource.availableOperations = ['update']
 
       await expect(resource.delete()).rejects.toThrow('Delete operation not available for this resource')
     })
 
     it('throws an error on delete failure', async () => {
-      const resource = new ShortcutResource({id: 123})
+      const resource = new Story({id: 123})
       resource.availableOperations = ['delete']
       mockedAxios.delete.mockRejectedValue(new Error('Error deleting story'))
 
