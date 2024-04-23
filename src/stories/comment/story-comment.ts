@@ -29,7 +29,7 @@ export default class StoryComment extends ShortcutResource<StoryCommentInterface
    * ```
    */
   public async react(emoji: string): Promise<void> {
-    const url: string = `${Story.baseUrl}/stories/${this.storyId}/comments/${this.id}/reactions`
+    const url: string = `${Story.baseUrl}/${this.storyId}/comments/${this.id}/reactions`
     await axios.post(url, {emoji}, {headers: getHeaders()}).catch((error) => {
       throw new Error(`Error reacting to comment: ${error}`)
     })
@@ -47,7 +47,7 @@ export default class StoryComment extends ShortcutResource<StoryCommentInterface
    * ```
    */
   public async comment(comment: string): Promise<StoryComment | void> {
-    const url = `${Story.baseUrl}/stories/${this.storyId}/comments`
+    const url = `${Story.baseUrl}/${this.storyId}/comments`
     const requestData: Record<string, string | number> = {text: comment, parentId: this.id}
     const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
       throw new Error(`Error creating comment: ${error}`)
