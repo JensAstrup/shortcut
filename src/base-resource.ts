@@ -23,7 +23,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
    */
   protected changedFields: string[] = []
   /**
-   * Fields that are used when creating a new resource
+   *  Fields that are used when creating a new resource
    */
   public createFields: string[] = []
   /**
@@ -42,13 +42,10 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
       Object.assign(this, init)
     }
     this.changedFields = []
-
-    // Check to ensure that the baseUrl property is overridden in the subclass
+// Check to ensure that the baseUrl property is overridden in the subclass
     if (this.constructor === ShortcutResource) {
       (this.constructor as typeof ShortcutResource).baseUrl
-    }
-
-    return new Proxy(this, {
+    }    return new Proxy(this, {
       get(target, property, receiver) {
         return Reflect.get(target, property, receiver)
       },
@@ -64,9 +61,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
 
   static get baseUrl(): string {
     throw new Error('You must override baseUrl in the subclass')
-  }
-
-  /**
+  }/**
    * Update the current instance of the resource with the changed fields.
    * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
    * @throws {Error} - Throws an error if the HTTP request fails.
@@ -120,14 +115,38 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
   }
 
   /**
+   * This method can be overridden by derived classes to perform any necessary operations before saving the resource
+   * @protected
+   */
+  protected async _preSave(): Promise<void> {
+  }
+
+  /**
+   * This method can be overridden by derived classes to perform any necessary operations before creating the resource
+   * @protected
+   */
+  protected async _preCreate(): Promise<void> {
+  }
+
+  /**
+   * This method can be overridden by derived classes to perform any necessary operations before updating the resource
+   * @protected
+   */
+  protected async _preUpdate(): Promise<void> {
+  }
+
+  /**
    * Save the current instance of the resource. If the resource already exists (has an ID), it will be updated.
    * Otherwise, it will be created using the fields `createFields`.
    */
   public async save(): Promise<void> {
+    await this._preSave()
     if (this.id) {
+      await this._preUpdate()
       await this.update()
     }
     else {
+      await this._preCreate()
       await this.create()
     }
   }
