@@ -45,7 +45,8 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     // Check to ensure that the baseUrl property is overridden in the subclass
     if (this.constructor === ShortcutResource) {
       (this.constructor as typeof ShortcutResource).baseUrl
-    }    return new Proxy(this, {
+    }
+    return new Proxy(this, {
       get(target, property, receiver) {
         return Reflect.get(target, property, receiver)
       },
@@ -61,7 +62,9 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
 
   static get baseUrl(): string {
     throw new Error('You must override baseUrl in the subclass')
-  }/**
+  }
+
+  /**
    * Update the current instance of the resource with the changed fields.
    * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
    * @throws {Error} - Throws an error if the HTTP request fails.
