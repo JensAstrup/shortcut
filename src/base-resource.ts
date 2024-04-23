@@ -80,11 +80,30 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
       return acc
     }, {})
 
-    const response = await axios.put(url, body, {headers: getHeaders()}).catch((error) => {
-      throw new Error(`Error saving story: ${error}`)
-    })
+    const response = await axios.put(url, body, {headers: getHeaders()})
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Error status', error.response.status)
+          console.error('Error data', error.response.data)
+          console.error('Error headers', error.response.headers)
+          console.log('Request data', body)
+          return
+        }
+        else if (error.request) {
+          // The request was made but no response was received
+          console.error('Error request', error.request)
+          return
+        }
+        else {
+          // Something happened in setting up the request that triggered an error
+          console.error('Error message', error.message)
+          return
+        }
+      })
 
-    const data: Record<string, unknown> = response.data
+    const data: Record<string, unknown> = response!.data
     Object.keys(data).forEach(key => {
       this[snakeToCamel(key)] = data[key]
     })

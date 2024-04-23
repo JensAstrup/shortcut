@@ -45,19 +45,22 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/stories'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
+  // These properties are utilized internally by the class and should not be accessed directly
+  private _labels: Label[] = []
+
   constructor(init: StoryInterface | object) {
     super()
     Object.assign(this, init)
-    this.changedFields = []
     this.instantiateComments()
     this.instantiateTasks()
     this.instantiateLinks()
     this.instantiateCustomFields()
     this.instantiateLabels()
+    this.changedFields = []
   }
 
   protected async _preUpdate(): Promise<void> {
-    if(this.changedFields.includes('labels')){
+    if (this.changedFields.includes('labels')) {
       this.labels = this.labels.map((label) => {
         return {name: label.name} as Label
       })
@@ -83,6 +86,19 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
 
   private instantiateLabels() {
     this.labels = this.labels?.map((label) => new Label(label))
+  }
+
+  /**
+   * Set the labels associated with the story. In order for creating/updating of stories to work properly with labels, you must set the labels to
+   * a new array of labels, rather than modifying the existing array. This allows the {@link Story} class to track changes to the labels.
+   */
+  set labels(labels: Label[]) {
+    this.changedFields.push('labels')
+    this._labels = labels
+  }
+
+  get labels(): Label[] {
+    return this._labels
   }
 
   get workflow(): Promise<WorkflowStateInterface> {
@@ -215,6 +231,10 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     return service.upload(file, this)
   }
 
+  /**
+   * Adds a subtask to the story, these are visible in Shortcut as a to-do list of items that need to be completed.
+   * @param task
+   */
   public async addTask(task: string): Promise<void> {
     const url = `${Story.baseUrl}/${this.id}/tasks`
     const requestData = {description: task}
@@ -227,6 +247,10 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     this.tasks.push(createdTask)
   }
 
+  /**
+   * Provide a story or story ID to indicate that this work blocks another story from being ready to start.
+   * @param story
+   */
   public async blocks(story: Story | number): Promise<void> {
     const link: StoryLink = new StoryLink({
       objectId: this.id,
@@ -237,6 +261,10 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     this.storyLinks.push(link)
   }
 
+  /**
+   * Provide a story or story ID to indicate that this story is duplicative of another story.
+   * @param story
+   */
   public async duplicates(story: Story | number): Promise<void> {
     const link: StoryLink = new StoryLink({
       objectId: this.id,
@@ -247,6 +275,10 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     this.storyLinks.push(link)
   }
 
+  /**
+   * Provide a story or story ID to indicate that this story is related to another story.
+   * @param story
+   */
   public async relatesTo(story: Story | number): Promise<void> {
     const link: StoryLink = new StoryLink({
       objectId: this.id,
@@ -284,8 +316,6 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   id: number
   iterationId: number | null
   labelIds: number[]
-  labels: Label[]
-
   /* The lead time in seconds of this story */
   leadTime: number
   linkedFiles: object[]
