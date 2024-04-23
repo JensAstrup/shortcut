@@ -42,7 +42,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
       Object.assign(this, init)
     }
     this.changedFields = []
-// Check to ensure that the baseUrl property is overridden in the subclass
+    // Check to ensure that the baseUrl property is overridden in the subclass
     if (this.constructor === ShortcutResource) {
       (this.constructor as typeof ShortcutResource).baseUrl
     }    return new Proxy(this, {
