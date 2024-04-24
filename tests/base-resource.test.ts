@@ -2,6 +2,7 @@ import process from 'process'
 
 import axios from 'axios'
 
+import Label from '../src/labels/label'
 import Story from '../src/stories/story'
 
 
@@ -30,12 +31,26 @@ describe('ShortcutResource', () => {
     it('calls update if id exists', async () => {
       const resource = new Story({id: 123})
       resource.availableOperations = ['update']
+      resource.changedFields = []
       resource.name = 'Updated Name'
+      resource.labels = [{name: 'label1'}, {name: 'label2'}] as Label[]
       mockedAxios.put.mockResolvedValue({data: {snake_name: 'Updated Name'}})
 
       await resource.save()
 
-      expect(axios.put).toHaveBeenCalledWith(expect.any(String), expect.any(Object), {headers: mockHeaders})
+      const expectedData = {
+        'labels': [
+          {
+            'name': 'label1',
+          },
+          {
+            'name': 'label2',
+          },
+        ],
+        'name': 'Updated Name',
+      }
+
+      expect(axios.put).toHaveBeenCalledWith(expect.any(String), expectedData, {headers: mockHeaders})
       expect(resource.name).toBe('Updated Name')
     })
 
