@@ -52,6 +52,13 @@ describe('Story', () => {
     expect(story.labels[0]).toBeInstanceOf(Label)
   })
 
+  it('should set labels and update changedFields', () => {
+    const story = new Story({id: 1})
+    story.labels = [{id: 1, name: 'Test label'} as Label]
+    expect(story.labels[0].name).toEqual('Test label')
+    expect(story.changedFields).toContain('labels')
+  })
+
   describe('workflow getter', () => {
     it('should return workflow state by ID', () => {
       const story = new Story({workflowStateId: 1})
