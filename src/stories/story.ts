@@ -59,13 +59,13 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     this.changedFields = []
   }
 
-  protected async _preUpdate(): Promise<void> {
+  protected async _preSave(): Promise<void> {
     if (this.changedFields.includes('labels')) {
       this.labels = this.labels.map((label) => {
         return {name: label.name} as Label
       })
     }
-    return super._preUpdate()
+    return super._preSave()
   }
 
   private instantiateComments() {

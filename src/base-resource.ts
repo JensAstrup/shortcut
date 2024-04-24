@@ -149,31 +149,15 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
   }
 
   /**
-   * This method can be overridden by derived classes to perform any necessary operations before creating the resource
-   * @protected
-   */
-  protected async _preCreate(): Promise<void> {
-  }
-
-  /**
-   * This method can be overridden by derived classes to perform any necessary operations before updating the resource
-   * @protected
-   */
-  protected async _preUpdate(): Promise<void> {
-  }
-
-  /**
    * Save the current instance of the resource. If the resource already exists (has an ID), it will be updated.
    * Otherwise, it will be created using the fields `createFields`.
    */
   public async save(): Promise<void> {
     await this._preSave()
     if (this.id) {
-      await this._preUpdate()
       await this.update()
     }
     else {
-      await this._preCreate()
       await this.create()
     }
   }
