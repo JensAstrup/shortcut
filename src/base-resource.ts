@@ -76,6 +76,9 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
     const url = `${baseUrl}/${this.id}`
     const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
+      if (field.startsWith('_')) {
+        return acc
+      }
       acc[camelToSnake(field)] = this[field]
       return acc
     }, {})
