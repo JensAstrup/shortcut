@@ -62,6 +62,51 @@ describe('ShortcutResource', () => {
       await expect(resource.save()).rejects.toThrow('Update operation not available for this resource')
     })
 
+    it('logs errors when server responds with a non-success status code', async () => {
+      const resource = new Story({id: 123})
+      resource.availableOperations = ['update']
+      const mockError = {
+        response: {
+          status: 500,
+          data: 'Internal Server Error',
+          headers: {'content-type': 'application/json'}
+        }
+      }
+      mockedAxios.put.mockRejectedValue(mockError)
+
+      await resource.update()
+
+      expect(console.error).toHaveBeenCalledWith('Error status', 500)
+      expect(console.error).toHaveBeenCalledWith('Error data', 'Internal Server Error')
+      expect(console.error).toHaveBeenCalledWith('Error headers', {'content-type': 'application/json'})
+    })
+
+    // Test when no response is received (e.g., network issues)
+    it('logs errors when request is made but no response is received', async () => {
+      const resource = new Story({id: 123})
+      resource.availableOperations = ['update']
+      const mockError = {
+        request: 'Request made but no response received'
+      }
+      mockedAxios.put.mockRejectedValue(mockError)
+
+      await resource.update()
+
+      expect(console.error).toHaveBeenCalledWith('Error request', 'Request made but no response received')
+    })
+
+    // Test when there is an error setting up the request
+    it('logs errors when an error occurs in setting up the request', async () => {
+      const resource = new Story({id: 123})
+      resource.availableOperations = ['update']
+      const mockError = new Error('Error in setting up the request')
+      mockedAxios.put.mockRejectedValue(mockError)
+
+      await resource.update()
+
+      expect(console.error).toHaveBeenCalledWith('Error message', 'Error in setting up the request')
+    })
+
     it('calls create if id does not exist', async () => {
       const resource = new Story({})
       resource.availableOperations = ['create']

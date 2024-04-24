@@ -83,7 +83,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
       return acc
     }, {})
 
-    const response = await axios.put(url, body, {headers: getHeaders()})
+    await axios.put(url, body, {headers: getHeaders()})
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -104,14 +104,16 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
           console.error('Error message', error.message)
           return
         }
+      }).then((response) => {
+        if(!response) {
+          return
+        }
+        const data: Record<string, unknown> = response!.data
+        Object.keys(data).forEach(key => {
+          this[snakeToCamel(key)] = data[key]
+          this.changedFields = []
+        })
       })
-
-    const data: Record<string, unknown> = response!.data
-    Object.keys(data).forEach(key => {
-      this[snakeToCamel(key)] = data[key]
-    })
-
-    this.changedFields = []
   }
 
   /**
