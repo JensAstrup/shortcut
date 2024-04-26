@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosError} from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Member from '@sx/members/member'
@@ -6,6 +6,7 @@ import MembersService from '@sx/members/members-service'
 import Story from '@sx/stories/story'
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 
 
@@ -34,7 +35,8 @@ class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
 
   public async getStories(): Promise<Story[]> {
     const url = new URL(`${Team.baseUrl}/${this.id}/stories`)
-    const response = await axios.get(url.toString(), {headers: getHeaders()}).catch((error: string) => {
+    const response = await axios.get(url.toString(), {headers: getHeaders()}).catch((error: AxiosError) => {
+      handleResponseFailure(error, {url})
       throw new Error(`Error fetching stories: ${error}`)
     })
     const storiesData: Record<string, unknown>[] = response.data.data ?? []

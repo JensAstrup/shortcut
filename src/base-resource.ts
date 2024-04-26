@@ -2,6 +2,7 @@ import axios from 'axios'
 
 import BaseInterface from '@sx/base-interface'
 import camelToSnake from '@sx/utils/camel-to-snake'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 
@@ -60,6 +61,10 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     })
   }
 
+  /**
+   * The base URL for the resource to be used in API requests. This property must be overridden in the subclass.
+   * @throws {Error} - Throws an error if the property is not overridden in the subclass.
+   */
   static get baseUrl(): string {
     throw new Error('You must override baseUrl in the subclass')
   }
@@ -85,27 +90,9 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
 
     await axios.put(url, body, {headers: getHeaders()})
       .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.error('Error status', error.response.status)
-          console.error('Error data', error.response.data)
-          console.error('Error headers', error.response.headers)
-          console.log('Request data', body)
-          return
-        }
-        else if (error.request) {
-          // The request was made but no response was received
-          console.error('Error request', error.request)
-          return
-        }
-        else {
-          // Something happened in setting up the request that triggered an error
-          console.error('Error message', error.message)
-          return
-        }
+        handleResponseFailure(error, body)
       }).then((response) => {
-        if(!response) {
+        if (!response) {
           return
         }
         const data: Record<string, unknown> = response!.data
@@ -172,8 +159,11 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
       throw new Error('Delete operation not available for this resource')
     }
     const url = `${this.baseUrl}/${this.id}`
-    await axios.delete(url, {headers: getHeaders()}).catch((error) => {
-      throw new Error(`Error deleting resource: ${error}`)
+    const response = await axios.delete(url, {headers: getHeaders()}).catch((error) => {
+      handleResponseFailure(error, {})
     })
+    if(!response) {
+      throw new Error('Failed to delete resource')
+    }
   }
 }

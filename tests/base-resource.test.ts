@@ -166,7 +166,7 @@ describe('ShortcutResource', () => {
       resource.availableOperations = ['delete']
       mockedAxios.delete.mockRejectedValue(new Error('Error deleting story'))
 
-      await expect(resource.delete()).rejects.toThrow('Error deleting story')
+      await expect(resource.delete()).rejects.toThrow('Failed to delete resource')
     })
   })
 })

@@ -61,7 +61,7 @@ describe('Epic', () => {
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
       const epic = new Epic({id: 1})
 
-      await expect(epic.comment('Test comment')).rejects.toThrow('Error creating comment: Error: Network error')
+      await expect(epic.comment('Test comment')).rejects.toThrow('Failed to add comment')
     })
   })
 
@@ -103,7 +103,7 @@ describe('Epic', () => {
         updatedAt: null
       }
 
-      await expect(epic.addComment(comment)).rejects.toThrow('Error creating comment: Error: Network error')
+      await expect(epic.addComment(comment)).rejects.toThrow('Failed to add comment')
     })
   })
 })
