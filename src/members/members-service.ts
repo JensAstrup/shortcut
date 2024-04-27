@@ -6,6 +6,7 @@ import {MemberProfile} from '@sx/members/contracts/member-profile'
 import MemberProfileApiData from '@sx/members/contracts/member-profile-api-data'
 import Member from '@sx/members/member'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import WorkspaceInterface from '@sx/workspace/contracts/workspace'
 
 
@@ -21,7 +22,10 @@ class MembersService extends BaseService<Member, MemberInterface> {
 
   async getAuthenticatedMemberProfile(): Promise<MemberProfile> {
     const apiUrl: string = 'https://api.app.shortcut.com/api/v3/member'
-    const response: AxiosResponse = await axios.get(apiUrl, {headers: this.headers})
+    const response: AxiosResponse | void = await axios.get(apiUrl, {headers: this.headers}).catch(error => {
+      handleResponseFailure(error, {})
+    })
+    if(!response) throw new Error('Failed to get member profile')
     const memberData = response.data as MemberProfileApiData
     const profile: MemberProfile = convertApiFields(memberData) as MemberProfile
     profile.workspace = convertApiFields(memberData.workspace2) as WorkspaceInterface

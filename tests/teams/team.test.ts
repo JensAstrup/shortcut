@@ -6,11 +6,14 @@ import Member from '@sx/members/member'
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import Team from '@sx/teams/team'
 
+import {handleResponseFailure} from '../../src/utils/handle-response-failure'
 
 
 jest.mock('axios', () => ({
   get: jest.fn(),
 }))
+jest.mock('@sx/utils/handle-response-failure')
+const mockedHandleResponseFailure = handleResponseFailure as jest.Mock
 
 describe('Team', () => {
   let originalToken: string | undefined
@@ -48,5 +51,13 @@ describe('Team', () => {
     expect(stories).toHaveLength(2)
     expect(stories[0].name).toBe('Story 1')
     expect(stories[1].name).toBe('Story 2')
+  })
+
+  it('should throw an error if request fails', async () => {
+    const team = new Team({id: '1'} as TeamInterface)
+    axios.get = jest.fn().mockRejectedValue(new Error('Failed to fetch stories'))
+
+    await expect(team.getStories()).rejects.toThrow('Failed to fetch stories')
+    expect(mockedHandleResponseFailure).toHaveBeenCalledTimes(1)
   })
 })

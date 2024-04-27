@@ -7,8 +7,13 @@ import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import WorkspaceApiData from '@sx/workspace/contracts/workspace-api-data'
 
+import {handleResponseFailure} from '../../src/utils/handle-response-failure'
+
 
 const axiosMock = new AxiosMockAdapter(axios)
+jest.mock('@sx/utils/handle-response-failure')
+const mockHandleResponseFailure = handleResponseFailure as jest.Mock
+
 
 describe('MembersService', () => {
   it('should return authenticated member', async () => {
@@ -32,5 +37,12 @@ describe('MembersService', () => {
     expect(memberProfile.name).toBe('Test Member')
     expect(memberProfile.mentionName).toBe('TestMember')
     expect(memberProfile.workspace).toEqual({urlSlug: 'test-workspace', estimateScale: [1, 2, 3]})
+  })
+
+  it('should throw an error if request fails', async () => {
+    axiosMock.onGet().reply(500)
+    const membersService = new MembersService({headers: {}})
+    await expect(membersService.getAuthenticatedMemberProfile()).rejects.toThrow('Failed to get member profile')
+    expect(mockHandleResponseFailure).toHaveBeenCalledTimes(1)
   })
 })
