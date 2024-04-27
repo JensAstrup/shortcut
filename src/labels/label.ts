@@ -7,6 +7,7 @@ import LabelInterface from '@sx/labels/contracts/label-interface'
 import {StoryApiData} from '@sx/stories/contracts/story-api-data'
 import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 
 
@@ -24,8 +25,13 @@ export default class Label extends ShortcutResource<LabelInterface> implements L
   /**
    * Get all stories using this label
    */
-  async stories(): Promise<Story[]>{
-    const response: AxiosResponse = await axios.get(`${Label.baseUrl}/${this.id}/stories`,{headers: getHeaders()})
+  async stories(): Promise<Story[]> {
+    const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/stories`, {headers: getHeaders()}).catch((error) => {
+      handleResponseFailure(error, {})
+    })
+    if (!response) {
+      throw new Error('Failed to fetch stories')
+    }
     const data: Array<StoryApiData> = response.data
     return data.map(storyData => convertApiFields<StoryApiData, Story>(storyData))
   }
@@ -33,8 +39,11 @@ export default class Label extends ShortcutResource<LabelInterface> implements L
   /**
    * Get all epics using this label
    */
-  async epics(): Promise<Epic[]>{
-    const response: AxiosResponse = await axios.get(`${Label.baseUrl}/${this.id}/epics`, {headers: getHeaders()})
+  async epics(): Promise<Epic[]> {
+    const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/epics`, {headers: getHeaders()}).catch((error) => {
+      handleResponseFailure(error, {})
+    })
+    if (!response) return []
     const data: EpicApiData[] = response.data
     return data.map(epicData => convertApiFields<EpicApiData, Epic>(epicData))
   }

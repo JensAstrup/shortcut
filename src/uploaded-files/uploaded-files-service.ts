@@ -6,6 +6,7 @@ import UploadedFileApiData from '@sx/uploaded-files/contracts/uploaded-file-api-
 import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 
 
 export default class UploadedFilesService extends BaseService<UploadedFile, UploadedFileInterface> {
@@ -30,7 +31,10 @@ export default class UploadedFilesService extends BaseService<UploadedFile, Uplo
     }
 
     try {
-      const response = await axios.post(this.baseUrl, formData, {headers})
+      const response = await axios.post(this.baseUrl, formData, {headers}).catch((error) => {
+        handleResponseFailure(error, {formData})
+        throw new Error('Failed to upload file: ' + error)
+      })
       const data = response.data as UploadedFileApiData
       const uploadedFile = convertApiFields(data) as UploadedFileInterface
       return this.factory(uploadedFile)

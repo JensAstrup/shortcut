@@ -13,6 +13,7 @@ import CreateThreadedCommentData from '@sx/threaded-comments/contracts/create-th
 import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-comment-api-data'
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
 import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
@@ -72,8 +73,11 @@ export default class Epic extends ShortcutResource<EpicInterface> implements Epi
   public async comment(comment: string): Promise<ThreadedCommentInterface | void> {
     const url = `${Epic.baseUrl}/${this.id}/comments`
     const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
-      throw new Error(`Error creating comment: ${error}`)
+      handleResponseFailure(error, {text: comment})
     })
+    if (!response) {
+      throw new Error('Failed to add comment')
+    }
     const data: ThreadedCommentApiData = response.data
     return convertApiFields(data) as ThreadedCommentInterface
   }
@@ -91,8 +95,11 @@ export default class Epic extends ShortcutResource<EpicInterface> implements Epi
     const url = `${Epic.baseUrl}/${this.id}/comments`
     const requestData: BaseData = convertToApiFields(comment)
     const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
-      throw new Error(`Error creating comment: ${error}`)
+      handleResponseFailure(error, requestData)
     })
+    if (!response){
+      throw new Error('Failed to add comment')
+    }
     const data: ThreadedCommentApiData = response.data
     return convertApiFields(data) as ThreadedCommentInterface
   }
