@@ -29,6 +29,7 @@ import TeamsService from '@sx/teams/teams-service'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowService from '@sx/workflows/workflows-service'
@@ -158,6 +159,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   public async history(): Promise<History[]> {
     const url = `${Story.baseUrl}/${this.id}/history`
     const response = await axios.get(url, {headers: getHeaders()}).catch((error) => {
+      handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error fetching history: ${error}`)
     })
     const historyData: HistoryApiData[] = response.data
@@ -218,6 +220,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   public async comment(comment: string): Promise<StoryComment> {
     const url = `${Story.baseUrl}/${this.id}/comments`
     const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
+      handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
@@ -239,6 +242,7 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     const url = `${Story.baseUrl}/${this.id}/tasks`
     const requestData = {description: task}
     const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+      handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error adding task: ${error}`)
     })
     const data: TaskApiData = response.data
