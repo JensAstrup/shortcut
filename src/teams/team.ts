@@ -37,8 +37,10 @@ class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
     const url = new URL(`${Team.baseUrl}/${this.id}/stories`)
     const response = await axios.get(url.toString(), {headers: getHeaders()}).catch((error: AxiosError) => {
       handleResponseFailure(error, {url})
-      throw new Error(`Error fetching stories: ${error}`)
     })
+    if (!response) {
+      throw new Error('Failed to fetch stories')
+    }
     const storiesData: Record<string, unknown>[] = response.data.data ?? []
     return storiesData.map((story) => new Story(convertApiFields(story)))
   }

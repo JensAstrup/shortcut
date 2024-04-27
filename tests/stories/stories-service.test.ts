@@ -5,14 +5,20 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 
 import StoriesService from '../../src/stories/stories-service'
 import Story from '../../src/stories/story'
+import {handleResponseFailure} from '../../src/utils/handle-response-failure'
 
 
 const axiosMock = new AxiosMockAdapter(axios)
+
 jest.mock('../../src/utils/convert-fields', () => {
   return {
     convertApiFields: jest.fn().mockImplementation((fields) => fields)
   }
 })
+
+jest.mock('../../src/utils/handle-response-failure')
+const mockHandleResponseFailure = jest.mocked(handleResponseFailure, {shallow: false}) as jest.Mock
+
 
 
 describe('Stories service', () => {
@@ -65,5 +71,13 @@ describe('Stories service', () => {
     expect(stories[1]).toBeInstanceOf(Story)
     expect(stories[0].id).toEqual(1)
     expect(stories[1].id).toEqual(2)
+  })
+
+  it('should throw an error if getExternallyLinked fails', async () => {
+    axiosMock.onGet().reply(500)
+
+    const service = new StoriesService({headers: {}})
+    await expect(service.getExternallyLinked('http://example.com')).rejects.toThrow('Failed to fetch externally linked stories')
+    expect(mockHandleResponseFailure).toHaveBeenCalledWith(expect.any(Error), { external_link: 'http://example.com' })
   })
 })

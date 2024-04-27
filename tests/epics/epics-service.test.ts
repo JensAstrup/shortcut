@@ -1,8 +1,9 @@
-import axios from 'axios'
+import axios, {AxiosError} from 'axios'
 
 import Epic from '../../src/epics/epic'
 import EpicsService from '../../src/epics/epics-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
+import {handleResponseFailure} from '../../src/utils/handle-response-failure'
 
 import mocked = jest.mocked
 
@@ -13,6 +14,11 @@ jest.mock('../../src/utils/convert-fields', () => {
     convertApiFields: jest.fn().mockImplementation((fields) => fields)
   }
 })
+
+jest.mock('../../src/utils/handle-response-failure')
+const mockHandleResponseFailure = jest.mocked(handleResponseFailure, {shallow: false}) as jest.Mock
+
+
 const mockedAxios = mocked(axios)
 
 describe('Epics service', () => {
@@ -25,6 +31,13 @@ describe('Epics service', () => {
     const service = new EpicsService({headers: {}})
     expect(service.getWorkflow()).resolves.toEqual({id: 1, name: 'Workflow 1'})
     expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/epic-workflow', {headers: {}})
+  })
+
+  it('should throw an error if getWorkflow fails', async () => {
+    mockedAxios.get.mockRejectedValue(new Error('Failed to fetch epic workflow'))
+    const service = new EpicsService({headers: {}})
+    await expect(service.getWorkflow()).rejects.toThrow('Failed to fetch epic workflow')
+    expect(mockHandleResponseFailure).toHaveBeenCalledTimes(1)
   })
 
   it('should return an array of epics after searching', async () => {

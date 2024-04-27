@@ -25,11 +25,13 @@ export default class Label extends ShortcutResource<LabelInterface> implements L
   /**
    * Get all stories using this label
    */
-  async stories(): Promise<Story[]>{
-    const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/stories`,{headers: getHeaders()}).catch((error) => {
+  async stories(): Promise<Story[]> {
+    const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/stories`, {headers: getHeaders()}).catch((error) => {
       handleResponseFailure(error, {})
     })
-    if (!response) return []
+    if (!response) {
+      throw new Error('Failed to fetch stories')
+    }
     const data: Array<StoryApiData> = response.data
     return data.map(storyData => convertApiFields<StoryApiData, Story>(storyData))
   }
@@ -37,7 +39,7 @@ export default class Label extends ShortcutResource<LabelInterface> implements L
   /**
    * Get all epics using this label
    */
-  async epics(): Promise<Epic[]>{
+  async epics(): Promise<Epic[]> {
     const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/epics`, {headers: getHeaders()}).catch((error) => {
       handleResponseFailure(error, {})
     })
