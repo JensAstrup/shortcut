@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios'
+import axios from 'axios'
 
 import Epic from '../../src/epics/epic'
 import EpicsService from '../../src/epics/epics-service'
