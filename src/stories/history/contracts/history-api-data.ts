@@ -9,7 +9,6 @@ export default interface HistoryApiData extends BaseData {
     external_id: string
     id: UUID
     member_id: UUID
-    primary_id: undefined
     references: []
     version: string
     webhook_id: string
