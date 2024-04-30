@@ -4,6 +4,7 @@ import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {ShortcutApiFieldType} from '@sx/utils/field-type'
 import UUID from '@sx/utils/uuid'
 
 
@@ -37,8 +38,8 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
     if (response.status >= 400) {
       throw new Error('HTTP error ' + response.status)
     }
-    const instanceData: Interface = convertApiFields(response.data)
-    const instance = this.factory(instanceData)
+    const instanceData: Interface = convertApiFields<BaseData, Interface>(response.data)
+    const instance: Resource = this.factory(instanceData)
     this.instances[id] = instance
     return instance
   }
@@ -55,7 +56,7 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
     if (response.status >= 400) {
       throw new Error('HTTP error ' + response.status)
     }
-    const instancesData: Record<string, unknown>[] = response.data ?? []
+    const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
 
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {

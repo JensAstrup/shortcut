@@ -3,6 +3,8 @@ import axios, {AxiosError} from 'axios'
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
+import {StoryApiData} from '@sx/stories/contracts/story-api-data'
+import StoryInterface from '@sx/stories/contracts/story-interface'
 import Story from '@sx/stories/story'
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import {convertApiFields} from '@sx/utils/convert-fields'
@@ -41,8 +43,8 @@ class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
     if (!response) {
       throw new Error('Failed to fetch stories')
     }
-    const storiesData: Record<string, unknown>[] = response.data.data ?? []
-    return storiesData.map((story) => new Story(convertApiFields(story)))
+    const storiesData: StoryApiData[] = response.data.data ?? []
+    return storiesData.map((story) => new Story(convertApiFields<StoryApiData, StoryInterface>(story)))
   }
 
   appUrl: string

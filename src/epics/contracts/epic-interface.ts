@@ -1,7 +1,8 @@
+import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface EpicInterface {
+export default interface EpicInterface extends BaseInterface {
     appUrl: string
     archived: boolean
     associatedGroups: []
