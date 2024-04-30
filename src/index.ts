@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+// Resources
 import ShortcutResource from '@sx/base-resource'
 import Client from '@sx/client'
 import Iteration from '@sx/iterations/iteration'
@@ -40,6 +41,9 @@ import CreateLinkedFileData from '@sx/linked-files/contracts/create-linked-file-
 import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
 import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 
+// Utils
+import Bundle from '@sx/bundle'
+
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField, UploadedFile}
 export {
@@ -67,4 +71,4 @@ export {
     CustomFieldInterface,
     UploadedFileInterface
 }
-export {ShortcutResource}
+export {Bundle, ShortcutResource}
