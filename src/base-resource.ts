@@ -2,6 +2,7 @@ import axios from 'axios'
 
 import BaseInterface from '@sx/base-interface'
 import camelToSnake from '@sx/utils/camel-to-snake'
+import {ShortcutApiFieldType, ShortcutFieldType} from '@sx/utils/field-type'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 import snakeToCamel from '@sx/utils/snake-to-camel'
@@ -16,7 +17,7 @@ export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
  * @group Story
  */
 export default abstract class ShortcutResource<Interface = BaseInterface> {
-  [key: string]: unknown
+  [key: string]: ShortcutFieldType
 
   /**
    * @internal
@@ -95,7 +96,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
         if (!response) {
           return
         }
-        const data: Record<string, unknown> = response!.data
+        const data: Record<string, ShortcutApiFieldType> = response!.data
         Object.keys(data).forEach(key => {
           this[snakeToCamel(key)] = data[key]
           this.changedFields = []

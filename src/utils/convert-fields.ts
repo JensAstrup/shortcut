@@ -2,19 +2,20 @@ import BaseCreateInterface from '@sx/base-create-interface'
 import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
 import camelToSnake from '@sx/utils/camel-to-snake'
+import {ShortcutFieldType} from '@sx/utils/field-type'
 import isValidDatetimeFormat from '@sx/utils/is-valid-datetime-format'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 
 
-type AnyObject = Record<string, unknown>
+type AnyObject = Record<string, ShortcutFieldType>
 
-function convertApiFields<Input extends BaseData, Resource extends BaseInterface>(object: Input): Resource {
-  const convertObject = (obj: BaseData | BaseData[]): AnyObject | Array<object> => {
+function convertApiFields<Input extends BaseData, Interface extends BaseInterface>(object: Input): Interface {
+  const convertObject = (obj: BaseData | BaseData[]): BaseData | BaseData[]=> {
     if (Array.isArray(obj)) {
-      return obj.map(item => convertObject(item)) // Recursively process each item in the array
+      return obj.map(item => <BaseData>convertObject(item)) // Recursively process each item in the array
     }
     else if (obj !== null && typeof obj === 'object') {
-      const newObj: AnyObject = {}
+      const newObj: BaseData = {}
       Object.keys(obj).forEach(key => {
         const camelKey = snakeToCamel(key)
         const value = obj[key]
@@ -23,7 +24,7 @@ function convertApiFields<Input extends BaseData, Resource extends BaseInterface
           newObj[camelKey] = new Date(value as string)
         }
         else {
-          newObj[camelKey] = typeof obj[key] === 'object' ? convertObject(obj[key] as AnyObject) : obj[key]
+          newObj[camelKey] = typeof obj[key] === 'object' ? convertObject(obj[key] as BaseData) : obj[key]
         }
       })
       return newObj
@@ -33,7 +34,7 @@ function convertApiFields<Input extends BaseData, Resource extends BaseInterface
     }
   }
 
-  return convertObject(object) as Resource
+  return convertObject(object) as Interface
 }
 
 function convertToApiFields<Input extends BaseCreateInterface, U extends BaseData>(object: Input): U {

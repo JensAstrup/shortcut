@@ -1,7 +1,8 @@
+import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface LinkedFileInterface {
+export default interface LinkedFileInterface extends BaseInterface {
     contentType: string
     createdAt: Date
     description: string
