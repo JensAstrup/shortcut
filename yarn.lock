@@ -5272,9 +5272,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typedoc-plugin-coverage@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/typedoc-plugin-coverage/-/typedoc-plugin-coverage-3.1.0.tgz"
-  integrity sha512-fxeJRrxQR3yM/aFZU7mOuatgRCztiMCbeNiCRVZKY6VNgOcVMC1HS+ZfZnlbLLteUOdeWleSQ6yntuipz5zi6A==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-coverage/-/typedoc-plugin-coverage-3.1.1.tgz#dda6f4d12a870ffd231b24d53be859e2e44d9c31"
+  integrity sha512-PAMYQ4fX7wJo6Y8mMzrISDNRurl5+xSNWEojrt6Yxofb/m7vWrgiP3bid2KXloMlPcSfCoBiJA6F2g3rmu8XTQ==
 
 typescript@^5.4.4, typescript@^5.4.5:
   version "5.4.5"
