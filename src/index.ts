@@ -43,6 +43,7 @@ import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-in
 
 // Utils
 import Bundle from '@sx/bundle'
+import {SearchResponse} from '@sx/base-service'
 
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField, UploadedFile}
@@ -71,4 +72,4 @@ export {
     CustomFieldInterface,
     UploadedFileInterface
 }
-export {Bundle, ShortcutResource}
+export {Bundle, ShortcutResource, SearchResponse}
