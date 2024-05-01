@@ -4,13 +4,14 @@ import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
+import {ShortcutApiFieldType} from '@sx/utils/field-type'
 import UUID from '@sx/utils/uuid'
 
 
-export type ServiceOperation = 'get' | 'search' | 'list'
+type ServiceOperation = 'get' | 'search' | 'list'
 
 
-export default class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
+class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
   public baseUrl = ''
   public headers: Record<string, string>
   protected factory: (data: Interface) => Resource
@@ -37,8 +38,8 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
     if (response.status >= 400) {
       throw new Error('HTTP error ' + response.status)
     }
-    const instanceData: Interface = convertApiFields(response.data)
-    const instance = this.factory(instanceData)
+    const instanceData: Interface = convertApiFields<BaseData, Interface>(response.data)
+    const instance: Resource = this.factory(instanceData)
     this.instances[id] = instance
     return instance
   }
@@ -55,7 +56,7 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
     if (response.status >= 400) {
       throw new Error('HTTP error ' + response.status)
     }
-    const instancesData: Record<string, unknown>[] = response.data ?? []
+    const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
 
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
@@ -70,8 +71,15 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
   }
 }
 
-export class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
+
+interface SearchResponse {
+  next?: string
+  results: ShortcutResource[]
+}
+
+class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
+
 
   /**
    * Search for resources using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
@@ -89,7 +97,7 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<{ next?: string, results: Resource[] }>{
+  public async search(query: string, next?: string): Promise<SearchResponse>{
     let url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
     if (next) {
       url = new URL(`https://api.app.shortcut.com${next}`)
@@ -113,3 +121,6 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
 
   }
 }
+
+export default BaseService
+export {BaseSearchableService, BaseService, SearchResponse, ServiceOperation}
