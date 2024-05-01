@@ -8,10 +8,10 @@ import {ShortcutApiFieldType} from '@sx/utils/field-type'
 import UUID from '@sx/utils/uuid'
 
 
-export type ServiceOperation = 'get' | 'search' | 'list'
+type ServiceOperation = 'get' | 'search' | 'list'
 
 
-export default class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
+class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
   public baseUrl = ''
   public headers: Record<string, string>
   protected factory: (data: Interface) => Resource
@@ -71,8 +71,15 @@ export default class BaseService<Resource extends ShortcutResource, Interface ex
   }
 }
 
-export class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
+
+interface SearchResponse {
+  next?: string
+  results: ShortcutResource[]
+}
+
+class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
+
 
   /**
    * Search for resources using the [Shortcut Syntax](https://help.shortcut.com/hc/en-us/articles/360000046646-Searching-in-Shortcut-Using-Search-Operators)
@@ -90,7 +97,7 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<{ next?: string, results: Resource[] }>{
+  public async search(query: string, next?: string): Promise<SearchResponse>{
     let url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
     if (next) {
       url = new URL(`https://api.app.shortcut.com${next}`)
@@ -114,3 +121,6 @@ export class BaseSearchableService<Resource extends ShortcutResource, Interface 
 
   }
 }
+
+export default BaseService
+export {BaseSearchableService, BaseService, SearchResponse, ServiceOperation}
