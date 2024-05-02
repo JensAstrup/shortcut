@@ -33,8 +33,17 @@ jobs:
           exit 1
         fi
 
+      # Commit changes to package.json
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add package.json yarn.lock  # Include yarn.lock if it changes
+        git commit -m "chore: bump version to $(node -p "require('./package.json').version") [skip ci]"
+        git push origin HEAD:${{ github.head_ref }} -f  # Correctly push to the branch that triggered the workflow
+
     - name: Build
-      run: npm run build
+      run: yarn build
 
     - name: Publish to NPM
       run: npm publish --tag beta
