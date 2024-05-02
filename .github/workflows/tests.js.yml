@@ -8,7 +8,7 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
-      - '.github/workflows/'
+      - '.github/**'
       - 'package.json' # In case the dependencies change
 
 jobs:
