@@ -72,9 +72,9 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
 }
 
 
-interface SearchResponse {
+interface SearchResponse<Resource extends ShortcutResource> {
   next?: string
-  results: ShortcutResource[]
+  results: Resource[]
 }
 
 class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
@@ -97,7 +97,7 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<SearchResponse>{
+  public async search(query: string, next?: string): Promise<SearchResponse<Resource>>{
     let url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
     if (next) {
       url = new URL(`https://api.app.shortcut.com${next}`)
@@ -118,7 +118,6 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
       results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
       next: nextPage
     }
-
   }
 }
 
