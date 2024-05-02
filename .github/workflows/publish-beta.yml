@@ -1,0 +1,55 @@
+name: Publish to NPM as Beta
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Ensures you fetch all history for all branches and tags
+
+    # Setup Node.js environment
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 21.x
+        registry-url: 'https://registry.npmjs.org/'
+
+    # Install dependencies using yarn
+    - name: Install dependencies
+      run: yarn
+
+    # Set version from PR title or description
+    - name: Set Version
+      run: |
+        VERSION_KEYWORD=$(echo '${{ github.event.pull_request.title }}' | grep -oP '(?<=version:)(major|minor|patch)')
+        if [ ! -z "$VERSION_KEYWORD" ]; then
+          npm version pre$VERSION_KEYWORD --preid beta --no-git-tag-version
+        else
+          echo "No version keyword found in PR title"
+          exit 1
+        fi
+
+    # Commit changes to package.json
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add package.json yarn.lock  # Include yarn.lock if it changes
+        git commit -m "chore: bump version to $(node -p "require('./package.json').version") [skip ci]"
+        git push
+
+    # Build your package
+    - name: Build
+      run: npm run build
+
+    # Publish to NPM with a beta tag
+    - name: Publish to NPM
+      run: npm publish --tag beta
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
