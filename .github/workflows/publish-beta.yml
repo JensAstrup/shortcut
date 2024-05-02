@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
   build-and-publish:
@@ -28,7 +27,7 @@ jobs:
       run: |
         VERSION_KEYWORD=$(echo '${{ github.event.pull_request.title }}' | grep -oP '(?<=version:)(major|minor|patch)')
         if [ ! -z "$VERSION_KEYWORD" ]; then
-          npm version pre$VERSION_KEYWORD --preid alpha --no-git-tag-version
+          npm version pre$VERSION_KEYWORD --preid beta --no-git-tag-version
         else
           echo "No version keyword found in PR title"
           exit 1
