@@ -27,14 +27,23 @@ jobs:
       run: |
         VERSION_KEYWORD=$(echo '${{ github.event.pull_request.title }}' | grep -oP '(?<=version:)(major|minor|patch)')
         if [ ! -z "$VERSION_KEYWORD" ]; then
-          npm version pre$VERSION_KEYWORD --preid beta --no-git-tag-version
+          npm version pre$VERSION_KEYWORD --preid alpha --no-git-tag-version
         else
           echo "No version keyword found in PR title"
           exit 1
         fi
 
+      # Commit changes to package.json
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add package.json yarn.lock  # Include yarn.lock if it changes
+        git commit -m "chore: bump version to $(node -p "require('./package.json').version") [skip ci]"
+        git push origin HEAD:${{ github.head_ref }} -f  # Correctly push to the branch that triggered the workflow
+
     - name: Build
-      run: npm run build
+      run: yarn build
 
     - name: Publish to NPM
       run: npm publish --tag beta
