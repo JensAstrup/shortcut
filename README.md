@@ -55,16 +55,19 @@ if (story.group_id) {
 And taking actions on resources is intuitive, here's how you leave a comment on a story:
 
 ```typescript
+import {SearchResponse} from './base-service'
+import Story from './story'
+
 const oneWeekAgo = new Date();
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
 const client: Client = new Client()
-const stories: Story[] = await client.stories.search('team:engineering is:started')
-const outdatedStories: Story[] = stories.filter(story => story.updatedAt < oneWeekAgo)
+const storiesSearch: SearchResponse<Story> = await client.stories.search('team:engineering is:started')
+const outdatedStories: Story[] = storiesSearch.results.filter(story => story.updatedAt < oneWeekAgo)
 
 for (const story of outdatedStories) {
-    const comment = 'This story has not been updated in over a week. Please provide an update.'
-    await story.comment(comment)
+  const comment = 'This story has not been updated in over a week. Please provide an update.'
+  await story.comment(comment)
 }
 ````
 
@@ -126,9 +129,14 @@ Full documentation for the Shortcut API can be found [here](https://shortcut.com
 ### Searching Stories
 
 ```typescript
+import {SearchResponse} from './base-service'
+import Story from './story'
+
 const client: Client = new Client()
-const stories: Story[] = await client.stories.search('team:engineering is:started')
-console.log(stories)
+const storiesSearch: SearchResponse<Story> = await client.stories.search('team:engineering is:started')
+console.log(stories.results)
+const moreStories: SearchResponse<Story> = await client.stories.search('team:engineering is:started', {page: storiesSearch.next})
+````
 ```
 
 ### Commenting on a Story
