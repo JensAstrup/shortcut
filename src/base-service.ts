@@ -5,6 +5,7 @@ import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {ShortcutApiFieldType} from '@sx/utils/field-type'
+import SearchResponse from '@sx/utils/search-response'
 import UUID from '@sx/utils/uuid'
 
 
@@ -72,11 +73,6 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
 }
 
 
-interface SearchResponse<Resource extends ShortcutResource> {
-  next?: string
-  results: Resource[]
-}
-
 class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
 
@@ -114,12 +110,12 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
-    return {
-      results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
-      next: nextPage
-    }
+    return new SearchResponse<Resource>({
+      next: nextPage,
+      results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource)))
+    })
   }
 }
 
 export default BaseService
-export {BaseSearchableService, BaseService, SearchResponse, ServiceOperation}
+export {BaseSearchableService, BaseService, ServiceOperation}
