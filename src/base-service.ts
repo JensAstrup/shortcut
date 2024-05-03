@@ -1,3 +1,5 @@
+import * as console from 'node:console'
+
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
@@ -6,7 +8,6 @@ import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {ShortcutApiFieldType} from '@sx/utils/field-type'
 import UUID from '@sx/utils/uuid'
-import * as console from 'node:console'
 
 
 type ServiceOperation = 'get' | 'search' | 'list'

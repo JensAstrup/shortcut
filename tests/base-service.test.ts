@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import BaseInterface from '../src/base-interface'
 import ShortcutResource from '../src/base-resource'
-import BaseService, {BaseSearchableService, ServiceOperation} from '../src/base-service'
+import {BaseSearchableService, BaseService, ServiceOperation} from '../src/base-service'
 
 import mocked = jest.mocked
 
