@@ -12,12 +12,12 @@ class SearchResponse<Resource extends ShortcutResource> {
     this.results = init.results
   }
 
-  public hasNextPage(): boolean {
+  get hasNextPage(): boolean {
     return this.nextPage !== undefined
   }
 
   public next(){
-    if (!this.hasNextPage()) {
+    if (!this.hasNextPage) {
       throw new Error('No next page available')
     }
     const service: BaseSearchableService<ShortcutResource, BaseInterface> = this.results[0].service as BaseSearchableService<ShortcutResource, BaseInterface>
