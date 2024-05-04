@@ -1,13 +1,13 @@
 import Label from '@sx/labels/label'
 import LabelsService from '@sx/labels/labels-service'
-import {MemberState} from '@sx/members/contracts/member'
+import {MemberState} from '@sx/members/contracts/member-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import HistoryActionInterface, {HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
 import HistoryAction from '@sx/stories/history/actions/history-action'
 
 
-jest.mock('../../../../src/utils/headers', () => ({
+jest.mock('@sx/utils/headers', () => ({
   getHeaders: jest.fn().mockReturnValue({Authorization: 'Bearer token'})
 }))
 

@@ -1,5 +1,5 @@
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
-import MemberInterface, {MemberState} from '@sx/members/contracts/member'
+import MemberInterface, {MemberState} from '@sx/members/contracts/member-interface'
 import {MemberProfile} from '@sx/members/contracts/member-profile'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Team from '@sx/teams/team'
