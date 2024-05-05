@@ -50,4 +50,23 @@ describe('SearchResponse', () => {
     expect(searchResponse.hasNextPage).toBe(false)
   })
 
+  test('next should throw an error when there is no next page token', () => {
+    searchResponse.nextPage = undefined
+    expect(() => searchResponse.next()).toThrow('No next page available')
+  })
+
+  test('next should return a new SearchResponse when there is a next page token', () => {
+    const newResources = [new MockResource('3'), new MockResource('4')]
+    const newSearchResponse = new SearchResponse({
+      query: 'newQuery',
+      results: newResources,
+      next: 'newPageToken',
+      service: mockService,
+    })
+    mockService.search = jest.fn().mockResolvedValue(newSearchResponse)
+    searchResponse.next().then((response) => {
+      expect(response).toEqual(newSearchResponse)
+    })
+  })
+
 })
