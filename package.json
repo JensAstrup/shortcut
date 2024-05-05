@@ -1,6 +1,6 @@
 {
   "name": "shortcut-api",
-  "version": "2.7.3-beta.0",
+  "version": "3.0.0-alpha.224.1",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",

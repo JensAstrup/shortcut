@@ -1,5 +1,3 @@
-import * as console from 'node:console'
-
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
@@ -7,6 +5,7 @@ import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {ShortcutApiFieldType} from '@sx/utils/field-type'
+import SearchResponse from '@sx/utils/search-response'
 import UUID from '@sx/utils/uuid'
 
 
@@ -73,11 +72,6 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
 }
 
 
-interface SearchResponse<Resource extends ShortcutResource> {
-  next?: string
-  results: Resource[]
-}
-
 class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
 
@@ -98,7 +92,7 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<SearchResponse<Resource>>{
+  public async search(query: string, next?: string): Promise<SearchResponse<Resource, Interface>>{
     const pathSegments = this.baseUrl.split('/')
     const resource = pathSegments.pop()
     let url = new URL(`https://api.app.shortcut.com/api/v3/search/${resource}`)
@@ -117,13 +111,14 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
-    console.log(resourceData)
-    return {
+    return new SearchResponse<Resource, Interface>({
+      query: query,
+      next: nextPage,
       results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
-      next: nextPage
-    }
+      service: this
+    })
   }
 }
 
 export default BaseService
-export {BaseSearchableService, BaseService, SearchResponse, ServiceOperation}
+export {BaseSearchableService, BaseService, ServiceOperation}
