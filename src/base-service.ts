@@ -1,5 +1,3 @@
-import * as console from 'node:console'
-
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
