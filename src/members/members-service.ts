@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from 'axios'
 
 import BaseService, {ServiceOperation} from '@sx/base-service'
-import MemberInterface from '@sx/members/contracts/member'
+import MemberInterface from '@sx/members/contracts/member-interface'
 import {MemberProfile} from '@sx/members/contracts/member-profile'
 import MemberProfileApiData from '@sx/members/contracts/member-profile-api-data'
 import Member from '@sx/members/member'
