@@ -1,3 +1,5 @@
+import * as console from 'node:console'
+
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
@@ -58,7 +60,7 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
-
+    console.log(instancesData)
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
       let id: string = resource.id as string
@@ -94,7 +96,9 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
    * @param next - The next page token to use for pagination
    */
   public async search(query: string, next?: string): Promise<SearchResponse<Resource>>{
-    let url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
+    const pathSegments = this.baseUrl.split('/')
+    const resource = pathSegments.pop()
+    let url = new URL(`https://api.app.shortcut.com/api/v3/search/${resource}`)
     if (next) {
       url = new URL(`https://api.app.shortcut.com${next}`)
     }
