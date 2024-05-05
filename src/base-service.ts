@@ -1,5 +1,3 @@
-import * as console from 'node:console'
-
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
@@ -59,7 +57,6 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
-    console.log(instancesData)
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
       let id: string = resource.id as string
@@ -118,7 +115,6 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
-    console.log(resourceData)
     return {
       results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
       next: nextPage

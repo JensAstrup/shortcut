@@ -93,7 +93,6 @@ describe('MockService', () => {
     expect(resources).toBeInstanceOf(Array)
     expect(resources).toHaveLength(2)
     expect(resources[0]).toBeInstanceOf(MockResource)
-    console.log(resources[0])
     expect(resources[0].id).toEqual(mockData[0].id)
     expect(resources[0].name).toEqual(mockData[0].name)
     expect(resources[1]).toBeInstanceOf(MockResource)
