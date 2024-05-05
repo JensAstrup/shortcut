@@ -154,7 +154,6 @@ describe('Story', () => {
       const history = [{id: 1}]
       axiosMock.onGet().reply(200, history)
       const storyHistory = await story.history()
-      console.log(storyHistory)
       expect(storyHistory[0]).toMatchObject(history[0])
     })
   })

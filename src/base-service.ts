@@ -60,7 +60,6 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
-    console.log(instancesData)
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
       let id: string = resource.id as string

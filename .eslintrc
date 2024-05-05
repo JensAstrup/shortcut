@@ -31,6 +31,7 @@
     "perfectionist/sort-interfaces": "off",
     "perfectionist/sort-objects": "off",
     "perfectionist/sort-object-types": "off",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
     "indent": [
       "error",
       2
