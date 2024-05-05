@@ -5,6 +5,7 @@ import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {ShortcutApiFieldType} from '@sx/utils/field-type'
+import SearchResponse from '@sx/utils/search-response'
 import UUID from '@sx/utils/uuid'
 
 
@@ -57,7 +58,6 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
-
     const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
       let id: string = resource.id as string
@@ -71,11 +71,6 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
   }
 }
 
-
-interface SearchResponse<Resource extends ShortcutResource> {
-  next?: string
-  results: Resource[]
-}
 
 class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
@@ -97,8 +92,10 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<SearchResponse<Resource>>{
-    let url = new URL('https://api.app.shortcut.com/api/v3/search/stories')
+  public async search(query: string, next?: string): Promise<SearchResponse<Resource, Interface>>{
+    const pathSegments = this.baseUrl.split('/')
+    const resource = pathSegments.pop()
+    let url = new URL(`https://api.app.shortcut.com/api/v3/search/${resource}`)
     if (next) {
       url = new URL(`https://api.app.shortcut.com${next}`)
     }
@@ -114,12 +111,14 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
-    return {
+    return new SearchResponse<Resource, Interface>({
+      query: query,
+      next: nextPage,
       results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
-      next: nextPage
-    }
+      service: this
+    })
   }
 }
 
 export default BaseService
-export {BaseSearchableService, BaseService, SearchResponse, ServiceOperation}
+export {BaseSearchableService, BaseService, ServiceOperation}

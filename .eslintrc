@@ -24,6 +24,14 @@
   ],
   "rules": {
     "dot-notation": "error",
+    "brace-style": ["error", "stroustrup"],
+    "perfectionist/sort-imports": "off",
+    "perfectionist/sort-union-types": "off",
+    "perfectionist/sort-classes": "off",
+    "perfectionist/sort-interfaces": "off",
+    "perfectionist/sort-objects": "off",
+    "perfectionist/sort-object-types": "off",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
     "indent": [
       "error",
       2
@@ -40,12 +48,6 @@
       "error",
       "never"
     ],
-    "brace-style": ["error", "stroustrup"],
-    "perfectionist/sort-imports": "off",
-    "perfectionist/sort-union-types": "off",
-    "perfectionist/sort-classes": "off",
-    "perfectionist/sort-interfaces": "off",
-    "perfectionist/sort-objects": "off",
     "import/order": [
       "error",
       {

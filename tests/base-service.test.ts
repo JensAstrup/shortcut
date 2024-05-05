@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import BaseInterface from '../src/base-interface'
 import ShortcutResource from '../src/base-resource'
-import BaseService, {BaseSearchableService, ServiceOperation} from '../src/base-service'
+import {BaseSearchableService, BaseService, ServiceOperation} from '../src/base-service'
 
 import mocked = jest.mocked
 
@@ -93,7 +93,6 @@ describe('MockService', () => {
     expect(resources).toBeInstanceOf(Array)
     expect(resources).toHaveLength(2)
     expect(resources[0]).toBeInstanceOf(MockResource)
-    console.log(resources[0])
     expect(resources[0].id).toEqual(mockData[0].id)
     expect(resources[0].name).toEqual(mockData[0].name)
     expect(resources[1]).toBeInstanceOf(MockResource)
@@ -124,6 +123,7 @@ describe('BaseSearchableService', () => {
   beforeEach(() => {
     mockService = new MockSearchableService({headers: {Authorization: 'Bearer token'}})
     mockService.availableOperations = ['search']
+    mockService.baseUrl = 'https://api.app.shortcut.com/api/v3/search/mockResources'
     jest.clearAllMocks()
   })
 
@@ -134,13 +134,13 @@ describe('BaseSearchableService', () => {
 
     const resources = await mockService.search('test')
 
-    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/search/stories?query=test', {headers: mockService.headers})
+    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/search/mockResources?query=test', {headers: mockService.headers})
     expect(resources.results[0]).toBeInstanceOf(MockResource)
   })
 
   it('should search using next page if token is provided', async () => {
     const mockData = {id: '1', name: 'Test Resource'}
-    const mockResponse = {status: 200, data: {data: [mockData], next: 'https://api.app.shortcut.com/api/v3/search/stories?query=test&page=2'}}
+    const mockResponse = {status: 200, data: {data: [mockData], next: 'https://api.app.shortcut.com/api/v3/search/mockResources?query=test&page=2'}}
     mockedAxios.get.mockResolvedValue(mockResponse)
 
     const resources = await mockService.search('test', '/token')

@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import BaseInterface from '@sx/base-interface'
+import BaseService, {BaseSearchableService} from '@sx/base-service'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import {ShortcutApiFieldType, ShortcutFieldType} from '@sx/utils/field-type'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
@@ -33,6 +34,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
    */
   public availableOperations: ResourceOperation[] = []
 
+  public service: BaseService<ShortcutResource, BaseInterface> | BaseSearchableService<ShortcutResource, BaseInterface>
   /**
    * Return a Proxy object to intercept property access and set operations on derived classes.
    * The Proxy object will track changes made to the object and store them in the `changedFields` property

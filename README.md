@@ -129,14 +129,17 @@ Full documentation for the Shortcut API can be found [here](https://shortcut.com
 ### Searching Stories
 
 ```typescript
-import {SearchResponse} from './base-service'
-import Story from './story'
+import SearchResponse from '@sx/utils/search-response'
+import Story from '@sx/stories/story'
 
 const client: Client = new Client()
-const storiesSearch: SearchResponse<Story> = await client.stories.search('team:engineering is:started')
-console.log(stories.results)
-const moreStories: SearchResponse<Story> = await client.stories.search('team:engineering is:started', {page: storiesSearch.next})
-````
+const search: SearchResponse<Story> = await client.stories.search('team:engineering is:started')
+const stories: Story[] = search.results
+if(search.hasNextPage()) {
+    const nextPage: SearchResponse<Story> = await search.next()
+    stories.push(...nextPage.results)
+}
+console.log(stories)
 ```
 
 ### Commenting on a Story

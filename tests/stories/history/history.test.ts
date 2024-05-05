@@ -1,7 +1,7 @@
 import axios from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter'
 
-import MemberInterface from '@sx/members/contracts/member'
+import MemberInterface from '@sx/members/contracts/member-interface'
 import Member from '@sx/members/member'
 import HistoryActionInterface, {HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
 import HistoryAction from '@sx/stories/history/actions/history-action'
