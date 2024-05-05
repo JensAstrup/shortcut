@@ -95,7 +95,7 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<SearchResponse<Resource>>{
+  public async search(query: string, next?: string): Promise<SearchResponse<Resource, Interface>>{
     const pathSegments = this.baseUrl.split('/')
     const resource = pathSegments.pop()
     let url = new URL(`https://api.app.shortcut.com/api/v3/search/${resource}`)
@@ -114,9 +114,11 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
-    return new SearchResponse<Resource>({
+    return new SearchResponse<Resource, Interface>({
+      query: query,
       next: nextPage,
-      results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource)))
+      results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
+      service: this
     })
   }
 }

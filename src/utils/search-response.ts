@@ -3,13 +3,15 @@ import ShortcutResource from '@sx/base-resource'
 import {BaseSearchableService} from '@sx/base-service'
 
 
-class SearchResponse<Resource extends ShortcutResource> {
+class SearchResponse<Resource extends ShortcutResource, Interface extends BaseInterface> {
   public nextPage: undefined | string
   public results: Resource[]
+  public service: BaseSearchableService<Resource, Interface>
 
-  constructor(init: { next?: string; results: Resource[] }) {
+  constructor(init: {query: string, results: Resource[], next?: string, service: BaseSearchableService<Resource, Interface> }) {
     this.nextPage = init.next
     this.results = init.results
+    this.service = init.service
   }
 
   get hasNextPage(): boolean {
@@ -20,8 +22,7 @@ class SearchResponse<Resource extends ShortcutResource> {
     if (!this.hasNextPage) {
       throw new Error('No next page available')
     }
-    const service: BaseSearchableService<ShortcutResource, BaseInterface> = this.results[0].service as BaseSearchableService<ShortcutResource, BaseInterface>
-    return service.search(this.nextPage!)
+    return this.service.search(this.nextPage!)
   }
 }
 
