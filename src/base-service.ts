@@ -1,3 +1,5 @@
+import * as console from 'node:console'
+
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
@@ -115,6 +117,7 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
+    console.log(resourceData)
     return {
       results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
       next: nextPage
