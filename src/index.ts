@@ -7,6 +7,7 @@ import Iteration from '@sx/iterations/iteration'
 import Member from '@sx/members/member'
 import Story from '@sx/stories/story'
 import Team from '@sx/teams/team'
+import SearchResponse from '@sx/utils/search-response'
 import Workflow from '@sx/workflows/workflow'
 import Epic from '@sx/epics/epic'
 import Objective from '@sx/objectives/objective'
@@ -53,7 +54,6 @@ import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interfac
 
 // Utils
 import Bundle from '@sx/bundle'
-import {SearchResponse} from '@sx/base-service'
 
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField, UploadedFile}
