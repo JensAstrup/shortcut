@@ -1,6 +1,6 @@
 import BaseInterface from '@sx/base-interface'
 import ShortcutResource from '@sx/base-resource'
-import {BaseSearchableService, BaseService} from '@sx/base-service'
+import {BaseSearchableService} from '@sx/base-service'
 import {SearchResponse} from '@sx/index'
 
 
