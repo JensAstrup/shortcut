@@ -1,3 +1,5 @@
+import * as console from 'node:console'
+
 import axios, {AxiosResponse} from 'axios'
 
 import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
@@ -26,6 +28,7 @@ export default class Label extends ShortcutResource<LabelInterface> implements L
    * Get all stories using this label
    */
   async stories(): Promise<Story[]> {
+    console.log('this.id', this.id)
     const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/stories`, {headers: getHeaders()}).catch((error) => {
       handleResponseFailure(error, {})
     })

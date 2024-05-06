@@ -197,7 +197,9 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
       throw new Error('Story does not have a cycle time')
     }
 
-    return (completedAt.getTime() - startedAt.getTime()) / (1000 * 60 * 60)
+    // eslint-disable-next-line no-magic-numbers
+    const millisecondsToHour = 1000 * 60 * 60
+    return (completedAt.getTime() - startedAt.getTime()) / millisecondsToHour
   }
 
   /**
@@ -214,7 +216,9 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
     if (!this.startedAt) {
       throw new Error('Story is not started')
     }
-    return (new Date().getTime() - this.startedAt!.getTime()) / (1000 * 60 * 60)
+    // eslint-disable-next-line no-magic-numbers
+    const millisecondsToHour = 1000 * 60 * 60
+    return (new Date().getTime() - this.startedAt!.getTime()) / millisecondsToHour
   }
 
   public async comment(comment: string): Promise<StoryComment> {
