@@ -5,7 +5,7 @@ import {BaseSearchableService} from '@sx/base-service'
 
 class SearchResponse<Resource extends ShortcutResource, Interface extends BaseInterface> {
   public query: string
-  public nextPage: undefined | string
+  public nextPage: undefined | string | null
   public results: Resource[]
   public service: BaseSearchableService<Resource, Interface>
 
@@ -17,7 +17,7 @@ class SearchResponse<Resource extends ShortcutResource, Interface extends BaseIn
   }
 
   get hasNextPage(): boolean {
-    return this.nextPage !== undefined
+    return this.nextPage !== undefined && this.nextPage !== null
   }
 
   public next(){
