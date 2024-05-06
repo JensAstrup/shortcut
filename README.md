@@ -55,16 +55,15 @@ if (story.group_id) {
 And taking actions on resources is intuitive, here's how you leave a comment on a story:
 
 ```typescript
-import {SearchResponse} from './base-service'
+import SearchResponse from './search-response'
 import Story from './story'
-import StoryInterface from './story-interface'
 
 const oneWeekAgo = new Date();
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
 const client: Client = new Client()
-const storiesSearch: SearchResponse<Story, StoryInterface> = await client.stories.search('team:engineering is:started')
-const outdatedStories: Story[] = storiesSearch.results.filter(story => story.updatedAt < oneWeekAgo)
+const search: SearchResponse<Story> = await client.stories.search('team:engineering is:started')
+const outdatedStories: Story[] = search.results.filter(story => story.updatedAt < oneWeekAgo)
 
 for (const story of outdatedStories) {
   const comment = 'This story has not been updated in over a week. Please provide an update.'
@@ -132,14 +131,13 @@ Full documentation for the Shortcut API can be found [here](https://shortcut.com
 ```typescript
 import SearchResponse from '@sx/utils/search-response'
 import Story from '@sx/stories/story'
-import StoryInterface from './story-interface'
 
 const client: Client = new Client()
-const search: SearchResponse<Story, StoryInterface> = await client.stories.search('team:engineering is:started')
+const search: SearchResponse<Story> = await client.stories.search('team:engineering is:started')
 const stories: Story[] = search.results
-if (search.hasNextPage()) {
-  const nextPage: SearchResponse<Story, StoryInterface> = await search.next()
-  stories.push(...nextPage.results)
+if(search.hasNextPage()) {
+    const nextPage: SearchResponse<Story> = await search.next()
+    stories.push(...nextPage.results)
 }
 console.log(stories)
 ```
