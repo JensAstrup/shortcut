@@ -78,7 +78,7 @@ describe('Epics service', () => {
     const service = new EpicsService({headers: {}})
     const searchResults = await service.search('epic')
     expect(searchResults).toBeInstanceOf(SearchResponse)
-    expect(searchResults).toEqual({results: [], nextPage: undefined, service: service})
+    expect(searchResults).toEqual({results: [], query: 'epic', nextPage: undefined, service: service})
   })
 
   it('should throw an error if response is 400 or greater', () => {
