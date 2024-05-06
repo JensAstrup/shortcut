@@ -50,6 +50,11 @@ describe('SearchResponse', () => {
     expect(searchResponse.hasNextPage).toBe(false)
   })
 
+  test('hasNextPage should return false when next page token is null', () => {
+    searchResponse.nextPage = null
+    expect(searchResponse.hasNextPage).toBe(false)
+  })
+
   test('next should throw an error when there is no next page token', () => {
     searchResponse.nextPage = undefined
     expect(() => searchResponse.next()).toThrow('No next page available')
@@ -67,6 +72,7 @@ describe('SearchResponse', () => {
     searchResponse.next().then((response) => {
       expect(response).toEqual(newSearchResponse)
     })
+    expect(mockService.search).toHaveBeenCalledWith('initialQuery', 'nextPageToken')
   })
 
 })
