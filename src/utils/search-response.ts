@@ -4,25 +4,27 @@ import {BaseSearchableService} from '@sx/base-service'
 
 
 class SearchResponse<Resource extends ShortcutResource, Interface extends BaseInterface> {
-  public nextPage: undefined | string
+  public query: string
+  public nextPage: undefined | string | null
   public results: Resource[]
   public service: BaseSearchableService<Resource, Interface>
 
   constructor(init: {query: string, results: Resource[], next?: string, service: BaseSearchableService<Resource, Interface> }) {
+    this.query = init.query
     this.nextPage = init.next
     this.results = init.results
     this.service = init.service
   }
 
   get hasNextPage(): boolean {
-    return this.nextPage !== undefined
+    return this.nextPage !== undefined && this.nextPage !== null
   }
 
   public next(){
     if (!this.hasNextPage) {
       throw new Error('No next page available')
     }
-    return this.service.search(this.nextPage!)
+    return this.service.search(this.query, this.nextPage!)
   }
 }
 
