@@ -67,6 +67,7 @@ describe('SearchResponse', () => {
     searchResponse.next().then((response) => {
       expect(response).toEqual(newSearchResponse)
     })
+    expect(mockService.search).toHaveBeenCalledWith('initialQuery', 'nextPageToken')
   })
 
 })
