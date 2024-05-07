@@ -124,7 +124,8 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     })
 
     const response = await axios.post(baseUrl, body, {headers: getHeaders()})
-    if (response.status >= 400) {
+    const HTTP_ERROR = 400
+    if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
     }
 

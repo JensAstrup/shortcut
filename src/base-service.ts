@@ -36,7 +36,8 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
     }
     const url = `${this.baseUrl}/${id}`
     const response = await axios.get(url, {headers: this.headers})
-    if (response.status >= 400) {
+    const HTTP_ERROR = 400
+    if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
     }
     const instanceData: Interface = convertApiFields<BaseData, Interface>(response.data)
@@ -54,7 +55,8 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
       throw new Error('Operation not supported')
     }
     const response = await axios.get(this.baseUrl, {headers: this.headers})
-    if (response.status >= 400) {
+    const HTTP_ERROR = 400
+    if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
@@ -105,7 +107,8 @@ class BaseSearchableService<Resource extends ShortcutResource, Interface extends
 
     const response = await axios.get(url.toString(), {headers: this.headers})
 
-    if (response.status >= 400) {
+    const HTTP_ERROR = 400
+    if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
 
     }

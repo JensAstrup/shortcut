@@ -35,7 +35,8 @@ class Bundle<R extends ShortcutResource>{
    */
   constructor(bundled: Array<UUID | number> | Array<R>, factory?: (data: { id: UUID | number }) => R){
     // If the bundled parameter is an array of ids, not an array of R, create the resources
-    if(Array.isArray(bundled) && typeof bundled[0] === 'number' || typeof bundled[0] ===  'string'){
+    const FIRST_BUNDLED = 0
+    if(Array.isArray(bundled) && typeof bundled[FIRST_BUNDLED] === 'number' || typeof bundled[FIRST_BUNDLED] ===  'string'){
       this.factory = factory!
       this.instanceIds = <UUID[] | number[]>bundled
       this.#createResources()
@@ -49,8 +50,8 @@ class Bundle<R extends ShortcutResource>{
       },
       set(target, property: string | symbol, value, receiver) {
         // Check that property is defined on R
-        if (!Reflect.has(target.resources[0], property)) {
-          throw new Error(`Property ${String(property)} is not defined on ${target.resources[0].constructor.name}`)
+        if (!Reflect.has(target.resources[FIRST_BUNDLED], property)) {
+          throw new Error(`Property ${String(property)} is not defined on ${target.resources[FIRST_BUNDLED].constructor.name}`)
         }
         // Track all changes made to the object
         if (!target.changedFields.includes(String(property))) {
