@@ -1,13 +1,14 @@
-{
+const baseConfig = require('eslint-config-yenz')
+
+module.exports = {
+  ...baseConfig,
   "env": {
     "es2022": true,
     "jest": true,
     "node": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:perfectionist/recommended-natural",
+    ...baseConfig.extends,
     "plugin:import/warnings",
     "plugin:import/typescript"
   ],
@@ -23,30 +24,8 @@
     "import"
   ],
   "rules": {
-    "dot-notation": "error",
-    "brace-style": ["error", "stroustrup"],
-    "perfectionist/sort-imports": "off",
-    "perfectionist/sort-union-types": "off",
-    "perfectionist/sort-classes": "off",
-    "perfectionist/sort-interfaces": "off",
-    "perfectionist/sort-objects": "off",
-    "perfectionist/sort-object-types": "off",
-    "no-console": ["error", { "allow": ["warn", "error"] }],
-    "indent": [
-      "error",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "never"
+    ...baseConfig.rules,
+    "import/newline-after-import": ["error", {"count": 2}
     ],
     "import/order": [
       "error",
@@ -74,12 +53,14 @@
           "caseInsensitive": true
         }
       }
-    ],
-    "import/newline-after-import": [
-      "error",
-      {
-        "count": 2
-      }
     ]
-  }
+  },
+  "overrides": [
+    {
+      files: ["**/*.test.*"], // Test files patterns
+      rules: {
+        "no-magic-numbers": "off"
+      }
+    }
+  ]
 }

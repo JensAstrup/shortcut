@@ -33,6 +33,7 @@ class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
   }
 
   public async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
+    // eslint-disable-next-line no-magic-numbers
     if (Object.keys(WORKFLOW_STATES).length === 0) {
       await this.getWorkflowStates()
     }
