@@ -1,5 +1,5 @@
 import BaseInterface from '@sx/base-interface'
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import BaseService from '@sx/base-service'
 import MembersService from '@sx/members/members-service'
 import {getHeaders} from '@sx/utils/headers'
@@ -11,7 +11,7 @@ interface ResourceMap {
   // Define a map of keys to resources, where the key is the field name in the data, and the value is a constructor for the resource and service
   [key: string]: {
     operation: 'get' | 'getMany'
-    service: typeof BaseService<ShortcutResource, BaseInterface>,
+    service: typeof BaseService<BaseResource, BaseInterface>,
   }
 }
 
@@ -23,7 +23,7 @@ class ResourceConverter {
   }
 
 
-  async getResourceFromId(resourceId: UUID | UUID[] | number | number[], key: string | number): Promise<ShortcutResource | Array<ShortcutResource | null> | null> {
+  async getResourceFromId(resourceId: UUID | UUID[] | number | number[], key: string | number): Promise<BaseResource | Array<BaseResource | null> | null> {
     if (!this.resourceMap[key]) return null
     const service = new this.resourceMap[key].service({headers: getHeaders()})
     if (this.resourceMap[key].operation === 'get') {

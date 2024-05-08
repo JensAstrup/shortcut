@@ -1,4 +1,4 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import MemberInterface, {MemberState} from '@sx/members/contracts/member-interface'
 import {MemberProfile} from '@sx/members/contracts/member-profile'
 import StoryInterface from '@sx/stories/contracts/story-interface'
@@ -10,7 +10,7 @@ import {getHeaders} from '@sx/utils/headers'
 /**
  * @inheritDoc
  */
-class Member extends ShortcutResource<MemberInterface> implements MemberInterface {
+class Member extends BaseResource<MemberInterface> implements MemberInterface {
   public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
   public availableOperations: ResourceOperation[] = []
 

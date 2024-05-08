@@ -1,9 +1,9 @@
 import BaseInterface from '@sx/base-interface'
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import {BaseSearchableService} from '@sx/base-service'
 
 
-class SearchResponse<Resource extends ShortcutResource, Interface extends BaseInterface> {
+class SearchResponse<Resource extends BaseResource, Interface extends BaseInterface> {
   public query: string
   public nextPage: undefined | string | null
   public results: Resource[]

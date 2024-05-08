@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
 import Iteration from '@sx/iterations/iteration'
@@ -40,9 +40,9 @@ import WorkflowService from '@sx/workflows/workflows-service'
  * Related: {@link StoriesService} for the service managing stories.
  *
  * @story
- * @inheritDoc ShortcutResource
+ * @inheritDoc BaseResource
  */
-class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
+class Story extends BaseResource<StoryInterface> implements StoryInterface {
   public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/stories'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
@@ -303,13 +303,13 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   blocked: boolean
   blocker: boolean
   branches: object[]
-  comments: StoryCommentInterface[] | StoryComment[]
+  comments: StoryComment[]
   commits: object[]
   completed: boolean
   completedAt: Date | null
   completedAtOverride: Date | null
   createdAt: Date
-  customFields: StoryCustomFieldInterface[] | StoryCustomField[]
+  customFields: StoryCustomField[]
   deadline: Date | null
   description: string
   entityType: string
@@ -340,11 +340,11 @@ class Story extends ShortcutResource<StoryInterface> implements StoryInterface {
   startedAt: Date | null
   startedAtOverride: Date | null
   stats: object
-  storyLinks: StoryLinkInterface[] | StoryLink[]
+  storyLinks: StoryLink[]
   storyTemplateId: string | null
   storyType: string
   syncedItem: object
-  tasks: Task[] | TaskInterface[]
+  tasks: Task[]
   unresolvedBlockerComments: number[]
   updatedAt: Date | null
   workflowId: number

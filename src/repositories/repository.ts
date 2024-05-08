@@ -1,9 +1,9 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import RepositoryInterface from '@sx/repositories/contracts/repository'
 import {RepositoryType} from '@sx/repositories/contracts/repository-api-data'
 
 
-class Repository extends ShortcutResource<RepositoryInterface> implements RepositoryInterface {
+class Repository extends BaseResource<RepositoryInterface> implements RepositoryInterface {
   public availableOperations: ResourceOperation[] = []
 
   createdAt: Date | null

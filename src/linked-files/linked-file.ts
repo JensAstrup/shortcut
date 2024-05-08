@@ -1,4 +1,4 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
 import StoriesService from '@sx/stories/stories-service'
 import Story from '@sx/stories/story'
@@ -10,9 +10,9 @@ import UUID from '@sx/utils/uuid'
  * @remarks
  * Related: {@link LinkedFilesService} for the service managing stories.
  *
- * @inheritDoc ShortcutResource
+ * @inheritDoc BaseResource
  */
-export default class LinkedFile extends ShortcutResource<LinkedFileInterface> implements LinkedFileInterface {
+export default class LinkedFile extends BaseResource<LinkedFileInterface> implements LinkedFileInterface {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/linked-files'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
   public createFields = ['contentType', 'description', 'name', 'size', 'storyId', 'type', 'uploaderId', 'url']

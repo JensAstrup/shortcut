@@ -12,7 +12,7 @@ import mocked = jest.mocked
 
 const mockedAxios = mocked(axios)
 
-describe('ShortcutResource', () => {
+describe('BaseResource', () => {
   const mockHeaders = {
     'Content-Type': 'application/json',
     'Shortcut-Token': 'token'
