@@ -17,6 +17,11 @@ export default class StoryCustomField extends ShortcutResource<StoryInterface> i
     this.changedFields = []
   }
 
+  /**
+   * Get an instance of the custom field that this story custom field is associated with. Due to the way the API works, this is a separate request.
+   * For example, `storyCustomField` has a `fieldId` of `1234`, and a value of `someValue`, but it is not possible to see the name of the field
+   * without making a separate request.
+   */
   get field(): Promise<CustomField> {
     const service = new CustomFieldsService({headers: getHeaders()})
     return service.get(this.fieldId)
