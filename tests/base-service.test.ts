@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import BaseInterface from '../src/base-interface'
-import ShortcutResource from '../src/base-resource'
+import BaseResource from '../src/base-resource'
 import {BaseSearchableService, BaseService, ServiceOperation} from '../src/base-service'
 
 import mocked = jest.mocked
@@ -15,7 +15,7 @@ interface MockInterface extends BaseInterface {
   name: string
 }
 
-class MockResource extends ShortcutResource implements MockInterface {
+class MockResource extends BaseResource implements MockInterface {
   constructor(data: MockInterface) {
     super(data)
     Object.assign(this, data)

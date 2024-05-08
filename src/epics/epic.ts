@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import BaseData from '@sx/base-data'
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
@@ -18,7 +18,7 @@ import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class Epic extends ShortcutResource<EpicInterface> implements EpicInterface {
+export default class Epic extends BaseResource<EpicInterface> implements EpicInterface {
   public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
   public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
     'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',

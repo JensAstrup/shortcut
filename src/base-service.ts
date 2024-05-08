@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {ShortcutApiFieldType} from '@sx/utils/field-type'
 import SearchResponse from '@sx/utils/search-response'
@@ -12,7 +12,7 @@ import UUID from '@sx/utils/uuid'
 type ServiceOperation = 'get' | 'search' | 'list'
 
 
-class BaseService<Resource extends ShortcutResource, Interface extends BaseInterface> {
+class BaseService<Resource extends BaseResource, Interface extends BaseInterface> {
   public baseUrl = ''
   public headers: Record<string, string>
   protected factory: (data: Interface) => Resource
@@ -74,7 +74,7 @@ class BaseService<Resource extends ShortcutResource, Interface extends BaseInter
 }
 
 
-class BaseSearchableService<Resource extends ShortcutResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
+class BaseSearchableService<Resource extends BaseResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
 
 

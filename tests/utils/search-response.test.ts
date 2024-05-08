@@ -1,11 +1,11 @@
 import BaseInterface from '@sx/base-interface'
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import {BaseSearchableService} from '@sx/base-service'
 import {SearchResponse} from '@sx/index'
 
 
-// Mock for ShortcutResource
-class MockResource extends ShortcutResource {
+// Mock for BaseResource
+class MockResource extends BaseResource {
   id: string
 
   constructor(id: string) {
