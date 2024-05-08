@@ -1,4 +1,4 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import Label from '@sx/labels/label'
 import LabelsService from '@sx/labels/labels-service'
 import Member from '@sx/members/member'
@@ -8,7 +8,7 @@ import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-class HistoryAction extends ShortcutResource<HistoryActionInterface> implements HistoryActionInterface {
+class HistoryAction extends BaseResource<HistoryActionInterface> implements HistoryActionInterface {
   public availableOperations: ResourceOperation[] = []
 
   constructor(init: HistoryActionInterface) {

@@ -17,7 +17,7 @@ export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
  * Base class for all Shortcut resources. Provides methods for creating, updating, and deleting resources.
  * @group Story
  */
-export default abstract class ShortcutResource<Interface = BaseInterface> {
+export default abstract class BaseResource<Interface = BaseInterface> {
   [key: string]: ShortcutFieldType
 
   /**
@@ -34,7 +34,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
    */
   public availableOperations: ResourceOperation[] = []
 
-  public service: BaseService<ShortcutResource, BaseInterface> | BaseSearchableService<ShortcutResource, BaseInterface>
+  public service: BaseService<BaseResource, BaseInterface> | BaseSearchableService<BaseResource, BaseInterface>
   /**
    * Return a Proxy object to intercept property access and set operations on derived classes.
    * The Proxy object will track changes made to the object and store them in the `changedFields` property
@@ -47,8 +47,8 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     }
     this.changedFields = []
     // Check to ensure that the baseUrl property is overridden in the subclass
-    if (this.constructor === ShortcutResource) {
-      (this.constructor as typeof ShortcutResource).baseUrl
+    if (this.constructor === BaseResource) {
+      (this.constructor as typeof BaseResource).baseUrl
     }
     return new Proxy(this, {
       get(target, property, receiver) {
@@ -81,7 +81,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('update'))) {
       throw new Error('Update operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
+    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
     const url = `${baseUrl}/${this.id}`
     const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
       if (field.startsWith('_')) {
@@ -115,7 +115,7 @@ export default abstract class ShortcutResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('create'))) {
       throw new Error('Create operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof ShortcutResource).baseUrl
+    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
     const body: Record<string, unknown> = {}
     Object.keys(this).forEach(key => {
       if (this.createFields.includes(key)) {

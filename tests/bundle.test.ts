@@ -1,10 +1,10 @@
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import UUID from '@sx/utils/uuid'
 
 import Bundle from '../src/bundle'
 
-// Mocks for ShortcutResource and UUID
-class Story extends ShortcutResource {
+// Mocks for BaseResource and UUID
+class Story extends BaseResource {
   id: UUID | number
   estimate?: number
 
