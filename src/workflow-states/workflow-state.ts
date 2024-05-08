@@ -1,8 +1,8 @@
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 
 
-class WorkflowState extends ShortcutResource<WorkflowStateInterface> implements WorkflowStateInterface {
+class WorkflowState extends BaseResource<WorkflowStateInterface> implements WorkflowStateInterface {
   public availableOperations: ResourceOperation[] = []
 
   constructor(init: WorkflowStateInterface) {

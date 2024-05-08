@@ -1,6 +1,6 @@
 import axios, {AxiosError} from 'axios'
 
-import ShortcutResource, {ResourceOperation} from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import {StoryApiData} from '@sx/stories/contracts/story-api-data'
@@ -15,7 +15,7 @@ import {getHeaders} from '@sx/utils/headers'
 /**
  * @inheritDoc
  */
-class Team extends ShortcutResource<TeamInterface> implements TeamInterface {
+class Team extends BaseResource<TeamInterface> implements TeamInterface {
   public static baseUrl = 'https://api.app.shortcut.com/api/v3/groups' // Shortcut renamed groups to teams
   public createFields: string[] = ['name', 'mentionName']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']

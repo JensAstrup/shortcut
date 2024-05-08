@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // Resources
-import ShortcutResource from '@sx/base-resource'
+import BaseResource from '@sx/base-resource'
 import Client from '@sx/client'
 import Iteration from '@sx/iterations/iteration'
 import Member from '@sx/members/member'
@@ -92,4 +92,4 @@ export {
   UploadedFileInterface
 
 }
-export {Bundle, ShortcutResource, SearchResponse}
+export {Bundle, BaseResource, SearchResponse}
