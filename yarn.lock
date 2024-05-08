@@ -2631,10 +2631,10 @@ escape-string-regexp@^4.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
-eslint-config-yenz@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-yenz/-/eslint-config-yenz-1.0.6.tgz#1030afaeb3bfb41c386120d01e209d93e9b5a756"
-  integrity sha512-Um5CEwJtVmKLKxtml8DkaKhxhvrBc6n8Bt21QAY0Z9tYyM0g40gHdDBdTznqsohhBKOdqL/WrVueGRLNYQUqFw==
+eslint-config-yenz@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-yenz/-/eslint-config-yenz-2.0.1.tgz#e296254e99ce96363635b88411ac4ce8a8e7bfa6"
+  integrity sha512-F6z3mWPOMW34qGUEhPuyMW5z8pLbQhj7S1RUn986NvuTeMwcleJKg8VY1Ao/N8KYn7eM1uA7deYNykD/0Q3+JA==
 
 eslint-import-resolver-node@^0.3.9:
   version "0.3.9"
