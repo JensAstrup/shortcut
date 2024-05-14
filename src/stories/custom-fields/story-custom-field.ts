@@ -27,11 +27,9 @@ export default class StoryCustomField extends BaseResource<StoryInterface> imple
     if (this.customField) {
       return Promise.resolve(this.customField)
     }
-    const service = new CustomFieldsService({headers: getHeaders()})
-    const field = service.get(this.fieldId)
-    field.then((field) => {
-      this.customField = field
-    })
+    const service: CustomFieldsService = new CustomFieldsService({headers: getHeaders()})
+    const field: Promise<CustomField> = service.get(this.fieldId)
+    field.then((field: CustomField) => this.customField = field)
     return field
   }
 
