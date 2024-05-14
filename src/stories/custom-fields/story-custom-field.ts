@@ -35,6 +35,9 @@ export default class StoryCustomField extends BaseResource<StoryInterface> imple
     return field
   }
 
+  /**
+   * Get the name of the custom field that this story custom field is associated with.
+   */
   get name(): Promise<string> {
     return this.field.then((field) => field.name)
   }
