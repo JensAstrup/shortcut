@@ -10,6 +10,7 @@ import UUID from '@sx/utils/uuid'
 export default class StoryCustomField extends BaseResource<StoryInterface> implements StoryCustomFieldInterface {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
   public availableOperations = []
+  private customField: CustomField | null = null
 
   constructor(init: StoryCustomFieldInterface) {
     super()
@@ -23,8 +24,20 @@ export default class StoryCustomField extends BaseResource<StoryInterface> imple
    * without making a separate request.
    */
   get field(): Promise<CustomField> {
-    const service = new CustomFieldsService({headers: getHeaders()})
-    return service.get(this.fieldId)
+    if (this.customField) {
+      return Promise.resolve(this.customField)
+    }
+    const service: CustomFieldsService = new CustomFieldsService({headers: getHeaders()})
+    const field: Promise<CustomField> = service.get(this.fieldId)
+    field.then((field: CustomField) => this.customField = field)
+    return field
+  }
+
+  /**
+   * Get the name of the custom field that this story custom field is associated with.
+   */
+  get name(): Promise<string> {
+    return this.field.then((field) => field.name)
   }
 
   fieldId: UUID
