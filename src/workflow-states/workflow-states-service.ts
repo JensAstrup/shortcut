@@ -25,7 +25,7 @@ class WorkflowStatesService extends BaseService<WorkflowState, WorkflowStateInte
 
   async get(id: number): Promise<WorkflowState> {
     if (!WORKFLOW_STATES.length) await this.populateWorkflows()
-    const match: undefined | WorkflowStateInterface = WORKFLOW_STATES.find(workflowState => workflowState.id === id)
+    const match: WorkflowStateInterface | undefined = WORKFLOW_STATES.find(workflowState => workflowState.id === id)
     if (!match) throw new Error(`Workflow state with id ${id} not found`)
     return new WorkflowState(match)
   }

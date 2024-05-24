@@ -14,7 +14,7 @@ import UUID from '@sx/utils/uuid'
  * bundle.estimate = 3
  * bundle.update() // Changes are propagated to the instances and sent to the API
  */
-class Bundle<R extends BaseResource>{
+class Bundle<R extends BaseResource> {
   [key: string]: ShortcutFieldType
 
   id?: string | number | null | undefined
@@ -33,15 +33,15 @@ class Bundle<R extends BaseResource>{
    * const bundle = new Bundle<Story>([1, 2, 3], (data) => new Story(data))
    * const otherBundle = new Bundle<Story>([new Story({id: 1}), new Story({id: 2})])
    */
-  constructor(bundled: Array<UUID | number> | Array<R>, factory?: (data: { id: UUID | number }) => R){
+  constructor(bundled: Array<UUID | number> | Array<R>, factory?: (data: { id: UUID | number }) => R) {
     // If the bundled parameter is an array of ids, not an array of R, create the resources
     const FIRST_BUNDLED = 0
-    if(Array.isArray(bundled) && typeof bundled[FIRST_BUNDLED] === 'number' || typeof bundled[FIRST_BUNDLED] ===  'string'){
+    if (Array.isArray(bundled) && typeof bundled[FIRST_BUNDLED] === 'number' || typeof bundled[FIRST_BUNDLED] === 'string') {
       this.factory = factory!
       this.instanceIds = <UUID[] | number[]>bundled
       this.#createResources()
     }
-    else{
+    else {
       this.resources = <R[]>bundled
     }
     return new Proxy(this, {
@@ -67,15 +67,14 @@ class Bundle<R extends BaseResource>{
   }
 
   public async update(): Promise<void> {
-    for (const resource of this.resources) {
-      for (const field of this.changedFields) {
-        if (field.startsWith('_')) {
-          continue
+    await Promise.all(this.resources.map(async resource => {
+      this.changedFields.forEach(field => {
+        if (!field.startsWith('_')) {
+          resource[field] = this[field]
         }
-        resource[field] = this[field]
-      }
+      })
       await resource.update()
-    }
+    }))
   }
 }
 

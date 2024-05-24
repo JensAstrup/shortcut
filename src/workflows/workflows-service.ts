@@ -17,9 +17,10 @@ class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
     const workflows: Workflow[] = await this.list()
     const workflowStates: WorkflowStateInterface[] = this.extractWorkflowStates(workflows)
 
-    for (const state of workflowStates) {
-      WORKFLOW_STATES[state.id] = convertApiFields(state as unknown as WorkflowStateApiData) as WorkflowStateInterface
-    }
+    workflowStates.reduce((accumulator, state) => {
+      accumulator[state.id] = convertApiFields(state as unknown as WorkflowStateApiData) as WorkflowStateInterface
+      return accumulator
+    }, WORKFLOW_STATES)
 
     return workflowStates
   }

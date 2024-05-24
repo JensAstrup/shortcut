@@ -36,22 +36,23 @@ class History extends BaseResource<HistoryInterface> implements HistoryInterface
 
   async getWorkflowHistory(): Promise<Array<FlatHistory>> {
     const actions = this.actions
+    // TODO: Ensure that this function is working as expected, it appears to be returning an array of arrays not an array of objects
     // @ts-expect-error idk and I'm not in the mood to figure it out
     const changes: Array<{ workflowStateId: HistoryActionChangeInterface}> = actions.map(action => action.changes)
-    const convertedChanges: Array<FlatHistory> = []
     const converter = new ResourceConverter()
-    for (const obj of changes) {
-      if (obj === undefined) continue
-      if (obj.workflowStateId) {
-        const newValue = obj.workflowStateId.new
-        const oldValue = obj.workflowStateId.old
-        if(!newValue || !oldValue) continue
-        const newResource = await converter.getResourceFromId(newValue, 'workflowStateId')
-        const oldResource = await converter.getResourceFromId(oldValue, 'workflowStateId')
-        convertedChanges.push(await this.flatHistory(newResource, oldResource))
-      }
-    }
-    return convertedChanges
+
+    const convertedChanges: Promise<FlatHistory | null>[] = changes.map(async (obj) => {
+      if (obj === undefined || !obj.workflowStateId) return null
+      const newValue = obj.workflowStateId.new
+      const oldValue = obj.workflowStateId.old
+      if (!newValue || !oldValue) return null
+      const newResource = await converter.getResourceFromId(newValue, 'workflowStateId')
+      const oldResource = await converter.getResourceFromId(oldValue, 'workflowStateId')
+      return await this.flatHistory(newResource, oldResource)
+    })
+
+    const resolvedChanges = await Promise.all(convertedChanges)
+    return resolvedChanges.filter(change => change !== null) as Array<FlatHistory>
   }
 
 

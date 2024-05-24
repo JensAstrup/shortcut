@@ -26,8 +26,7 @@ module.exports = {
   ],
   "rules": {
     ...baseConfig.rules,
-    "import/newline-after-import": ["error", {"count": 2}
-    ],
+    "import/newline-after-import": ["error", {"count": 2}],
     "import/order": [
       "error",
       {
