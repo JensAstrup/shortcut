@@ -18,6 +18,7 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
+    ...baseConfig.plugins,
     "@typescript-eslint",
     "perfectionist",
     "@typescript-eslint",
