@@ -59,6 +59,15 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
   }
 
   /**
+   * Get the owners of the epic
+   * @returns {Promise<Member[]>}
+   */
+  get owners(): Promise<Member[]> {
+    const service = new MembersService({headers: getHeaders()})
+    return service.getMany(this.ownerIds)
+  }
+
+  /**
    * Add a comment to the epic authored by the user associated with the API key currently in use
    *
    * @example
@@ -103,6 +112,7 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
     const data: ThreadedCommentApiData = response.data
     return convertApiFields(data) as ThreadedCommentInterface
   }
+
 
 
   appUrl: string

@@ -7,6 +7,8 @@ import Team from '../../src/teams/team'
 import TeamsService from '../../src/teams/teams-service'
 import {convertApiFields} from '../../src/utils/convert-fields'
 import {getHeaders} from '../../src/utils/headers'
+import MembersService from '../../src/members/members-service'
+import Member from '../../src/members/member'
 
 
 jest.mock('axios', () => ({
@@ -41,6 +43,16 @@ describe('Epic', () => {
       const epic = new Epic({groupIds: [1]})
       expect(epic.teams).resolves.toEqual([{id: 1}])
       expect(TeamsService.prototype.getMany).toHaveBeenCalledWith([1])
+    })
+  })
+
+  describe('owners getter', () => {
+    it('returns the owner object', () => {
+      const owners = [{id: 1}]
+      jest.spyOn(MembersService.prototype, 'getMany').mockResolvedValue(owners as unknown as Member[])
+      const epic = new Epic({ownerIds: [1]})
+      expect(epic.owners).resolves.toEqual([{id: 1}])
+      expect(MembersService.prototype.getMany).toHaveBeenCalledWith([1])
     })
   })
 
