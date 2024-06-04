@@ -14,11 +14,12 @@ module.exports = {
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    ...baseConfig.parserOptions,
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "./tsconfig.json"
   },
   "plugins": [
+    ...baseConfig.plugins,
     "@typescript-eslint",
     "perfectionist",
     "@typescript-eslint",
