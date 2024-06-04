@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 
 import BaseData from '@sx/base-data'
 import BaseResource from '@sx/base-resource'
@@ -12,9 +12,9 @@ import TeamsService from '@sx/teams/teams-service'
 import CreateThreadedCommentData from '@sx/threaded-comments/contracts/create-threaded-comment-data'
 import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-comment-api-data'
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
-import {convertApiFields, convertToApiFields} from '@sx/utils/convert-fields'
-import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import {getHeaders} from '@sx/utils/headers'
+import { convertApiFields, convertToApiFields } from '@sx/utils/convert-fields'
+import { handleResponseFailure } from '@sx/utils/handle-response-failure'
+import { getHeaders } from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
@@ -36,7 +36,7 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
    * @returns {Promise<Objective[]>}
    */
   get objectives(): Promise<Objective[]> {
-    const service = new ObjectivesService({headers: getHeaders()})
+    const service = new ObjectivesService({ headers: getHeaders() })
     return service.getMany(this.objectiveIds)
   }
 
@@ -45,7 +45,7 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
    * @returns {Promise<Team>}
    */
   get teams(): Promise<Team[]> {
-    const service = new TeamsService({headers: getHeaders()})
+    const service = new TeamsService({ headers: getHeaders() })
     return service.getMany(this.groupIds)
   }
 
@@ -54,7 +54,7 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
    * @returns {Promise<Member[]>}
    */
   get followers(): Promise<Member[]> {
-    const service: MembersService = new MembersService({headers: getHeaders()})
+    const service: MembersService = new MembersService({ headers: getHeaders() })
     return service.getMany(this.followerIds)
   }
 
@@ -63,7 +63,7 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
    * @returns {Promise<Member[]>}
    */
   get owners(): Promise<Member[]> {
-    const service = new MembersService({headers: getHeaders()})
+    const service = new MembersService({ headers: getHeaders() })
     return service.getMany(this.ownerIds)
   }
 
@@ -81,14 +81,14 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
    */
   public async comment(comment: string): Promise<ThreadedCommentInterface | void> {
     const url = `${Epic.baseUrl}/${this.id}/comments`
-    const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
-      handleResponseFailure(error, {text: comment})
+    const response: void | AxiosResponse<ThreadedCommentApiData, unknown> = await axios.post(url, { text: comment }, { headers: getHeaders() }).catch((error: AxiosError) => {
+      handleResponseFailure(error, { text: comment })
     })
     if (!response) {
       throw new Error('Failed to add comment')
     }
     const data: ThreadedCommentApiData = response.data
-    return convertApiFields(data) as ThreadedCommentInterface
+    return convertApiFields<ThreadedCommentApiData, ThreadedCommentInterface>(data)
   }
 
   /**
@@ -103,14 +103,14 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
   public async addComment(comment: CreateThreadedCommentData): Promise<ThreadedCommentInterface | void> {
     const url = `${Epic.baseUrl}/${this.id}/comments`
     const requestData: BaseData = convertToApiFields(comment)
-    const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+    const response: void | AxiosResponse<ThreadedCommentApiData, unknown> = await axios.post(url, requestData, { headers: getHeaders() }).catch((error: AxiosError) => {
       handleResponseFailure(error, requestData)
     })
-    if (!response){
+    if (!response) {
       throw new Error('Failed to add comment')
     }
     const data: ThreadedCommentApiData = response.data
-    return convertApiFields(data) as ThreadedCommentInterface
+    return convertApiFields<ThreadedCommentApiData, ThreadedCommentInterface>(data)
   }
 
 

@@ -4,6 +4,5 @@
     "module": "ESNext",
     "outDir": "./dist/esm",
     "types": ["node", "jest"],
-  },
-  "include": ["src/**/*"]
+  }
 }
