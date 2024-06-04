@@ -50,6 +50,7 @@ import ObjectiveInterface from '@sx/objectives/contracts/objective-interface'
 import LabelInterface from '@sx/labels/contracts/label-interface'
 import KeyResultInterface from '@sx/key-results/contracts/key-result-interface'
 import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
+import MemberProfile from '@sx/members/contracts/member-profile'
 
 
 // Utils
@@ -71,6 +72,8 @@ export {
   LinkedFilesService,
   CustomFieldsService,
   UploadedFilesService,
+}
+export {
   IterationInterface,
   MemberInterface,
   StoryInterface,
@@ -79,9 +82,8 @@ export {
   EpicInterface,
   ObjectiveInterface,
   LabelInterface,
-  KeyResultInterface
-}
-export {
+  KeyResultInterface,
+  MemberProfile,
   ThreadedCommentInterface,
   CreateThreadedCommentData,
   StoryCommentInterface,
