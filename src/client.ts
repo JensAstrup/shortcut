@@ -1,5 +1,3 @@
-import * as process from 'process'
-
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
 import EpicsService from '@sx/epics/epics-service'
 import IterationsService from '@sx/iterations/iterations-service'
