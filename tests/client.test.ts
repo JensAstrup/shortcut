@@ -20,6 +20,7 @@ describe('Client', () => {
       'Shortcut-Token': shortcutApiKey
     }
     expect(client.headers).toEqual(expectedHeaders)
+    expect(process.env.SHORTCUT_API_KEY).toEqual(shortcutApiKey)
   })
 
   it('creates new instance with shortcutApiKey from env', () => {
