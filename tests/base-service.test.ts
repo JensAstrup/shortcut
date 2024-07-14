@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import BaseInterface from '../src/base-interface'
 import BaseResource from '../src/base-resource'
-import {BaseSearchableService, BaseService, ServiceOperation} from '../src/base-service'
+import { BaseSearchableService, BaseService, ServiceOperation } from '../src/base-service'
 
 import mocked = jest.mocked
 
@@ -23,7 +23,6 @@ class MockResource extends BaseResource implements MockInterface {
 
   id: string
   name: string
-
 }
 
 
@@ -33,7 +32,8 @@ class MockService extends BaseService<MockResource, MockInterface> {
   constructor(init: { headers: Record<string, string> }) {
     super(init)
     this.baseUrl = 'https://api.mockservice.com/resources'
-    this.factory = (data) => new MockResource(data)
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    this.factory = data => new MockResource(data)
   }
 }
 
@@ -43,20 +43,20 @@ describe('MockService', () => {
   const mockedAxios = mocked(axios)
 
   beforeEach(() => {
-    mockService = new MockService({headers: {Authorization: 'Bearer token'}})
+    mockService = new MockService({ headers: { Authorization: 'Bearer token' } })
     mockService.availableOperations = ['get', 'list', 'search']
     jest.clearAllMocks()
   })
 
   it('should get a resource by ID', async () => {
-    const mockData = {id: '1', name: 'Test Resource'}
-    const mockResponse = {status: 200, data: mockData}
+    const mockData = { id: '1', name: 'Test Resource' }
+    const mockResponse = { status: 200, data: mockData }
     mockedAxios.get.mockResolvedValue(mockResponse)
 
     mockService.availableOperations = ['get']
     const resource = await mockService.get('1')
 
-    expect(axios.get).toHaveBeenCalledWith(`${mockService.baseUrl}/1`, {headers: mockService.headers})
+    expect(axios.get).toHaveBeenCalledWith(`${mockService.baseUrl}/1`, { headers: mockService.headers })
     expect(resource).toBeInstanceOf(MockResource)
     expect(resource.id).toEqual(mockData.id)
     expect(resource.name).toEqual(mockData.name)
@@ -64,12 +64,12 @@ describe('MockService', () => {
 
   it('should throw an error if get method is not available on resource', async () => {
     mockService.availableOperations = ['list']
-    expect(mockService.get('1')).rejects.toThrow('Operation not supported')
+    await expect(mockService.get('1')).rejects.toThrow('Operation not supported')
   })
 
   it('should get multiple resources', async () => {
-    const mockData = [{id: '1', name: 'Test Resource 1'}, {id: '2', name: 'Test Resource 2'}]
-    const mockResponse = {status: 200, data: mockData}
+    const mockData = [{ id: '1', name: 'Test Resource 1' }, { id: '2', name: 'Test Resource 2' }]
+    const mockResponse = { status: 200, data: mockData }
     mockedAxios.get.mockResolvedValue(mockResponse)
 
     mockService.availableOperations = ['get']
@@ -82,14 +82,14 @@ describe('MockService', () => {
   })
 
   it('should list out resources', async () => {
-    const mockData = [{id: '1', name: 'Test Resource 1'}, {id: '2', name: 'Test Resource 2'}]
-    const mockResponse = {status: 200, data: mockData}
+    const mockData = [{ id: '1', name: 'Test Resource 1' }, { id: '2', name: 'Test Resource 2' }]
+    const mockResponse = { status: 200, data: mockData }
     mockedAxios.get.mockResolvedValue(mockResponse)
 
     mockService.availableOperations = ['list']
     const resources = await mockService.list()
 
-    expect(mockedAxios.get).toHaveBeenCalledWith(mockService.baseUrl, {headers: mockService.headers})
+    expect(mockedAxios.get).toHaveBeenCalledWith(mockService.baseUrl, { headers: mockService.headers })
     expect(resources).toBeInstanceOf(Array)
     expect(resources).toHaveLength(2)
     expect(resources[0]).toBeInstanceOf(MockResource)
@@ -100,9 +100,9 @@ describe('MockService', () => {
     expect(resources[1].name).toEqual(mockData[1].name)
   })
 
-  it('should throw an error if list method is not available on resource', () => {
+  it('should throw an error if list method is not available on resource', async () => {
     mockService.availableOperations = ['get']
-    expect(mockService.list()).rejects.toThrow('Operation not supported')
+    await expect(mockService.list()).rejects.toThrow('Operation not supported')
   })
 })
 
@@ -112,7 +112,8 @@ class MockSearchableService extends BaseSearchableService<MockResource, MockInte
   constructor(init: { headers: Record<string, string> }) {
     super(init)
     this.baseUrl = 'https://api.mockservice.com/resources'
-    this.factory = (data) => new MockResource(data)
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    this.factory = data => new MockResource(data)
   }
 }
 
@@ -121,31 +122,38 @@ describe('BaseSearchableService', () => {
   const mockedAxios = mocked(axios)
 
   beforeEach(() => {
-    mockService = new MockSearchableService({headers: {Authorization: 'Bearer token'}})
+    mockService = new MockSearchableService({ headers: { Authorization: 'Bearer token' } })
     mockService.availableOperations = ['search']
     mockService.baseUrl = 'https://api.app.shortcut.com/api/v3/search/mockResources'
     jest.clearAllMocks()
   })
 
+  it('should throw an error if response status is greater than 400', async () => {
+    const mockResponse = { status: 400, statusText: 'Bad Request', data: { error: 'some error' } }
+    mockedAxios.get.mockResolvedValue(mockResponse)
+
+    await expect(mockService.search('test')).rejects.toThrow('HTTP error 400 (Bad Request) {"error":"some error"}')
+  })
+
   it('should return an instance of MockResource', async () => {
-    const mockData = {id: '1', name: 'Test Resource'}
-    const mockResponse = {status: 200, data: {data: [mockData]}}
+    const mockData = { id: '1', name: 'Test Resource' }
+    const mockResponse = { status: 200, data: { data: [mockData] } }
     mockedAxios.get.mockResolvedValue(mockResponse)
 
     const resources = await mockService.search('test')
 
-    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/search/mockResources?query=test', {headers: mockService.headers})
+    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/api/v3/search/mockResources?query=test', { headers: mockService.headers })
     expect(resources.results[0]).toBeInstanceOf(MockResource)
   })
 
   it('should search using next page if token is provided', async () => {
-    const mockData = {id: '1', name: 'Test Resource'}
-    const mockResponse = {status: 200, data: {data: [mockData], next: 'https://api.app.shortcut.com/api/v3/search/mockResources?query=test&page=2'}}
+    const mockData = { id: '1', name: 'Test Resource' }
+    const mockResponse = { status: 200, data: { data: [mockData], next: 'https://api.app.shortcut.com/api/v3/search/mockResources?query=test&page=2' } }
     mockedAxios.get.mockResolvedValue(mockResponse)
 
     const resources = await mockService.search('test', '/token')
 
-    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/token', {headers: mockService.headers})
+    expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/token', { headers: mockService.headers })
     expect(resources.results[0]).toBeInstanceOf(MockResource)
   })
 })

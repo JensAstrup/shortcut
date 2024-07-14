@@ -109,7 +109,7 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
 
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
-      throw new Error('HTTP error ' + response.status)
+      throw new Error('HTTP error ' + response.status + ' (' + response.statusText + ') ' + JSON.stringify(response.data))
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
