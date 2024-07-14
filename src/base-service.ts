@@ -105,20 +105,28 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
       url.search = new URLSearchParams({ query: query }).toString()
     }
 
-    const response = await axios.get(url.toString(), { headers: this.headers })
+    try {
+      const response = await axios.get(url.toString(), { headers: this.headers })
 
-    const HTTP_ERROR = 400
-    if (response.status >= HTTP_ERROR) {
-      throw new Error('HTTP error ' + response.status + ' (' + response.statusText + ') ' + JSON.stringify(response.data))
+      const HTTP_ERROR = 400
+      if (response.status >= HTTP_ERROR) {
+        throw new Error('HTTP error ' + response.status + ' (' + response.statusText + ') ' + JSON.stringify(response.data))
+      }
+      const nextPage = response.data.next
+      const resourceData: BaseData[] = response.data.data ?? []
+      return new SearchResponse<Resource, Interface>({
+        query: query,
+        next: nextPage,
+        results: resourceData.map(resource => this.factory(convertApiFields<BaseData, Interface>(resource))),
+        service: this
+      })
     }
-    const nextPage = response.data.next
-    const resourceData: BaseData[] = response.data.data ?? []
-    return new SearchResponse<Resource, Interface>({
-      query: query,
-      next: nextPage,
-      results: resourceData.map(resource => this.factory(convertApiFields<BaseData, Interface>(resource))),
-      service: this
-    })
+    catch (e) {
+      if (e instanceof axios.AxiosError) {
+        throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data))
+      }
+      throw e
+    }
   }
 }
 
