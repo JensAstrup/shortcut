@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 
 import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
@@ -31,7 +31,7 @@ class BaseService<Resource extends BaseResource, Interface extends BaseInterface
     if (!this.availableOperations.includes('get')) {
       throw new Error('Operation not supported')
     }
-    if (this.instances[id]) {
+    if (id in this.instances) {
       return this.instances[id]
     }
     const url = `${this.baseUrl}/${id}`
@@ -54,7 +54,7 @@ class BaseService<Resource extends BaseResource, Interface extends BaseInterface
     if (!this.availableOperations.includes('list')) {
       throw new Error('Operation not supported')
     }
-    const response = await axios.get(this.baseUrl, { headers: this.headers })
+    const response: AxiosResponse = await axios.get(this.baseUrl, { headers: this.headers })
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
@@ -73,6 +73,11 @@ class BaseService<Resource extends BaseResource, Interface extends BaseInterface
   }
 }
 
+interface SearchApiResponse {
+    query: string
+    next: string
+    data?: BaseData[]
+}
 
 class BaseSearchableService<Resource extends BaseResource, Interface extends BaseInterface> extends BaseService<Resource, Interface> {
   public availableOperations: ServiceOperation[] = ['search']
@@ -112,8 +117,9 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
       if (response.status >= HTTP_ERROR) {
         throw new Error('HTTP error ' + response.status + ' (' + response.statusText + ') ' + JSON.stringify(response.data))
       }
-      const nextPage = response.data.next
-      const resourceData: BaseData[] = response.data.data ?? []
+      const responseData = response.data as SearchApiResponse
+      const nextPage = responseData.next
+      const resourceData: BaseData[] = responseData.data ?? []
       return new SearchResponse<Resource, Interface>({
         query: query,
         next: nextPage,
@@ -122,7 +128,7 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
       })
     }
     catch (e) {
-      if (e instanceof axios.AxiosError) {
+      if (e instanceof AxiosError) {
         throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data))
       }
       throw e
