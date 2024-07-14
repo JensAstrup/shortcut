@@ -3,8 +3,8 @@ import axios from 'axios'
 import BaseData from '@sx/base-data'
 import BaseInterface from '@sx/base-interface'
 import BaseResource from '@sx/base-resource'
-import {convertApiFields} from '@sx/utils/convert-fields'
-import {ShortcutApiFieldType} from '@sx/utils/field-type'
+import { convertApiFields } from '@sx/utils/convert-fields'
+import { ShortcutApiFieldType } from '@sx/utils/field-type'
 import SearchResponse from '@sx/utils/search-response'
 import UUID from '@sx/utils/uuid'
 
@@ -35,7 +35,7 @@ class BaseService<Resource extends BaseResource, Interface extends BaseInterface
       return this.instances[id]
     }
     const url = `${this.baseUrl}/${id}`
-    const response = await axios.get(url, {headers: this.headers})
+    const response = await axios.get(url, { headers: this.headers })
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
@@ -54,13 +54,13 @@ class BaseService<Resource extends BaseResource, Interface extends BaseInterface
     if (!this.availableOperations.includes('list')) {
       throw new Error('Operation not supported')
     }
-    const response = await axios.get(this.baseUrl, {headers: this.headers})
+    const response = await axios.get(this.baseUrl, { headers: this.headers })
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
     }
     const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
-    const resources: Resource[] = instancesData.map((instance) => this.factory(convertApiFields(instance)))
+    const resources: Resource[] = instancesData.map(instance => this.factory(convertApiFields(instance)))
     this.instances = resources.reduce((acc: Record<string, Resource>, resource: Resource) => {
       let id: string = resource.id as string
       if (!isNaN(Number(resource.id))) {
@@ -94,7 +94,7 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
    * @param query - The search query to use
    * @param next - The next page token to use for pagination
    */
-  public async search(query: string, next?: string): Promise<SearchResponse<Resource, Interface>>{
+  public async search(query: string, next?: string): Promise<SearchResponse<Resource, Interface>> {
     const pathSegments = this.baseUrl.split('/')
     const resource = pathSegments.pop()
     let url = new URL(`https://api.app.shortcut.com/api/v3/search/${resource}`)
@@ -102,26 +102,25 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
       url = new URL(`https://api.app.shortcut.com${next}`)
     }
     else {
-      url.search = new URLSearchParams({query: query}).toString()
+      url.search = new URLSearchParams({ query: query }).toString()
     }
 
-    const response = await axios.get(url.toString(), {headers: this.headers})
+    const response = await axios.get(url.toString(), { headers: this.headers })
 
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
-
     }
     const nextPage = response.data.next
     const resourceData: BaseData[] = response.data.data ?? []
     return new SearchResponse<Resource, Interface>({
       query: query,
       next: nextPage,
-      results: resourceData.map((resource) => this.factory(convertApiFields<BaseData, Interface>(resource))),
+      results: resourceData.map(resource => this.factory(convertApiFields<BaseData, Interface>(resource))),
       service: this
     })
   }
 }
 
 export default BaseService
-export {BaseSearchableService, BaseService, ServiceOperation}
+export { BaseSearchableService, BaseService, ServiceOperation }
