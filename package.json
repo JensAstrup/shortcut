@@ -40,7 +40,7 @@
     "@jens_astrup/tscpaths": "^0.0.11",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.27",
+    "@types/node": "^22.5.2",
     "@types/node-fetch": "^2.6.11",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
