@@ -6,7 +6,7 @@ import BaseCreateData from '@sx/base-create-data'
  * Any fields that can be undefined on this interface are optional.
  * @group Story
  */
-export default interface CreateStoryData extends BaseCreateData {
+interface CreateStoryData extends BaseCreateData {
     name: string;
     archived?: boolean;
     comments?: [];
@@ -37,3 +37,6 @@ export default interface CreateStoryData extends BaseCreateData {
     updated_at?: Date;
     workflow_state_id?: number;
 }
+
+export { CreateStoryData as default }
+

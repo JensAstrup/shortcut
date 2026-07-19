@@ -9,9 +9,9 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 
 
-export default class UploadedFilesService extends BaseService<UploadedFile, UploadedFileInterface> {
+class UploadedFilesService extends BaseService<UploadedFile, UploadedFileInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/files'
-  public factory = (data: UploadedFileInterface) => new UploadedFile(data)
+  public factory = (data: UploadedFileInterface): UploadedFile => new UploadedFile(data)
   public availableOperations: ServiceOperation[] = ['list', 'get']
 
   /**
@@ -36,11 +36,14 @@ export default class UploadedFilesService extends BaseService<UploadedFile, Uplo
         throw new Error('Failed to upload file: ' + error)
       })
       const data = response.data as UploadedFileApiData
-      const uploadedFile = convertApiFields(data) as UploadedFileInterface
+      const uploadedFile = convertApiFields<UploadedFileApiData, UploadedFileInterface>(data)
       return this.factory(uploadedFile)
     }
     catch (error) {
-      throw new Error('Failed to upload file: ' + error)
+      throw new Error('Failed to upload file: ' + String(error), {cause: error})
     }
   }
 }
+
+export { UploadedFilesService as default }
+

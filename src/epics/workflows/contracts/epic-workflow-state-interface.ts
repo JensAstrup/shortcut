@@ -1,7 +1,7 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export default interface EpicWorkflowStateInterface extends BaseInterface {
+interface EpicWorkflowStateInterface extends BaseInterface {
     color: string
     createdAt: Date
     description: string
@@ -12,3 +12,6 @@ export default interface EpicWorkflowStateInterface extends BaseInterface {
     type: string
     updatedAt: Date
 }
+
+export { EpicWorkflowStateInterface as default }
+

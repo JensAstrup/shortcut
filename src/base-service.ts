@@ -129,7 +129,7 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
     }
     catch (e) {
       if (e instanceof AxiosError) {
-        throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data))
+        throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data), {cause: e})
       }
       throw e
     }

@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface ObjectiveInterface extends BaseInterface {
+interface ObjectiveInterface extends BaseInterface {
     appUrl: string
     archived: boolean
     categories: object[]
@@ -23,3 +23,6 @@ export default interface ObjectiveInterface extends BaseInterface {
     stats: object
     updatedAt: Date
 }
+
+export { ObjectiveInterface as default }
+

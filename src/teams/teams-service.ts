@@ -5,9 +5,9 @@ import TeamInterface from '@sx/teams/contracts/team-interface'
 import Team from '@sx/teams/team'
 
 
-export default class TeamsService extends BaseService<Team, TeamInterface> {
+class TeamsService extends BaseService<Team, TeamInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/groups'
-  protected factory = (data: TeamInterface) => new Team(data)
+  protected factory = (data: TeamInterface): Team => new Team(data)
   public static teams: Record<number, Team> = {}
   public availableOperations: ServiceOperation[] = ['get', 'list']
 
@@ -37,3 +37,6 @@ export default class TeamsService extends BaseService<Team, TeamInterface> {
   }
 
 }
+
+export { TeamsService as default }
+

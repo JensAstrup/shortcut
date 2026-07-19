@@ -18,7 +18,7 @@ class History extends BaseResource<HistoryInterface> implements HistoryInterface
     this.instantiateActions()
   }
 
-  private instantiateActions() {
+  private instantiateActions(): void {
     this.actions = this.actions?.map(action => new HistoryAction(action))
   }
 

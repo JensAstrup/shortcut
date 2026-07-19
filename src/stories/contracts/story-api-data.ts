@@ -4,7 +4,7 @@ import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment
 import TaskApiData from '@sx/stories/tasks/contracts/task-api-data'
 
 
-export interface StoryApiData extends BaseData {
+interface StoryApiData extends BaseData {
     app_url: string;
     archived: boolean;
     blocked: boolean;
@@ -59,3 +59,6 @@ export interface StoryApiData extends BaseData {
     workflow_id: number;
     workflow_state_id: number;
 }
+
+export type { StoryApiData }
+

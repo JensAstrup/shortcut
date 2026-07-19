@@ -13,7 +13,7 @@ import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import {getHeaders} from '@sx/utils/headers'
 
 
-export default class Label extends BaseResource<LabelInterface> implements LabelInterface {
+class Label extends BaseResource<LabelInterface> implements LabelInterface {
   public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/labels'
   public createFields = ['color', 'description', 'externalId', 'name']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
@@ -63,3 +63,6 @@ export default class Label extends BaseResource<LabelInterface> implements Label
   stats: object[]
   updatedAt: Date | null
 }
+
+export { Label as default }
+

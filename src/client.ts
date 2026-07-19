@@ -13,10 +13,10 @@ import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import WorkflowService from '@sx/workflows/workflows-service'
 
 
-export type ShortcutHeaders = { 'Content-Type': string, 'Shortcut-Token': string }
+type ShortcutHeaders = { 'Content-Type': string, 'Shortcut-Token': string }
 
 
-export default class Client {
+class Client {
   get headers(): ShortcutHeaders {
     if (this.shortcutApiKey) {
       process.env.SHORTCUT_API_KEY = this.shortcutApiKey
@@ -66,3 +66,6 @@ export default class Client {
     this.repositories = new RepositoriesService({ headers: this.headers })
   }
 }
+
+export { type ShortcutHeaders, Client as default }
+

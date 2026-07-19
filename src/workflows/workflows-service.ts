@@ -10,7 +10,7 @@ const WORKFLOW_STATES: Record<number, WorkflowStateInterface> = {}
 
 class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/workflows'
-  protected factory = (data: WorkflowInterface) => new Workflow(data)
+  protected factory = (data: WorkflowInterface): Workflow => new Workflow(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
 
   public async getWorkflowStates(): Promise<WorkflowStateInterface[]> {
@@ -18,7 +18,7 @@ class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
     const workflowStates: WorkflowStateInterface[] = this.extractWorkflowStates(workflows)
 
     for (const state of workflowStates) {
-      WORKFLOW_STATES[state.id] = convertApiFields(state as unknown as WorkflowStateApiData) as WorkflowStateInterface
+      WORKFLOW_STATES[state.id] = convertApiFields(state as unknown as WorkflowStateApiData)
     }
 
     return workflowStates
@@ -33,7 +33,7 @@ class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
   }
 
   public async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
-    // eslint-disable-next-line no-magic-numbers
+
     if (Object.keys(WORKFLOW_STATES).length === 0) {
       await this.getWorkflowStates()
     }

@@ -1,7 +1,7 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export default interface StoryLinkInterface extends BaseInterface {
+interface StoryLinkInterface extends BaseInterface {
     createdAt: string
     entityType: string
     id: number
@@ -11,3 +11,6 @@ export default interface StoryLinkInterface extends BaseInterface {
     updatedAt: string
     verb: 'blocks' | 'duplicates' | 'relates to'
 }
+
+export { StoryLinkInterface as default }
+

@@ -2,7 +2,7 @@ import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface TaskApiData extends BaseData {
+interface TaskApiData extends BaseData {
     complete: boolean
     completed_at: string | null
     created_at: string
@@ -17,3 +17,6 @@ export default interface TaskApiData extends BaseData {
     story_id: number
     updated_at: string
 }
+
+export { TaskApiData as default }
+

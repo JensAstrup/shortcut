@@ -69,23 +69,23 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     return super._preSave()
   }
 
-  private instantiateComments() {
+  private instantiateComments(): void {
     this.comments = this.comments?.map((comment: StoryCommentInterface | StoryComment) => new StoryComment(comment))
   }
 
-  private instantiateTasks() {
+  private instantiateTasks(): void {
     this.tasks = this.tasks?.map((task: TaskInterface | Task) => new Task(task))
   }
 
-  private instantiateLinks() {
+  private instantiateLinks(): void {
     this.storyLinks = this.storyLinks?.map((link: StoryLinkInterface | StoryLink) => new StoryLink(link))
   }
 
-  private instantiateCustomFields() {
+  private instantiateCustomFields(): void {
     this.customFields = this.customFields?.map((field: StoryCustomFieldInterface | StoryCustomField) => field instanceof StoryCustomField ? field : new StoryCustomField(field))
   }
 
-  private instantiateLabels() {
+  private instantiateLabels(): void {
     this.labels = this.labels?.map((label) => new Label(label))
   }
 
@@ -164,7 +164,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     })
     const historyData: HistoryApiData[] = response.data
     return historyData.map((history) => {
-      const historyInterface = convertApiFields(history) as HistoryInterface
+      const historyInterface = convertApiFields<HistoryApiData, HistoryInterface>(history)
       return new History(historyInterface)
     })
   }
@@ -210,7 +210,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
    */
   public async timeInDevelopment(): Promise<number> {
     const workflow: WorkflowStateInterface = await this.workflow
-    if (workflow.type === 'Finished') {
+    if (workflow.type === WorkflowStateType.FINISHED) {
       throw new Error('Story is already finished')
     }
     if (!this.startedAt) {
@@ -218,7 +218,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     }
     // eslint-disable-next-line no-magic-numbers
     const millisecondsToHour = 1000 * 60 * 60
-    return (new Date().getTime() - this.startedAt!.getTime()) / millisecondsToHour
+    return (new Date().getTime() - this.startedAt.getTime()) / millisecondsToHour
   }
 
   public async comment(comment: string): Promise<StoryComment> {

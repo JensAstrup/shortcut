@@ -31,7 +31,7 @@ class Team extends BaseResource<TeamInterface> implements TeamInterface {
     return service.getMany(this.memberIds)
   }
 
-  get stories() {
+  get stories(): Promise<Story[]> {
     return this.getStories()
   }
 

@@ -3,7 +3,7 @@ import CustomFieldEnumValueApiData from '@sx/custom-fields/contracts/custom-fiel
 import UUID from '@sx/utils/uuid'
 
 
-export default interface CustomFieldApiData extends BaseData {
+interface CustomFieldApiData extends BaseData {
     canonical_name: string
     created_at: string
     description: string
@@ -17,3 +17,6 @@ export default interface CustomFieldApiData extends BaseData {
     updated_at: string
     values: CustomFieldEnumValueApiData[]
 }
+
+export { CustomFieldApiData as default }
+

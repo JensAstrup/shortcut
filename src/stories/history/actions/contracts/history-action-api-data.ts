@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export default interface HistoryActionApiData extends BaseData {
+interface HistoryActionApiData extends BaseData {
     id: number
     entity_type: string
     action: string
@@ -10,3 +10,5 @@ export default interface HistoryActionApiData extends BaseData {
     app_url: string
     changes: Record<string, string | number | boolean>
 }
+
+export { HistoryActionApiData as default }

@@ -4,7 +4,7 @@ import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment
 import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 
 
-export default interface StoryInterface extends BaseInterface {
+interface StoryInterface extends BaseInterface {
     appUrl: string
     archived: boolean
     blocked: boolean
@@ -59,3 +59,6 @@ export default interface StoryInterface extends BaseInterface {
     workflowId: number
     workflowStateId: number
 }
+
+export { StoryInterface as default }
+

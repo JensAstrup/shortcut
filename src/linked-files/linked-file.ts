@@ -12,7 +12,7 @@ import UUID from '@sx/utils/uuid'
  *
  * @inheritDoc BaseResource
  */
-export default class LinkedFile extends BaseResource<LinkedFileInterface> implements LinkedFileInterface {
+class LinkedFile extends BaseResource<LinkedFileInterface> implements LinkedFileInterface {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/linked-files'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
   public createFields = ['contentType', 'description', 'name', 'size', 'storyId', 'type', 'uploaderId', 'url']
@@ -46,3 +46,6 @@ export default class LinkedFile extends BaseResource<LinkedFileInterface> implem
   updatedAt: Date
   url: string
 }
+
+export { LinkedFile as default }
+

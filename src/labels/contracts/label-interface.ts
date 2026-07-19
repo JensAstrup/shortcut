@@ -1,7 +1,7 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export default interface LabelInterface extends BaseInterface {
+interface LabelInterface extends BaseInterface {
     appUrl: string
     archived: boolean
     color: string | null
@@ -14,3 +14,6 @@ export default interface LabelInterface extends BaseInterface {
     stats: object[]
     updatedAt: Date | null
 }
+
+export { LabelInterface as default }
+

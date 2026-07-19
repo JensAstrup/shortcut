@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export default interface StoryLinkApiData extends BaseData {
+interface StoryLinkApiData extends BaseData {
     created_at: string
     entity_type: string
     id: number
@@ -11,3 +11,6 @@ export default interface StoryLinkApiData extends BaseData {
     updated_at: string
     verb: string
 }
+
+export { StoryLinkApiData as default }
+

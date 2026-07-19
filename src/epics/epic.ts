@@ -18,7 +18,7 @@ import { getHeaders } from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class Epic extends BaseResource<EpicInterface> implements EpicInterface {
+class Epic extends BaseResource<EpicInterface> implements EpicInterface {
   public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
   public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
     'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',
@@ -114,7 +114,6 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
   }
 
 
-
   appUrl: string
   archived: boolean
   associatedGroups: []
@@ -152,3 +151,6 @@ export default class Epic extends BaseResource<EpicInterface> implements EpicInt
   storiesWithoutProjects: number
   updatedAt: string | null
 }
+
+export { Epic as default }
+

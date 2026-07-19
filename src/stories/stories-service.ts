@@ -11,9 +11,9 @@ import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 /**
  * @inheritDoc
  */
-export default class StoriesService extends BaseSearchableService<Story, StoryInterface> {
+class StoriesService extends BaseSearchableService<Story, StoryInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
-  protected factory = (data: object) => new Story(data as StoryInterface)
+  protected factory = (data: object): Story => new Story(data)
   public availableOperations: ServiceOperation[] = ['get', 'search']
 
   constructor(init: { headers: Record<string, string> }) {
@@ -37,3 +37,6 @@ export default class StoriesService extends BaseSearchableService<Story, StoryIn
     })
   }
 }
+
+export { StoriesService as default }
+

@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export default interface MemberApiData extends BaseData {
+interface MemberApiData extends BaseData {
     created_at: string
     disabled: boolean
     entity_type: string
@@ -12,3 +12,6 @@ export default interface MemberApiData extends BaseData {
     state: 'disabled' | 'full' | 'imported' | 'partial'
     updated_at: string
 }
+
+export { MemberApiData as default }
+

@@ -1,3 +1,5 @@
-export default interface BaseCreateInterface {
-    [key: string]: number | string | boolean | Date | null | object
+interface BaseCreateInterface {
+    [key: string]: number | string | boolean | Date | object | null
 }
+
+export { BaseCreateInterface as default }

@@ -3,9 +3,9 @@ import LabelInterface from '@sx/labels/contracts/label-interface'
 import Label from '@sx/labels/label'
 
 
-export default class LabelsService extends BaseService<Label, LabelInterface> {
+class LabelsService extends BaseService<Label, LabelInterface> {
   public baseUrl: string = 'https://api.app.shortcut.com/api/v3/labels'
-  protected factory = (data: object) => new Label(data)
+  protected factory = (data: object): Label => new Label(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
 
   /**
@@ -18,3 +18,6 @@ export default class LabelsService extends BaseService<Label, LabelInterface> {
     return labels.find(label => label.name === name) || null
   }
 }
+
+export { LabelsService as default }
+

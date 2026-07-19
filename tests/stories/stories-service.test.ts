@@ -20,7 +20,6 @@ jest.mock('../../src/utils/handle-response-failure')
 const mockHandleResponseFailure = jest.mocked(handleResponseFailure, {shallow: false}) as jest.Mock
 
 
-
 describe('Stories service', () => {
   beforeEach(() => {
     axiosMock.reset()

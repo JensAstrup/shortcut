@@ -10,7 +10,7 @@ import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class StoryComment extends BaseResource<StoryCommentInterface> implements StoryCommentInterface {
+class StoryComment extends BaseResource<StoryCommentInterface> implements StoryCommentInterface {
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   constructor(init: object) {
@@ -56,7 +56,7 @@ export default class StoryComment extends BaseResource<StoryCommentInterface> im
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
-    return convertApiFields(data) as StoryComment
+    return convertApiFields<StoryCommentApiData, StoryCommentInterface>(data) as StoryComment
   }
 
   authorId: string
@@ -77,3 +77,6 @@ export default class StoryComment extends BaseResource<StoryCommentInterface> im
   position: number
   unblocksParent: boolean
 }
+
+export { StoryComment as default }
+
