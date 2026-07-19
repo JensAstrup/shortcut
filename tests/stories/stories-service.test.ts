@@ -3,10 +3,10 @@ import AxiosMockAdapter from 'axios-mock-adapter'
 
 import {convertApiFields} from '@sx/utils/convert-fields'
 
-import {mockHttp} from '../helpers/http'
 import StoriesService from '../../src/stories/stories-service'
 import Story from '../../src/stories/story'
 import {handleResponseFailure} from '../../src/utils/handle-response-failure'
+import {mockHttp} from '../helpers/http'
 
 
 jest.mock('../../src/utils/convert-fields', () => {
