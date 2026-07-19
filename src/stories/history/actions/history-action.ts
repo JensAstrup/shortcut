@@ -4,7 +4,6 @@ import LabelsService from '@sx/labels/labels-service'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import HistoryActionInterface, {HistoryActionChangeInterface, HistoryActionEnum} from '@sx/stories/history/actions/contracts/history-action-interface'
-import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
@@ -25,7 +24,7 @@ class HistoryAction extends BaseResource<HistoryActionInterface> implements Hist
       return Promise.resolve([])
     }
     else {
-      const service = new MembersService({headers: getHeaders()})
+      const service = new MembersService({http: this.http})
       return service.getMany(this.ownerIds)
     }
   }
@@ -37,7 +36,7 @@ class HistoryAction extends BaseResource<HistoryActionInterface> implements Hist
     if (!this.labelIds) {
       return Promise.resolve([])
     }
-    const service = new LabelsService({headers: getHeaders()})
+    const service = new LabelsService({http: this.http})
     return service.getMany(this.labelIds)
   }
 

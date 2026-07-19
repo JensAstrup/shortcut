@@ -5,7 +5,7 @@ import UUID from '@sx/utils/uuid'
 
 
 class CustomField extends BaseResource<CustomFieldInterface> implements CustomFieldInterface {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/custom-fields'
+  public baseUrl = '/custom-fields'
   public availableOperations: ResourceOperation[] = ['update', 'delete']
 
   constructor(init: CustomFieldInterface) {

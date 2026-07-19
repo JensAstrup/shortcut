@@ -4,7 +4,7 @@ import Iteration from '@sx/iterations/iteration'
 
 
 class IterationsService extends BaseSearchableService<Iteration, IterationInterface> {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
+  public baseUrl = '/iterations'
   protected factory = (data: object): Iteration => new Iteration(data)
   public availableOperations: ServiceOperation[] = ['get', 'search', 'list']
 }

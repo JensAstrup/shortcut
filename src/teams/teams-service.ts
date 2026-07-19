@@ -1,12 +1,10 @@
-import axios from 'axios'
-
 import BaseService, {ServiceOperation} from '@sx/base-service'
 import TeamInterface from '@sx/teams/contracts/team-interface'
 import Team from '@sx/teams/team'
 
 
 class TeamsService extends BaseService<Team, TeamInterface> {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/groups'
+  public baseUrl = '/groups'
   protected factory = (data: TeamInterface): Team => new Team(data)
   public static teams: Record<number, Team> = {}
   public availableOperations: ServiceOperation[] = ['get', 'list']
@@ -15,7 +13,7 @@ class TeamsService extends BaseService<Team, TeamInterface> {
    * Enables the teams feature for the workspace.
    */
   public async enable(): Promise<boolean> {
-    await axios.post(`${this.baseUrl}/enable`, {}, {headers: this.headers})
+    await this.http.post(`${this.baseUrl}/enable`, {})
     return true
   }
 
@@ -23,7 +21,7 @@ class TeamsService extends BaseService<Team, TeamInterface> {
    * Disables the teams feature for the workspace.
    */
   public async disable(): Promise<boolean> {
-    await axios.post(`${this.baseUrl}/disable`, {}, {headers: this.headers})
+    await this.http.post(`${this.baseUrl}/disable`, {})
     return true
   }
 

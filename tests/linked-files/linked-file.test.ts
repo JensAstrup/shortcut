@@ -3,10 +3,6 @@ import StoriesService from '@sx/stories/stories-service'
 import Story from '@sx/stories/story'
 
 
-jest.mock('../../src/utils/headers', () => ({
-  getHeaders: jest.fn().mockReturnValue({Authorization: 'Bearer token'})
-}))
-
 describe('Linked file', () => {
   it('constructs a linked file', () => {
     const linkedFile = new LinkedFile({

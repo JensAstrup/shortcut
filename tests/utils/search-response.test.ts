@@ -3,6 +3,8 @@ import BaseResource from '@sx/base-resource'
 import {BaseSearchableService} from '@sx/base-service'
 import {SearchResponse} from '@sx/index'
 
+import {stubHttp} from '../helpers/http'
+
 
 // Mock for BaseResource
 class MockResource extends BaseResource {
@@ -24,7 +26,7 @@ describe('SearchResponse', () => {
   let searchResponse: SearchResponse<MockResource, BaseInterface>
 
   beforeEach(() => {
-    mockService = new MockService({headers: {}})
+    mockService = new MockService({http: stubHttp()})
     initialResources = [new MockResource('1'), new MockResource('2')]
     searchResponse = new SearchResponse({
       query: 'initialQuery',

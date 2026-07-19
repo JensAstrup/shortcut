@@ -1,6 +1,4 @@
-import * as console from 'node:console'
-
-import axios, {AxiosResponse} from 'axios'
+import {AxiosResponse} from 'axios'
 
 import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import EpicApiData from '@sx/epics/contracts/epic-api-data'
@@ -10,11 +8,10 @@ import {StoryApiData} from '@sx/stories/contracts/story-api-data'
 import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import {getHeaders} from '@sx/utils/headers'
 
 
 class Label extends BaseResource<LabelInterface> implements LabelInterface {
-  public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/labels'
+  public static baseUrl: string = '/labels'
   public createFields = ['color', 'description', 'externalId', 'name']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
@@ -28,8 +25,7 @@ class Label extends BaseResource<LabelInterface> implements LabelInterface {
    * Get all stories using this label
    */
   async stories(): Promise<Story[]> {
-    console.log('this.id', this.id)
-    const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/stories`, {headers: getHeaders()}).catch((error) => {
+    const response: AxiosResponse | void = await this.http.get(`${Label.baseUrl}/${this.id}/stories`).catch((error) => {
       handleResponseFailure(error, {})
     })
     if (!response) {
@@ -43,7 +39,7 @@ class Label extends BaseResource<LabelInterface> implements LabelInterface {
    * Get all epics using this label
    */
   async epics(): Promise<Epic[]> {
-    const response: AxiosResponse | void = await axios.get(`${Label.baseUrl}/${this.id}/epics`, {headers: getHeaders()}).catch((error) => {
+    const response: AxiosResponse | void = await this.http.get(`${Label.baseUrl}/${this.id}/epics`).catch((error) => {
       handleResponseFailure(error, {})
     })
     if (!response) return []

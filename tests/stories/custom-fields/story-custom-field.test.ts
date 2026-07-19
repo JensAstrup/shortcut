@@ -5,11 +5,6 @@ import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story
 import StoryCustomField from '@sx/stories/custom-fields/story-custom-field'
 
 
-jest.mock('@sx/utils/headers', () => ({
-  getHeaders: jest.fn().mockReturnValue({ Authorization: 'Bearer token' })
-}))
-
-
 describe('Story Custom Field', () => {
   it('should instantiate a new custom field', () => {
     const customField = new StoryCustomField({ fieldId: '1' } as StoryCustomFieldInterface)

@@ -3,7 +3,7 @@ import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface
 
 
 class StoryLink extends BaseResource<StoryLinkInterface> implements StoryLinkInterface {
-  public static baseUrl = 'https://api.app.shortcut.com/api/v3/story-links'
+  public static baseUrl = '/story-links'
   public availableOperations: ResourceOperation[] = ['delete', 'create', 'update']
   public createFields: string[] = ['subjectId', 'verb', 'objectId']
 

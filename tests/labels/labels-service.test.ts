@@ -1,24 +1,20 @@
-import axios from 'axios'
-
 import LabelsService from '@sx/labels/labels-service'
 
 import Label from '../../src/labels/label'
-
-
-jest.mock('axios')
-const mockedAxios = axios as jest.Mocked<typeof axios>
+import {stubHttp} from '../helpers/http'
 
 
 describe('Labels Service', () => {
   it('should get a label by name', async () => {
-    mockedAxios.get.mockResolvedValue({
+    const http = stubHttp();
+    (http.get as jest.Mock).mockResolvedValue({
       data: [
         {name: 'Bug', color: 'red', id: 1},
         {name: 'Feature', color: 'green', id: 2},
         {name: 'Chore', color: 'blue', id: 3}
       ]
     })
-    const labelsService = new LabelsService({headers: {'Authorization': 'Bearer'}})
+    const labelsService = new LabelsService({http})
     const label = await labelsService.getByName('Bug')
     expect(label).toBeInstanceOf(Label)
     expect(label?.name).toBe('Bug')
@@ -27,14 +23,15 @@ describe('Labels Service', () => {
   })
 
   it('should return null if no label is found', async () => {
-    mockedAxios.get.mockResolvedValue({
+    const http = stubHttp();
+    (http.get as jest.Mock).mockResolvedValue({
       data: [
         {name: 'Bug', color: 'red', id: 1},
         {name: 'Feature', color: 'green', id: 2},
         {name: 'Chore', color: 'blue', id: 3}
       ]
     })
-    const labelsService = new LabelsService({headers: {'Authorization': 'Bearer'}})
+    const labelsService = new LabelsService({http})
     const label = await labelsService.getByName('Task')
     expect(label).toBeNull()
   })
