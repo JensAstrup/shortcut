@@ -43,7 +43,7 @@ describe('BaseResource HTTP client injection', () => {
 
     const story = new Story({id: 1, tasks: [{id: 9, storyId: 1}]}).setHttp(http)
 
-    const task = (story.tasks as Task[])[0]
+    const task = (story.tasks)[0]
     expect(task).toBeInstanceOf(Task)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((task as any)._http).toBe(http)

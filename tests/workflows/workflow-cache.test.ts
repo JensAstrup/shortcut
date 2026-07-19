@@ -12,8 +12,9 @@ import WorkflowStatesService from '@sx/workflow-states/workflow-states-service'
  * between clients authenticated against different workspaces.
  */
 describe('workflow state caching', () => {
-  const workflowsFor = (mock: AxiosMockAdapter): number =>
-    mock.history.get.filter(request => request.url === '/workflows').length
+  function workflowsFor(mock: AxiosMockAdapter): number {
+    return mock.history.get.filter(request => request.url === '/workflows').length 
+  }
 
   it('fetches the workflow list once across repeated lookups on one client', async () => {
     const http = createHttpClient('tok')

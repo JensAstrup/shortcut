@@ -11,7 +11,7 @@ import {BASE_URL} from '@sx/utils/http'
  * export, so tests mock the instance they hand in. Request paths are relative to {@link BASE_URL},
  * so matchers should use paths (`/stories/1`), not absolute URLs.
  */
-export function mockHttp(): {http: AxiosInstance, mock: AxiosMockAdapter} {
+function mockHttp(): {http: AxiosInstance, mock: AxiosMockAdapter} {
   const http = axios.create({baseURL: BASE_URL})
   return {http, mock: new AxiosMockAdapter(http)}
 }
@@ -19,7 +19,7 @@ export function mockHttp(): {http: AxiosInstance, mock: AxiosMockAdapter} {
 /**
  * A bare jest-stubbed client, for tests that assert on call arguments rather than serving responses.
  */
-export function stubHttp(): AxiosInstance {
+function stubHttp(): AxiosInstance {
   return {
     get: jest.fn(),
     post: jest.fn(),
@@ -27,3 +27,6 @@ export function stubHttp(): AxiosInstance {
     delete: jest.fn()
   } as unknown as AxiosInstance
 }
+
+export { mockHttp, stubHttp }
+

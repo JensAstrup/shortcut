@@ -35,7 +35,7 @@ class BaseService<Resource extends BaseResource, Interface extends BaseInterface
    * are authenticated as the same client that fetched it.
    */
   protected build(data: Interface): Resource {
-    return this.factory(data).setHttp(this.http) as Resource
+    return this.factory(data).setHttp(this.http)
   }
 
   public async get(id: string | number): Promise<Resource> {

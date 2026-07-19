@@ -8,7 +8,7 @@ const VERSION_PATH = '/api/v3'
  * Create a pre-authenticated HTTP client. All request paths are relative to {@link BASE_URL}.
  * @param apiKey - The Shortcut API token to authenticate requests with
  */
-export function createHttpClient(apiKey: string): AxiosInstance {
+function createHttpClient(apiKey: string): AxiosInstance {
   return axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -26,7 +26,7 @@ export function createHttpClient(apiKey: string): AxiosInstance {
  *
  * @throws {Error} - If `SHORTCUT_API_KEY` is not set
  */
-export function defaultHttpClient(): AxiosInstance {
+function defaultHttpClient(): AxiosInstance {
   const apiKey = process.env.SHORTCUT_API_KEY
   if (!apiKey) throw new Error('Shortcut API Key not found')
   return createHttpClient(apiKey)
@@ -42,7 +42,10 @@ export function defaultHttpClient(): AxiosInstance {
  *
  * @param next - The `next` value returned by a search response
  */
-export function normalizeNext(next: string): string {
+function normalizeNext(next: string): string {
   if (next.startsWith('http://') || next.startsWith('https://')) return next
   return next.startsWith(VERSION_PATH) ? next.slice(VERSION_PATH.length) : next
 }
+
+export { createHttpClient, defaultHttpClient, normalizeNext }
+
