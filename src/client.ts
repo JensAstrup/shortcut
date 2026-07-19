@@ -21,8 +21,8 @@ class Client {
 
   /**
    * The single pre-authenticated HTTP client shared by every service and resource created through
-   * this client. Holding the credential here — rather than in the environment — is what keeps two
-   * clients constructed with different API keys fully isolated from one another.
+   * this client. Holding the credential hereis what keeps two clients constructed with different 
+   * API keys fully isolated from one another.
    */
   private readonly http: AxiosInstance
 
