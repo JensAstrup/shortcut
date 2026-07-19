@@ -20,7 +20,7 @@ class SearchResponse<Resource extends BaseResource, Interface extends BaseInterf
     return this.nextPage !== undefined && this.nextPage !== null
   }
 
-  public next(){
+  public next(): Promise<SearchResponse<Resource, Interface>> {
     if (!this.hasNextPage) {
       throw new Error('No next page available')
     }

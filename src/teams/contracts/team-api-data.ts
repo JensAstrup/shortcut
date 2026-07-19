@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export default interface TeamApiData extends BaseData {
+interface TeamApiData extends BaseData {
     app_url: string
     archived: boolean
     color: string
@@ -17,3 +17,6 @@ export default interface TeamApiData extends BaseData {
     num_stories_started: number
     workflow_ids: number[]
 }
+
+export { TeamApiData as default }
+

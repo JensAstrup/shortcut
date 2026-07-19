@@ -2,7 +2,7 @@ import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface ObjectiveApiData extends BaseData {
+interface ObjectiveApiData extends BaseData {
     app_url: string
     archived: boolean
     categories: object[]
@@ -23,3 +23,6 @@ export default interface ObjectiveApiData extends BaseData {
     stats: object
     updated_at: string
 }
+
+export { ObjectiveApiData as default }
+

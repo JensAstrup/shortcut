@@ -14,10 +14,10 @@ let WORKFLOW_STATES: WorkflowStateInterface[] = []
  */
 class WorkflowStatesService extends BaseService<WorkflowState, WorkflowStateInterface> {
   public baseUrl = ''
-  protected factory = (data: object) => new WorkflowState(data as WorkflowStateInterface)
+  protected factory = (data: object): WorkflowState => new WorkflowState(data as WorkflowStateInterface)
   public availableOperations: ServiceOperation[] = []
 
-  async populateWorkflows() {
+  async populateWorkflows(): Promise<void> {
     const service: WorkflowsService = new WorkflowsService({headers: getHeaders()})
     WORKFLOWS = await service.list()
     WORKFLOW_STATES = WORKFLOWS.map(workflow => workflow.states).flat()
@@ -25,7 +25,7 @@ class WorkflowStatesService extends BaseService<WorkflowState, WorkflowStateInte
 
   async get(id: number): Promise<WorkflowState> {
     if (!WORKFLOW_STATES.length) await this.populateWorkflows()
-    const match: undefined | WorkflowStateInterface = WORKFLOW_STATES.find(workflowState => workflowState.id === id)
+    const match: WorkflowStateInterface | undefined = WORKFLOW_STATES.find(workflowState => workflowState.id === id)
     if (!match) throw new Error(`Workflow state with id ${id} not found`)
     return new WorkflowState(match)
   }

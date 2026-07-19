@@ -6,7 +6,7 @@ import {AxiosError} from 'axios'
  * @param {AxiosError} error - The error object from the Axios request.
  * @param {Record<string, unknown>} body - The body of the request.
  */
-function handleResponseFailure(error: AxiosError, body: Record<string, unknown>) {
+function handleResponseFailure(error: AxiosError, body: Record<string, unknown>): void {
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx

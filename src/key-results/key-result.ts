@@ -4,7 +4,7 @@ import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-
 import UUID from '@sx/utils/uuid'
 
 
-export default class KeyResult extends BaseResource<KeyResultInterface> implements KeyResultInterface {
+class KeyResult extends BaseResource<KeyResultInterface> implements KeyResultInterface {
   public availableOperations: ResourceOperation[] = ['update']
 
   constructor(init: object) {
@@ -24,3 +24,6 @@ export default class KeyResult extends BaseResource<KeyResultInterface> implemen
   type: KeyResultType
   id: UUID
 }
+
+export { KeyResult as default }
+

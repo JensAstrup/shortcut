@@ -129,7 +129,13 @@ class BaseSearchableService<Resource extends BaseResource, Interface extends Bas
     }
     catch (e) {
       if (e instanceof AxiosError) {
-        throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data))
+        // An AxiosError carries the request config, so `error.cause` would otherwise hand the
+        // Shortcut-Token to anything that logs it. The header is redacted before the error is chained,
+        // which keeps the original stack for debugging without leaking the credential.
+        if (e.config?.headers) {
+          delete e.config.headers['Shortcut-Token']
+        }
+        throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data), {cause: e})
       }
       throw e
     }

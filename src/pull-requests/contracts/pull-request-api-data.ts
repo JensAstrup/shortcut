@@ -1,4 +1,4 @@
-export interface PullRequestApiData {
+interface PullRequestApiData {
     branch_id: number
     branch_name: string
     build_status: string
@@ -24,3 +24,5 @@ export interface PullRequestApiData {
     url: string
     vcs_labels: Record<string, unknown>[]
 }
+
+export type { PullRequestApiData }

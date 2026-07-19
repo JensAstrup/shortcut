@@ -5,7 +5,6 @@ import {MemberProfile} from '@sx/members/contracts/member-profile'
 import MemberProfileApiData from '@sx/members/contracts/member-profile-api-data'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
-import WorkspaceApiData from '@sx/workspace/contracts/workspace-api-data'
 
 import {handleResponseFailure} from '../../src/utils/handle-response-failure'
 
@@ -28,7 +27,7 @@ describe('MembersService', () => {
   })
 
   it('should return authenticated member profile', async () => {
-    const workspace = {url_slug: 'test-workspace', estimate_scale: [1, 2, 3], } as WorkspaceApiData
+    const workspace = {url_slug: 'test-workspace', estimate_scale: [1, 2, 3], }
     const memberData = {id: 'UUID1', name: 'Test Member', mention_name: 'TestMember', workspace2: workspace, deactivated: false, display_icon: '', email_address: 'test@member.com', gravatar_hash: 'hash', is_owner: false, two_factor_auth_enabled: true} as MemberProfileApiData
     axiosMock.onGet().reply(200, memberData)
     const membersService = new MembersService({headers: {}})

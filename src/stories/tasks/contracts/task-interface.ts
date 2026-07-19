@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface TaskInterface extends BaseInterface {
+interface TaskInterface extends BaseInterface {
     complete: boolean
     completedAt: Date | null
     createdAt: Date
@@ -17,3 +17,6 @@ export default interface TaskInterface extends BaseInterface {
     storyId: number
     updatedAt: Date
 }
+
+export { TaskInterface as default }
+

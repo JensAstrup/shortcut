@@ -3,7 +3,7 @@ import HistoryActionApiData from '@sx/stories/history/actions/contracts/history-
 import UUID from '@sx/utils/uuid'
 
 
-export default interface HistoryApiData extends BaseData {
+interface HistoryApiData extends BaseData {
     actions: HistoryActionApiData[]
     changed_at: string
     external_id: string
@@ -13,3 +13,6 @@ export default interface HistoryApiData extends BaseData {
     version: string
     webhook_id: string
 }
+
+export { HistoryApiData as default }
+

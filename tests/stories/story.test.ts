@@ -83,9 +83,9 @@ describe('Story', () => {
   })
 
   describe('iteration getter', () => {
-    it('returns null if story does not have an iteration', async () => {
+    it('returns null if story does not have an iteration', () => {
       const story = new Story({iterationId: null})
-      await expect(story.iteration).toBeNull()
+      expect(story.iteration).toBeNull()
     })
 
     it('returns an iteration if story has an iteration ID', async () => {

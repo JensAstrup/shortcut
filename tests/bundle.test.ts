@@ -13,7 +13,7 @@ class Story extends BaseResource {
     this.id = data.id
   }
 
-  update() {
+  update(): Promise<void> {
     return Promise.resolve()
   }
 }

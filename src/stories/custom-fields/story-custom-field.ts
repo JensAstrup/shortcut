@@ -7,7 +7,7 @@ import { getHeaders } from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class StoryCustomField extends BaseResource<StoryInterface> implements StoryCustomFieldInterface {
+class StoryCustomField extends BaseResource<StoryInterface> implements StoryCustomFieldInterface {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
   public availableOperations = []
   private customField: CustomField | null = null
@@ -45,3 +45,6 @@ export default class StoryCustomField extends BaseResource<StoryInterface> imple
   valueId: UUID
   id: UUID | number
 }
+
+export { StoryCustomField as default }
+

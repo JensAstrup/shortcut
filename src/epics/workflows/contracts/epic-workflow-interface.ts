@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import EpicWorkflowStateInterface from '@sx/epics/workflows/contracts/epic-workflow-state-interface'
 
 
-export default interface EpicWorkflowInterface extends BaseInterface {
+interface EpicWorkflowInterface extends BaseInterface {
     createdAt: Date
     defaultEpicStateId: number
     entityType: string
@@ -10,3 +10,6 @@ export default interface EpicWorkflowInterface extends BaseInterface {
     id: number
     updatedAt: Date
 }
+
+export { EpicWorkflowInterface as default }
+

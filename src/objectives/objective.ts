@@ -3,7 +3,7 @@ import ObjectiveInterface from '@sx/objectives/contracts/objective-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default class Objective extends BaseResource<ObjectiveInterface> implements ObjectiveInterface {
+class Objective extends BaseResource<ObjectiveInterface> implements ObjectiveInterface {
   public baseUrl: string = 'https://api.app.shortcut.com/api/v3/objectives'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
@@ -33,3 +33,6 @@ export default class Objective extends BaseResource<ObjectiveInterface> implemen
   stats: object
   updatedAt: Date
 }
+
+export { Objective as default }
+

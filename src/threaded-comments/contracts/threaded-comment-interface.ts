@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface ThreadedCommentInterface extends BaseInterface {
+interface ThreadedCommentInterface extends BaseInterface {
     appUrl: string
     authorId: UUID
     comments: ThreadedCommentInterface[]
@@ -17,3 +17,5 @@ export default interface ThreadedCommentInterface extends BaseInterface {
     text: string
     updatedAt: string
 }
+
+export { ThreadedCommentInterface as default }

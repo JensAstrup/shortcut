@@ -2,7 +2,7 @@ import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface EpicApiData extends BaseData {
+interface EpicApiData extends BaseData {
     app_url: string
     archived: boolean
     associated_groups: []
@@ -40,3 +40,5 @@ export default interface EpicApiData extends BaseData {
     stories_without_projects: number
     updated_at: string | null
 }
+
+export { EpicApiData as default }

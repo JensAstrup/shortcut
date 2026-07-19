@@ -3,7 +3,7 @@ import CustomFieldEnumValueInterface from '@sx/custom-fields/contracts/custom-fi
 import UUID from '@sx/utils/uuid'
 
 
-export default interface CustomFieldInterface extends BaseInterface {
+interface CustomFieldInterface extends BaseInterface {
     canonicalName: string
     createdAt: Date
     description: string
@@ -17,3 +17,6 @@ export default interface CustomFieldInterface extends BaseInterface {
     updatedAt: Date
     values: CustomFieldEnumValueInterface[]
 }
+
+export { CustomFieldInterface as default }
+

@@ -27,10 +27,10 @@ class ResourceConverter {
     if (!this.resourceMap[key]) return null
     const service = new this.resourceMap[key].service({headers: getHeaders()})
     if (this.resourceMap[key].operation === 'get') {
-      return service.get(<UUID | string>resourceId)
+      return service.get(<UUID  >resourceId)
     }
     else if (this.resourceMap[key].operation === 'getMany') {
-      return service.getMany(<UUID[] | string[]>resourceId)
+      return service.getMany(<UUID[]  >resourceId)
     }
     return null
   }

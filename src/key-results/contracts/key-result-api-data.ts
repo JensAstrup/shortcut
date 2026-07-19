@@ -2,7 +2,7 @@ import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface KeyResultValueApiData extends BaseData {
+interface KeyResultValueApiData extends BaseData {
     current_observed_value: KeyResultValueApiData
     current_target_value: KeyResultValueApiData
     id: UUID
@@ -12,3 +12,6 @@ export default interface KeyResultValueApiData extends BaseData {
     progress: number
     type: 'boolean' | 'numeric' | 'percent'
 }
+
+export { KeyResultValueApiData as default }
+

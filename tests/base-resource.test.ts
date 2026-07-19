@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import Label from '../src/labels/label'
 import Story from '../src/stories/story'
+import Task from '../src/stories/tasks/task'
 
 
 jest.mock('axios')
@@ -151,7 +152,38 @@ describe('BaseResource', () => {
 
       await resource.delete()
 
-      expect(mockedAxios.delete).toHaveBeenCalledWith(expect.any(String), {headers: mockHeaders})
+      expect(mockedAxios.delete).toHaveBeenCalledWith(`${Story.baseUrl}/123`, {headers: mockHeaders})
+    })
+
+    // Resources are inconsistent about where baseUrl lives: Story declares `static baseUrl`, Task
+    // declares it as an instance property. delete() previously read only `this.baseUrl`, so the
+    // static-only resources built a `undefined/<id>` URL. Both forms are asserted so a future change
+    // to one resolution path cannot silently break the other.
+    it('builds the delete url from a static baseUrl', async () => {
+      const resource = new Story({id: 123})
+      resource.availableOperations = ['delete']
+      mockedAxios.delete.mockClear()
+      mockedAxios.delete.mockResolvedValue({})
+
+      await resource.delete()
+
+      const [url] = mockedAxios.delete.mock.calls[0]
+      expect(url).toBe(`${Story.baseUrl}/123`)
+      expect(url).not.toContain('undefined')
+    })
+
+    it('builds the delete url from an instance baseUrl', async () => {
+      // Task derives its instance baseUrl from storyId in the constructor, so the fixture needs one.
+      const resource = new Task({id: 456, storyId: 789})
+      resource.availableOperations = ['delete']
+      mockedAxios.delete.mockClear()
+      mockedAxios.delete.mockResolvedValue({})
+
+      await resource.delete()
+
+      const [url] = mockedAxios.delete.mock.calls[0]
+      expect(url).toBe('https://api.app.shortcut.com/api/v3/stories/789/tasks/456')
+      expect(url).not.toContain('undefined')
     })
 
     it('throws an error if delete operation is not available', async () => {

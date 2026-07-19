@@ -9,9 +9,9 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 
 
-export default class EpicsService extends BaseSearchableService<Epic, EpicInterface> {
+class EpicsService extends BaseSearchableService<Epic, EpicInterface> {
   public baseUrl = 'https://api.app.shortcut.com/api/v3/epics'
-  protected factory = (data: object) => new Epic(data)
+  protected factory = (data: object): Epic => new Epic(data)
   public availableOperations: ServiceOperation[] = ['get', 'search', 'list']
 
   public async getWorkflow(): Promise<EpicWorkflowInterface> {
@@ -24,6 +24,9 @@ export default class EpicsService extends BaseSearchableService<Epic, EpicInterf
       throw new Error('Failed to fetch epic workflow')
     }
     const data: EpicWorkflowApiData = response.data
-    return convertApiFields(data) as EpicWorkflowInterface
+    return convertApiFields<EpicWorkflowApiData, EpicWorkflowInterface>(data)
   }
 }
+
+export { EpicsService as default }
+

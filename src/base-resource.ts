@@ -10,14 +10,14 @@ import snakeToCamel from '@sx/utils/snake-to-camel'
 
 
 /* The possible operations that can be available on a resource */
-export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
+type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
 
 
 /**
  * Base class for all Shortcut resources. Provides methods for creating, updating, and deleting resources.
  * @group Story
  */
-export default abstract class BaseResource<Interface = BaseInterface> {
+abstract class BaseResource<Interface = BaseInterface> {
   [key: string]: ShortcutFieldType
 
   /**
@@ -46,15 +46,17 @@ export default abstract class BaseResource<Interface = BaseInterface> {
       Object.assign(this, init)
     }
     this.changedFields = []
-    // Check to ensure that the baseUrl property is overridden in the subclass
+    // Check to ensure that the baseUrl property is overridden in the subclass. Reading the getter is
+    // the check: the base implementation throws. Bound to a name so it reads as a deliberate access
+    // rather than a statement with no effect.
     if (this.constructor === BaseResource) {
-      (this.constructor as typeof BaseResource).baseUrl
+      const _baseUrl = (this.constructor as typeof BaseResource).baseUrl
     }
     return new Proxy(this, {
-      get(target, property, receiver) {
+      get(target, property, receiver): ShortcutFieldType {
         return Reflect.get(target, property, receiver)
       },
-      set(target, property, value, receiver) {
+      set(target, property, value, receiver): boolean {
         // Track all changes made to the object
         if (!target.changedFields.includes(String(property))) {
           target.changedFields.push(String(property))
@@ -73,6 +75,19 @@ export default abstract class BaseResource<Interface = BaseInterface> {
   }
 
   /**
+   * Resolves the base URL for this instance. Subclasses are inconsistent about where they declare it:
+   * some (Story, Label, Team, Iteration, StoryLink) use `static baseUrl`, others (Task, Objective,
+   * CustomField, LinkedFile, UploadedFile) use an instance property. Checking the instance first and
+   * falling back to the static getter means every verb resolves the same URL regardless of which form
+   * the subclass picked, rather than each call site guessing.
+   * @throws {Error} - Throws if the subclass declares neither form.
+   */
+  protected get resourceUrl(): string {
+    const instanceUrl = this.baseUrl as string | undefined
+    return instanceUrl ?? (this.constructor as typeof BaseResource).baseUrl
+  }
+
+  /**
    * Update the current instance of the resource with the changed fields.
    * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
    * @throws {Error} - Throws an error if the HTTP request fails.
@@ -81,8 +96,9 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('update'))) {
       throw new Error('Update operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
-    const url = `${baseUrl}/${this.id}`
+    // The class index signature widens every property to ShortcutFieldType, so the id is narrowed to
+    // what it actually is before being interpolated.
+    const url = `${this.resourceUrl}/${this.id as string | number}`
     const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
       if (field.startsWith('_')) {
         return acc
@@ -98,7 +114,7 @@ export default abstract class BaseResource<Interface = BaseInterface> {
         if (!response) {
           return
         }
-        const data: Record<string, ShortcutApiFieldType> = response!.data
+        const data: Record<string, ShortcutApiFieldType> = response.data
         Object.keys(data).forEach(key => {
           this[snakeToCamel(key)] = data[key]
           this.changedFields = []
@@ -115,7 +131,7 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('create'))) {
       throw new Error('Create operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
+    const baseUrl = this.resourceUrl
     const body: Record<string, unknown> = {}
     Object.keys(this).forEach(key => {
       if (this.createFields.includes(key)) {
@@ -162,7 +178,7 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('delete'))) {
       throw new Error('Delete operation not available for this resource')
     }
-    const url = `${this.baseUrl}/${this.id}`
+    const url = `${this.resourceUrl}/${this.id as string | number}`
     const response = await axios.delete(url, {headers: getHeaders()}).catch((error) => {
       handleResponseFailure(error, {})
     })
@@ -171,3 +187,6 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     }
   }
 }
+
+export { type ResourceOperation, BaseResource as default }
+
