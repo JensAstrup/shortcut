@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 
 import BaseInterface from '../src/base-interface'
 import BaseResource from '../src/base-resource'
@@ -155,5 +155,41 @@ describe('BaseSearchableService', () => {
 
     expect(mockedAxios.get).toHaveBeenCalledWith('https://api.app.shortcut.com/token', { headers: mockService.headers })
     expect(resources.results[0]).toBeInstanceOf(MockResource)
+  })
+
+  // An AxiosError carries the request config, so chaining it as `cause` would hand the API token to
+  // any caller that logs the error. The token is stripped before the error is re-thrown.
+  it('strips the Shortcut-Token from the chained cause on an AxiosError', async () => {
+    const error = new AxiosError('Request failed', '401')
+    error.config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Shortcut-Token': 'super-secret-token'
+      }
+    } as unknown as InternalAxiosRequestConfig
+    error.response = {
+      status: 401,
+      statusText: 'Unauthorized',
+      data: { message: 'Invalid token' }
+    } as AxiosResponse
+    mockedAxios.get.mockRejectedValue(error)
+
+    const thrown = await mockService.search('test').then(() => null, (e: Error) => e)
+
+    expect(thrown).toBeInstanceOf(Error)
+    expect(thrown!.message).toContain('HTTP error 401 (Unauthorized)')
+    const cause = thrown!.cause as AxiosError
+    expect(cause).toBe(error)
+    expect(cause.config?.headers['Shortcut-Token']).toBeUndefined()
+    expect(JSON.stringify(cause.config)).not.toContain('super-secret-token')
+    // The rest of the config survives, so the error is still useful for debugging.
+    expect(cause.config?.headers['Content-Type']).toBe('application/json')
+  })
+
+  it('rethrows non-Axios errors unchanged', async () => {
+    const error = new Error('boom')
+    mockedAxios.get.mockRejectedValue(error)
+
+    await expect(mockService.search('test')).rejects.toBe(error)
   })
 })

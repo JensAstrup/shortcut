@@ -75,6 +75,19 @@ abstract class BaseResource<Interface = BaseInterface> {
   }
 
   /**
+   * Resolves the base URL for this instance. Subclasses are inconsistent about where they declare it:
+   * some (Story, Label, Team, Iteration, StoryLink) use `static baseUrl`, others (Task, Objective,
+   * CustomField, LinkedFile, UploadedFile) use an instance property. Checking the instance first and
+   * falling back to the static getter means every verb resolves the same URL regardless of which form
+   * the subclass picked, rather than each call site guessing.
+   * @throws {Error} - Throws if the subclass declares neither form.
+   */
+  protected get resourceUrl(): string {
+    const instanceUrl = this.baseUrl as string | undefined
+    return instanceUrl ?? (this.constructor as typeof BaseResource).baseUrl
+  }
+
+  /**
    * Update the current instance of the resource with the changed fields.
    * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
    * @throws {Error} - Throws an error if the HTTP request fails.
@@ -83,10 +96,9 @@ abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('update'))) {
       throw new Error('Update operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
     // The class index signature widens every property to ShortcutFieldType, so the id is narrowed to
     // what it actually is before being interpolated.
-    const url = `${baseUrl}/${this.id as string | number}`
+    const url = `${this.resourceUrl}/${this.id as string | number}`
     const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
       if (field.startsWith('_')) {
         return acc
@@ -119,7 +131,7 @@ abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('create'))) {
       throw new Error('Create operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
+    const baseUrl = this.resourceUrl
     const body: Record<string, unknown> = {}
     Object.keys(this).forEach(key => {
       if (this.createFields.includes(key)) {
@@ -166,7 +178,7 @@ abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('delete'))) {
       throw new Error('Delete operation not available for this resource')
     }
-    const url = `${this.baseUrl as string}/${this.id as string | number}`
+    const url = `${this.resourceUrl}/${this.id as string | number}`
     const response = await axios.delete(url, {headers: getHeaders()}).catch((error) => {
       handleResponseFailure(error, {})
     })

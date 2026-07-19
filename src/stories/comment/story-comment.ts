@@ -56,7 +56,7 @@ class StoryComment extends BaseResource<StoryCommentInterface> implements StoryC
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
-    return convertApiFields<StoryCommentApiData, StoryCommentInterface>(data) as StoryComment
+    return new StoryComment(convertApiFields<StoryCommentApiData, StoryCommentInterface>(data))
   }
 
   authorId: string

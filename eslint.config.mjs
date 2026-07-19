@@ -13,8 +13,7 @@ export default [
     languageOptions: {
       ...yenz.languageOptions,
       globals: {
-        ...globals.node,
-        ...globals.jest
+        ...globals.node
       }
     },
     rules: {
@@ -46,6 +45,12 @@ export default [
   },
   {
     files: ['**/*.test.*', 'tests/**'],
+    // Scoped here rather than to all **/*.ts so that describe/it/expect in src are still undefined-var errors.
+    languageOptions: {
+      globals: {
+        ...globals.jest
+      }
+    },
     rules: {
       'no-magic-numbers': 'off'
     }
