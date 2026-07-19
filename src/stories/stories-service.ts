@@ -32,7 +32,7 @@ class StoriesService extends BaseSearchableService<Story, StoryInterface> {
       throw new Error('Failed to fetch externally linked stories')
     }
     return response.data.map((data: StoryApiData) => {
-      const interfaceData = convertApiFields(data)
+      const interfaceData = convertApiFields<StoryApiData, StoryInterface>(data)
       return this.build(interfaceData)
     })
   }
