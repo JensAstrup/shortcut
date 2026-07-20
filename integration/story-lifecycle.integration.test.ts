@@ -193,7 +193,7 @@ async function eventually<T>(attempt: () => Promise<T>, timeoutMs = 45_000, inte
       return result
     }
     if (Date.now() >= deadline) {
-      return undefined
+      throw new Error(`eventually() timed out after ${timeoutMs}ms without a truthy result`)
     }
     await new Promise(resolve => setTimeout(resolve, intervalMs))
     return poll()
