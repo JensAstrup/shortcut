@@ -11,7 +11,7 @@ function isValidVersionType(type: string): boolean {
   return ['major', 'minor', 'patch'].includes(type)
 }
 
-function handleInvalidType(type: string): void {
+function handleInvalidType(type: string): never {
   process.stderr.write(`Invalid version type: ${type}. Must be one of: major, minor, patch\n`)
   process.exit(1)
 }
@@ -27,19 +27,31 @@ if (require.main === module) {
   program
     .command('prepare-version [type]')
     .description('Create a version bump branch and PR to develop')
-    .action((type: string | undefined) => {
+    .action(async (type: string | undefined) => {
       const versionType = type ?? 'patch'
       if (!isValidVersionType(versionType)) {
         handleInvalidType(versionType)
       }
-      prepareVersion(versionType as 'major' | 'minor' | 'patch')
+      try {
+        await prepareVersion(versionType as 'major' | 'minor' | 'patch')
+      }
+      catch (error) {
+        console.error(error)
+        process.exit(1)
+      }
     })
 
   program
     .command('create-release')
     .description('Create a release branch and PR to main')
-    .action(() => {
-      createRelease()
+    .action(async () => {
+      try {
+        await createRelease()
+      }
+      catch (error) {
+        console.error(error)
+        process.exit(1)
+      }
     })
 
   program.parse()

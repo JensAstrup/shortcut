@@ -77,9 +77,9 @@ function extractIssueNumber(commitMessage: string): number | undefined {
  * Get commits between develop and main branch
  */
 async function getCommitsBetweenBranches(): Promise<CommitInfo[]> {
-  await executeGitCommand('git fetch origin main')
+  await executeGitCommand('git fetch origin main develop')
 
-  const command = 'git log main..develop --pretty=format:"%H|%s"'
+  const command = 'git log origin/main..origin/develop --pretty=format:"%H|%s"'
   const output = await executeGitCommand(command)
 
   if (!output) {
@@ -180,6 +180,7 @@ async function determineBumpType(): Promise<VersionBumpType> {
     const commits = await getCommitsBetweenBranches()
 
     for (const commit of commits) {
+      // eslint-disable-next-line no-console
       console.info(commit.message)
     }
 

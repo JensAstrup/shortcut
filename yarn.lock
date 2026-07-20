@@ -4012,6 +4012,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:15.0.0":
+  version: 15.0.0
+  resolution: "commander@npm:15.0.0"
+  checksum: 10c0/539229c171914ea1ccd45ee5f10d924289a12a684ea3a7a44147abe54003c35ed6de9ae4ad198d88c29fdf403dca0428451a388234e6dc01b6faa978fb207206
+  languageName: node
+  linkType: hard
+
 "commander@npm:^2.20.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
@@ -7211,6 +7218,7 @@ __metadata:
     "@types/node-fetch": "npm:2.6.11"
     axios: "npm:^1.6.7"
     axios-mock-adapter: "npm:1.22.0"
+    commander: "npm:15.0.0"
     dotenv: "npm:17.4.2"
     eslint: "npm:10.7.0"
     eslint-config-yenz: "npm:10.1.2"
@@ -7227,6 +7235,7 @@ __metadata:
     tscpaths: "npm:0.0.9"
     typedoc-plugin-coverage: "npm:3.1.0"
     typescript: "npm:5.4.4"
+    zod: "npm:4.4.3"
   languageName: unknown
   linkType: soft
 
@@ -8221,5 +8230,12 @@ __metadata:
   version: 2.1.2
   resolution: "yoctocolors@npm:2.1.2"
   checksum: 10c0/b220f30f53ebc2167330c3adc86a3c7f158bcba0236f6c67e25644c3188e2571a6014ffc1321943bb619460259d3d27eb4c9cc58c2d884c1b195805883ec7066
+  languageName: node
+  linkType: hard
+
+"zod@npm:4.4.3":
+  version: 4.4.3
+  resolution: "zod@npm:4.4.3"
+  checksum: 10c0/7ea31b558e88f9faf44f31dd185e2e1cbf51fed3081787fb96cc2534749b50c0acfc6da7f0922a7353ed092dd358c7d50c28ea96c94d04af64191bd33152eca3
   languageName: node
   linkType: hard

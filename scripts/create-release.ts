@@ -1,5 +1,3 @@
-import { basename } from 'path'
-
 import { config } from 'dotenv'
 import { execa } from 'execa'
 import type { Octokit } from 'octokit'
@@ -73,6 +71,7 @@ type GitHubIssue = {
   number: number
   title: string
   body?: string | null
+  closed_at?: string | null
   pull_request?: unknown
 }
 
@@ -103,7 +102,13 @@ async function getIssues(): Promise<GitHubIssue[]> {
     ...(since ? { since } : {}),
   })
   // The issues endpoint also returns pull requests; drop them
-  return issues.filter(issue => !issue.pull_request)
+  const closedIssues = issues.filter((issue: GitHubIssue) => !issue.pull_request)
+  if (!since) {
+    return closedIssues
+  }
+  // `since` filters on updated_at, so drop issues that were closed before the last release
+  const sinceTime = new Date(since).getTime()
+  return closedIssues.filter((issue: GitHubIssue) => !!issue.closed_at && new Date(issue.closed_at).getTime() >= sinceTime)
 }
 
 /**
@@ -136,11 +141,10 @@ function getIssueNotes(issues: IssueContent[]): string {
 /**
  * Generates release notes using OpenAI
  */
-async function retrieveNotes(issues: IssueContent[]): Promise<string> {
+async function retrieveNotes(issues: IssueContent[], newVersion: string): Promise<string> {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY!,
   })
-  const newVersion = await getNewVersion()
   const systemMessage: OpenAI.ChatCompletionSystemMessageParam = {
     content: SYSTEM_PROMPT,
     role: 'system',
@@ -166,8 +170,7 @@ async function retrieveNotes(issues: IssueContent[]): Promise<string> {
 /**
  * Creates a GitHub PR from develop to main with release notes
  */
-async function createPullRequest(notes: string): Promise<string> {
-  const version = await getNewVersion()
+async function createPullRequest(notes: string, version: string): Promise<string> {
   const octokit = getOctokit()
   const pullRequest = await octokit.rest.pulls.create({
     ...getRepo(),
@@ -198,23 +201,25 @@ async function createRelease(): Promise<void> {
     const issues = await getIssues()
     const issueContents = issues.map(getIssueContent)
 
+    const newVersion = await getNewVersion()
+
     spinner.text = 'Generating release notes with AI'
-    const notes = await retrieveNotes(issueContents)
+    const notes = await retrieveNotes(issueContents, newVersion)
 
     spinner.text = 'Creating pull request'
-    const pullRequestUrl = await createPullRequest(notes)
+    const pullRequestUrl = await createPullRequest(notes, newVersion)
 
     spinner.succeed(`Release PR created: ${pullRequestUrl}`)
   }
   catch (error) {
     spinner.fail(error instanceof Error ? error.message : 'Unknown error occurred')
-    process.exit(1)
+    throw error
   }
 }
 
 // Execute if called directly
-if (basename(__filename) === basename(process.argv[1] ?? '')) {
-  createRelease()
+if (require.main === module) {
+  createRelease().catch(() => process.exit(1))
 }
 
 export { createRelease, getIssues, getIssueContent, retrieveNotes, createPullRequest }
