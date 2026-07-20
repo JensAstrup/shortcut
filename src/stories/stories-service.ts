@@ -1,4 +1,4 @@
-import axios from 'axios'
+import {AxiosInstance} from 'axios'
 
 import {BaseSearchableService, ServiceOperation} from '@sx/base-service'
 import {StoryApiData} from '@sx/stories/contracts/story-api-data'
@@ -12,11 +12,11 @@ import {handleResponseFailure} from '@sx/utils/handle-response-failure'
  * @inheritDoc
  */
 class StoriesService extends BaseSearchableService<Story, StoryInterface> {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
+  public baseUrl = '/stories'
   protected factory = (data: object): Story => new Story(data)
   public availableOperations: ServiceOperation[] = ['get', 'search']
 
-  constructor(init: { headers: Record<string, string> }) {
+  constructor(init: { http: AxiosInstance }) {
     super(init)
   }
 
@@ -24,16 +24,16 @@ class StoriesService extends BaseSearchableService<Story, StoryInterface> {
    * Fetches all stories that have an external link associated with them.
    */
   async getExternallyLinked(link: string): Promise<Story[]> {
-    const url = 'https://api.app.shortcut.com/api/v3/external-link/stories'
-    const response = await axios.get(url, { headers: this.headers, params: { external_link: link } }).catch((error) => {
+    const url = '/external-link/stories'
+    const response = await this.http.get(url, { params: { external_link: link } }).catch((error) => {
       handleResponseFailure(error, { external_link: link })
     })
     if (!response) {
       throw new Error('Failed to fetch externally linked stories')
     }
     return response.data.map((data: StoryApiData) => {
-      const interfaceData = convertApiFields(data)
-      return this.factory(interfaceData)
+      const interfaceData = convertApiFields<StoryApiData, StoryInterface>(data)
+      return this.build(interfaceData)
     })
   }
 }

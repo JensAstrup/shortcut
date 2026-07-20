@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 import BaseData from '@sx/base-data'
 import BaseResource from '@sx/base-resource'
@@ -14,12 +14,11 @@ import ThreadedCommentApiData from '@sx/threaded-comments/contracts/threaded-com
 import ThreadedCommentInterface from '@sx/threaded-comments/contracts/threaded-comment-interface'
 import { convertApiFields, convertToApiFields } from '@sx/utils/convert-fields'
 import { handleResponseFailure } from '@sx/utils/handle-response-failure'
-import { getHeaders } from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
 class Epic extends BaseResource<EpicInterface> implements EpicInterface {
-  public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/epics'
+  public static baseUrl: string = '/epics'
   public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
     'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',
     'name', 'objectiveIds', 'ownerIds', 'plannedStartDate', 'requestedById',
@@ -36,7 +35,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
    * @returns {Promise<Objective[]>}
    */
   get objectives(): Promise<Objective[]> {
-    const service = new ObjectivesService({ headers: getHeaders() })
+    const service = new ObjectivesService({http: this.http})
     return service.getMany(this.objectiveIds)
   }
 
@@ -45,7 +44,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
    * @returns {Promise<Team>}
    */
   get teams(): Promise<Team[]> {
-    const service = new TeamsService({ headers: getHeaders() })
+    const service = new TeamsService({http: this.http})
     return service.getMany(this.groupIds)
   }
 
@@ -54,7 +53,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
    * @returns {Promise<Member[]>}
    */
   get followers(): Promise<Member[]> {
-    const service: MembersService = new MembersService({ headers: getHeaders() })
+    const service: MembersService = new MembersService({http: this.http})
     return service.getMany(this.followerIds)
   }
 
@@ -63,7 +62,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
    * @returns {Promise<Member[]>}
    */
   get owners(): Promise<Member[]> {
-    const service = new MembersService({ headers: getHeaders() })
+    const service = new MembersService({http: this.http})
     return service.getMany(this.ownerIds)
   }
 
@@ -81,7 +80,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
    */
   public async comment(comment: string): Promise<ThreadedCommentInterface | void> {
     const url = `${Epic.baseUrl}/${this.id}/comments`
-    const response: void | AxiosResponse<ThreadedCommentApiData, unknown> = await axios.post(url, { text: comment }, { headers: getHeaders() }).catch((error: AxiosError) => {
+    const response: void | AxiosResponse<ThreadedCommentApiData, unknown> = await this.http.post(url, { text: comment }).catch((error: AxiosError) => {
       handleResponseFailure(error, { text: comment })
     })
     if (!response) {
@@ -103,7 +102,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
   public async addComment(comment: CreateThreadedCommentData): Promise<ThreadedCommentInterface | void> {
     const url = `${Epic.baseUrl}/${this.id}/comments`
     const requestData: BaseData = convertToApiFields(comment)
-    const response: void | AxiosResponse<ThreadedCommentApiData, unknown> = await axios.post(url, requestData, { headers: getHeaders() }).catch((error: AxiosError) => {
+    const response: void | AxiosResponse<ThreadedCommentApiData, unknown> = await this.http.post(url, requestData).catch((error: AxiosError) => {
       handleResponseFailure(error, requestData)
     })
     if (!response) {

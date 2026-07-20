@@ -2,7 +2,6 @@ import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
 import StoriesService from '@sx/stories/stories-service'
 import Story from '@sx/stories/story'
-import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
@@ -13,7 +12,7 @@ import UUID from '@sx/utils/uuid'
  * @inheritDoc BaseResource
  */
 class LinkedFile extends BaseResource<LinkedFileInterface> implements LinkedFileInterface {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/linked-files'
+  public baseUrl = '/linked-files'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
   public createFields = ['contentType', 'description', 'name', 'size', 'storyId', 'type', 'uploaderId', 'url']
 
@@ -27,7 +26,7 @@ class LinkedFile extends BaseResource<LinkedFileInterface> implements LinkedFile
    * Gets all stories that have linked this file
    */
   get stories(): Promise<Story[]> {
-    const service = new StoriesService({headers: getHeaders()})
+    const service = new StoriesService({http: this.http})
     return service.getMany(this.storyIds)
   }
 

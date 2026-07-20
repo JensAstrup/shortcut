@@ -1,9 +1,10 @@
-import {getHeaders} from '@sx/utils/headers'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowState from '@sx/workflow-states/workflow-state'
 import WorkflowStatesService from '@sx/workflow-states/workflow-states-service'
 import Workflow from '@sx/workflows/workflow'
 import WorkflowsService from '@sx/workflows/workflows-service'
+
+import {stubHttp} from '../helpers/http'
 
 
 describe('Workflow States Service', () => {
@@ -28,7 +29,7 @@ describe('Workflow States Service', () => {
       name: 'Test Workflow',
       states: [workflowStateInterface],
     }] as object as Workflow[])
-    const workflowStateService = new WorkflowStatesService({headers: getHeaders()})
+    const workflowStateService = new WorkflowStatesService({http: stubHttp()})
     const workflowState = await workflowStateService.get(1)
     expect(workflowState).toEqual(new WorkflowState(workflowStateInterface))
   })
@@ -39,7 +40,7 @@ describe('Workflow States Service', () => {
       name: 'Test Workflow',
       states: [],
     }] as object as Workflow[])
-    const workflowStateService = new WorkflowStatesService({headers: getHeaders()})
+    const workflowStateService = new WorkflowStatesService({http: stubHttp()})
     await expect(workflowStateService.get(2)).rejects.toThrow('Workflow state with id 2 not found')
   })
 
@@ -64,7 +65,7 @@ describe('Workflow States Service', () => {
       name: 'Test Workflow',
       states: [workflowStateInterface],
     }] as object as Workflow[])
-    const workflowStateService = new WorkflowStatesService({headers: getHeaders()})
+    const workflowStateService = new WorkflowStatesService({http: stubHttp()})
     const workflowState = await workflowStateService.getMany([1])
     expect(workflowState).toEqual([new WorkflowState(workflowStateInterface)])
   })

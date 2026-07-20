@@ -4,7 +4,7 @@ import UUID from '@sx/utils/uuid'
 
 
 class UploadedFile extends BaseResource<UploadedFileInterface> implements UploadedFileInterface {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/files'
+  public baseUrl = '/files'
   public availableOperations: ResourceOperation[] = ['update', 'delete']
 
   constructor(init: UploadedFileInterface) {

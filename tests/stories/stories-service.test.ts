@@ -1,4 +1,4 @@
-import axios from 'axios'
+import {AxiosInstance} from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter'
 
 import {convertApiFields} from '@sx/utils/convert-fields'
@@ -6,9 +6,8 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import StoriesService from '../../src/stories/stories-service'
 import Story from '../../src/stories/story'
 import {handleResponseFailure} from '../../src/utils/handle-response-failure'
+import {mockHttp} from '../helpers/http'
 
-
-const axiosMock = new AxiosMockAdapter(axios)
 
 jest.mock('../../src/utils/convert-fields', () => {
   return {
@@ -21,18 +20,21 @@ const mockHandleResponseFailure = jest.mocked(handleResponseFailure, {shallow: f
 
 
 describe('Stories service', () => {
+  let http: AxiosInstance
+  let mock: AxiosMockAdapter
+
   beforeEach(() => {
-    axiosMock.reset()
     jest.clearAllMocks()
+    ;({http, mock} = mockHttp())
   })
 
   it('should construct a new instance', () => {
-    const service = new StoriesService({headers: {Authorization: 'Bearer token'}})
-    expect(service.headers).toEqual({Authorization: 'Bearer token'})
+    const service = new StoriesService({http})
+    expect(service.http).toBe(http)
   })
 
   it('should return an array of stories after searching', async () => {
-    axiosMock.onGet().reply(200, {
+    mock.onGet().reply(200, {
       data: [{id: 1, name: 'Story 1', created_at: '2021-01-01T00:00:00Z'},
         {id: 2, name: 'Story 2', created_at: '2021-01-02T00:00:00Z'}]
     })
@@ -41,7 +43,7 @@ describe('Stories service', () => {
       new Story({id: 1, name: 'Story 1', created_at: '2021-01-01T00:00:00Z'}),
       new Story({id: 2, name: 'Story 2', created_at: '2021-01-02T00:00:00Z'})
     ]
-    const service = new StoriesService({headers: {}})
+    const service = new StoriesService({http})
     const stories = await service.search('story')
 
     // Since we're comparing instances of Story, either ensure Story's equality check is appropriate
@@ -57,11 +59,11 @@ describe('Stories service', () => {
   })
 
   it('should return an array of stories with external links', async () => {
-    axiosMock.onGet().reply(200, [
+    mock.onGet().reply(200, [
       {id: 1, name: 'Story 1', created_at: '2021-01-01T00:00:00Z'},
       {id: 2, name: 'Story 2', created_at: '2021-01-02T00:00:00Z'}
     ])
-    const service = new StoriesService({headers: {}})
+    const service = new StoriesService({http})
     const stories = await service.getExternallyLinked('http://example.com')
 
     expect(stories).toHaveLength(2)
@@ -73,9 +75,9 @@ describe('Stories service', () => {
   })
 
   it('should throw an error if getExternallyLinked fails', async () => {
-    axiosMock.onGet().reply(500)
+    mock.onGet().reply(500)
 
-    const service = new StoriesService({headers: {}})
+    const service = new StoriesService({http})
     await expect(service.getExternallyLinked('http://example.com')).rejects.toThrow('Failed to fetch externally linked stories')
     expect(mockHandleResponseFailure).toHaveBeenCalledWith(expect.any(Error), { external_link: 'http://example.com' })
   })

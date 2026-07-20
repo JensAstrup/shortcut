@@ -4,7 +4,7 @@ import CustomField from '@sx/custom-fields/custom-field'
 
 
 class CustomFieldsService extends BaseService<CustomField, CustomFieldInterface> {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/custom-fields'
+  public baseUrl = '/custom-fields'
   protected factory = (data: CustomFieldInterface): CustomField => new CustomField(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
 }

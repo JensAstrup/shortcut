@@ -1,4 +1,4 @@
-import axios from 'axios'
+import {AxiosInstance} from 'axios'
 
 import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
@@ -30,7 +30,6 @@ import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import {getHeaders} from '@sx/utils/headers'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowService from '@sx/workflows/workflows-service'
 
@@ -43,7 +42,7 @@ import WorkflowService from '@sx/workflows/workflows-service'
  * @inheritDoc BaseResource
  */
 class Story extends BaseResource<StoryInterface> implements StoryInterface {
-  public static baseUrl: string = 'https://api.app.shortcut.com/api/v3/stories'
+  public static baseUrl: string = '/stories'
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   // These properties are utilized internally by the class and should not be accessed directly
@@ -58,6 +57,21 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     this.instantiateCustomFields()
     this.instantiateLabels()
     this.changedFields = []
+  }
+
+  /**
+   * @internal
+   * Child resources are built in the constructor, before a client is attached, so the client has to
+   * be handed down to them here rather than at construction time.
+   */
+  public setHttp(http: AxiosInstance): this {
+    super.setHttp(http)
+    this.comments?.forEach((comment: StoryComment) => comment.setHttp(http))
+    this.tasks?.forEach((task: Task) => task.setHttp(http))
+    this.storyLinks?.forEach((link: StoryLink) => link.setHttp(http))
+    this.customFields?.forEach((field: StoryCustomField) => field.setHttp(http))
+    this.labels?.forEach((label: Label) => label.setHttp(http))
+    return this
   }
 
   protected async _preSave(): Promise<void> {
@@ -103,7 +117,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
   }
 
   get workflow(): Promise<WorkflowStateInterface> {
-    const service = new WorkflowService({headers: getHeaders()})
+    const service = new WorkflowService({http: this.http})
     return service.getWorkflowState(this.workflowStateId)
   }
 
@@ -119,7 +133,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     if (this.iterationId === null) {
       return null
     }
-    const iterationService = new IterationsService({headers: getHeaders()})
+    const iterationService = new IterationsService({http: this.http})
     return iterationService.get(this.iterationId)
   }
 
@@ -131,7 +145,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     if (this.groupId === null) {
       return null
     }
-    const service = new TeamsService({headers: getHeaders()})
+    const service = new TeamsService({http: this.http})
     return service.get(this.groupId)
   }
 
@@ -140,7 +154,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
    * @returns {Promise<Member[]>}
    */
   get owners(): Promise<Member[]> {
-    const service = new MembersService({headers: getHeaders()})
+    const service = new MembersService({http: this.http})
     return service.getMany(this.ownerIds)
   }
 
@@ -152,20 +166,20 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     if (this.epicId === null) {
       return null
     }
-    const service = new EpicsService({headers: getHeaders()})
+    const service = new EpicsService({http: this.http})
     return service.get(this.epicId)
   }
 
   public async history(): Promise<History[]> {
     const url = `${Story.baseUrl}/${this.id}/history`
-    const response = await axios.get(url, {headers: getHeaders()}).catch((error) => {
+    const response = await this.http.get(url).catch((error) => {
       handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error fetching history: ${error}`)
     })
     const historyData: HistoryApiData[] = response.data
     return historyData.map((history) => {
       const historyInterface = convertApiFields<HistoryApiData, HistoryInterface>(history)
-      return new History(historyInterface)
+      return new History(historyInterface).setHttp(this.http)
     })
   }
 
@@ -223,18 +237,18 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
 
   public async comment(comment: string): Promise<StoryComment> {
     const url = `${Story.baseUrl}/${this.id}/comments`
-    const response = await axios.post(url, {text: comment}, {headers: getHeaders()}).catch((error) => {
+    const response = await this.http.post(url, {text: comment}).catch((error) => {
       handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
     const interfaceData = convertApiFields(data)
 
-    return new StoryComment(interfaceData)
+    return new StoryComment(interfaceData).setHttp(this.http)
   }
 
   public async addFile(file: Buffer): Promise<UploadedFile> {
-    const service = new UploadedFilesService({headers: getHeaders()})
+    const service = new UploadedFilesService({http: this.http})
     return service.upload(file, this)
   }
 
@@ -245,13 +259,13 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
   public async addTask(task: string): Promise<void> {
     const url = `${Story.baseUrl}/${this.id}/tasks`
     const requestData = {description: task}
-    const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+    const response = await this.http.post(url, requestData).catch((error) => {
       handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error adding task: ${error}`)
     })
     const data: TaskApiData = response.data
     const interfaceData = convertApiFields(data)
-    const createdTask = new Task(interfaceData)
+    const createdTask = new Task(interfaceData).setHttp(this.http)
     this.tasks.push(createdTask)
   }
 
@@ -264,7 +278,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
       objectId: this.id,
       verb: 'blocks',
       subjectId: story instanceof Story ? story.id : story
-    })
+    }).setHttp(this.http)
     await link.save()
     this.storyLinks.push(link)
   }
@@ -278,7 +292,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
       objectId: this.id,
       verb: 'duplicates',
       subjectId: story instanceof Story ? story.id : story
-    })
+    }).setHttp(this.http)
     await link.save()
     this.storyLinks.push(link)
   }
@@ -292,7 +306,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
       objectId: this.id,
       verb: 'relates to',
       subjectId: story instanceof Story ? story.id : story
-    })
+    }).setHttp(this.http)
     await link.save()
     this.storyLinks.push(link)
   }

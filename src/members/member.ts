@@ -4,14 +4,13 @@ import {MemberProfile} from '@sx/members/contracts/member-profile'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
-import {getHeaders} from '@sx/utils/headers'
 
 
 /**
  * @inheritDoc
  */
 class Member extends BaseResource<MemberInterface> implements MemberInterface {
-  public static baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+  public static baseUrl = '/members'
   public availableOperations: ResourceOperation[] = []
 
   createdAt: string
@@ -25,7 +24,7 @@ class Member extends BaseResource<MemberInterface> implements MemberInterface {
   state: MemberState
   updatedAt: string
 
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+  public baseUrl = '/members'
 
   constructor(init: StoryInterface | object) {
     super()
@@ -34,7 +33,7 @@ class Member extends BaseResource<MemberInterface> implements MemberInterface {
   }
 
   get teams(): Promise<Array<Team>> {
-    const service = new TeamsService({headers: getHeaders()})
+    const service = new TeamsService({http: this.http})
     return service.getMany(this.groupIds)
   }
 }

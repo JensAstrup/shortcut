@@ -1,14 +1,13 @@
-import axios from 'axios'
-import AxiosMockAdapter from 'axios-mock-adapter'
-
 import Story from '@sx/stories/story'
 import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 
+import {mockHttp} from '../helpers/http'
 
-const axiosMock = new AxiosMockAdapter(axios)
-const service = new UploadedFilesService({headers: {'Shortcut-Token': 'test-token'}})
+
+const {http, mock: axiosMock} = mockHttp()
+const service = new UploadedFilesService({http})
 
 describe('UploadedFilesService', () => {
   afterEach(() => {

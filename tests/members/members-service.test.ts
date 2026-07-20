@@ -1,15 +1,12 @@
-import axios from 'axios'
-import AxiosMockAdapter from 'axios-mock-adapter'
-
 import {MemberProfile} from '@sx/members/contracts/member-profile'
 import MemberProfileApiData from '@sx/members/contracts/member-profile-api-data'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 
 import {handleResponseFailure} from '../../src/utils/handle-response-failure'
+import {mockHttp} from '../helpers/http'
 
 
-const axiosMock = new AxiosMockAdapter(axios)
 jest.mock('@sx/utils/handle-response-failure')
 const mockHandleResponseFailure = handleResponseFailure as jest.Mock
 
@@ -18,8 +15,10 @@ describe('MembersService', () => {
   it('should return authenticated member', async () => {
     jest.spyOn(MembersService.prototype, 'getAuthenticatedMemberProfile').mockResolvedValue({id: 'UUID1', name: 'Test Member'} as MemberProfile)
     const memberData = {id: 'UUID1', name: 'Test Member'} as MemberProfileApiData
-    axiosMock.onGet().reply(200, memberData)
-    const membersService = new MembersService({headers: {}})
+    const {http, mock} = mockHttp()
+    // getAuthenticatedMemberProfile is stubbed above, so the only real request is the member lookup.
+    mock.onGet(`/members/${memberData.id}`).reply(200, memberData)
+    const membersService = new MembersService({http})
     const member = await membersService.getAuthenticatedMember()
     expect(member.id).toBe('UUID1')
     expect(member.name).toBe('Test Member')
@@ -29,8 +28,9 @@ describe('MembersService', () => {
   it('should return authenticated member profile', async () => {
     const workspace = {url_slug: 'test-workspace', estimate_scale: [1, 2, 3], }
     const memberData = {id: 'UUID1', name: 'Test Member', mention_name: 'TestMember', workspace2: workspace, deactivated: false, display_icon: '', email_address: 'test@member.com', gravatar_hash: 'hash', is_owner: false, two_factor_auth_enabled: true} as MemberProfileApiData
-    axiosMock.onGet().reply(200, memberData)
-    const membersService = new MembersService({headers: {}})
+    const {http, mock} = mockHttp()
+    mock.onGet('/member').reply(200, memberData)
+    const membersService = new MembersService({http})
     const memberProfile = await membersService.getAuthenticatedMemberProfile()
     expect(memberProfile.id).toBe('UUID1')
     expect(memberProfile.name).toBe('Test Member')
@@ -39,8 +39,9 @@ describe('MembersService', () => {
   })
 
   it('should throw an error if request fails', async () => {
-    axiosMock.onGet().reply(500)
-    const membersService = new MembersService({headers: {}})
+    const {http, mock} = mockHttp()
+    mock.onGet('/member').reply(500)
+    const membersService = new MembersService({http})
     await expect(membersService.getAuthenticatedMemberProfile()).rejects.toThrow('Failed to get member profile')
     expect(mockHandleResponseFailure).toHaveBeenCalledTimes(1)
   })

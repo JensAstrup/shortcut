@@ -1,11 +1,10 @@
-import axios from 'axios'
+import {AxiosInstance} from 'axios'
 
 import BaseInterface from '@sx/base-interface'
-import BaseService, {BaseSearchableService} from '@sx/base-service'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import {ShortcutApiFieldType, ShortcutFieldType} from '@sx/utils/field-type'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import {getHeaders} from '@sx/utils/headers'
+import {defaultHttpClient} from '@sx/utils/http'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 
 
@@ -34,7 +33,6 @@ abstract class BaseResource<Interface = BaseInterface> {
    */
   public availableOperations: ResourceOperation[] = []
 
-  public service: BaseService<BaseResource, BaseInterface> | BaseSearchableService<BaseResource, BaseInterface>
   /**
    * Return a Proxy object to intercept property access and set operations on derived classes.
    * The Proxy object will track changes made to the object and store them in the `changedFields` property
@@ -75,16 +73,54 @@ abstract class BaseResource<Interface = BaseInterface> {
   }
 
   /**
-   * Resolves the base URL for this instance. Subclasses are inconsistent about where they declare it:
-   * some (Story, Label, Team, Iteration, StoryLink) use `static baseUrl`, others (Task, Objective,
-   * CustomField, LinkedFile, UploadedFile) use an instance property. Checking the instance first and
-   * falling back to the static getter means every verb resolves the same URL regardless of which form
-   * the subclass picked, rather than each call site guessing.
+   * The path for this resource's own requests, relative to the client's base URL.
+   *
+   * Subclasses are inconsistent about where they declare it: some (Story, Label, Team, Iteration,
+   * StoryLink) use `static baseUrl`, while others (Task, Objective, CustomField, LinkedFile,
+   * UploadedFile) need a path derived from instance data and declare it on the instance. Resolving
+   * both here keeps `update()`, `create()` and `delete()` in agreement — previously `delete()` read
+   * only the instance property, so resources with just a static one built a request to
+   * `undefined/<id>`.
+   *
    * @throws {Error} - Throws if the subclass declares neither form.
    */
   protected get resourceUrl(): string {
-    const instanceUrl = this.baseUrl as string | undefined
-    return instanceUrl ?? (this.constructor as typeof BaseResource).baseUrl
+    return (this.baseUrl as string | undefined) ?? (this.constructor as typeof BaseResource).baseUrl
+  }
+
+  /**
+   * @internal
+   * Attach the HTTP client that this resource should use for its own requests. Called by services
+   * so that a resource keeps making requests as the {@link Client} that fetched it, rather than
+   * resolving credentials from the environment at call time.
+   *
+   * Defined via `Object.defineProperty` rather than assignment: the resource is a Proxy that records
+   * every `set` into `changedFields`, and a plain assignment here would leak the client into update
+   * request bodies. Subclasses holding child resources should override this to cascade.
+   */
+  public setHttp(http: AxiosInstance): this {
+    Object.defineProperty(this, '_http', {
+      value: http,
+      writable: true,
+      enumerable: false,
+      configurable: true
+    })
+    return this
+  }
+
+  /**
+   * The HTTP client for this resource's requests. Resources obtained from a {@link Client} use that
+   * client's instance; resources constructed directly fall back to one built from the
+   * `SHORTCUT_API_KEY` environment variable.
+   *
+   * @throws {Error} - If no client was attached and `SHORTCUT_API_KEY` is not set
+   */
+  protected get http(): AxiosInstance {
+    const attached = this._http as AxiosInstance | undefined
+    if (attached) return attached
+    const fallback = defaultHttpClient()
+    this.setHttp(fallback)
+    return fallback
   }
 
   /**
@@ -107,7 +143,7 @@ abstract class BaseResource<Interface = BaseInterface> {
       return acc
     }, {})
 
-    await axios.put(url, body, {headers: getHeaders()})
+    await this.http.put(url, body)
       .catch((error) => {
         handleResponseFailure(error, body)
       }).then((response) => {
@@ -139,7 +175,7 @@ abstract class BaseResource<Interface = BaseInterface> {
       }
     })
 
-    const response = await axios.post(baseUrl, body, {headers: getHeaders()})
+    const response = await this.http.post(baseUrl, body)
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
       throw new Error('HTTP error ' + response.status)
@@ -179,7 +215,7 @@ abstract class BaseResource<Interface = BaseInterface> {
       throw new Error('Delete operation not available for this resource')
     }
     const url = `${this.resourceUrl}/${this.id as string | number}`
-    const response = await axios.delete(url, {headers: getHeaders()}).catch((error) => {
+    const response = await this.http.delete(url).catch((error) => {
       handleResponseFailure(error, {})
     })
     if(!response) {

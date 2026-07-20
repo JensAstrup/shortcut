@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from 'axios'
+import {AxiosResponse} from 'axios'
 
 import BaseService, {ServiceOperation} from '@sx/base-service'
 import MemberInterface from '@sx/members/contracts/member-interface'
@@ -12,7 +12,7 @@ import WorkspaceApiData from '@sx/workspace/contracts/workspace-api-data'
 
 
 class MembersService extends BaseService<Member, MemberInterface> {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/members'
+  public baseUrl = '/members'
   protected factory = (data: object): Member => new Member(data)
   public availableOperations: ServiceOperation[] = ['get', 'list']
 
@@ -22,8 +22,8 @@ class MembersService extends BaseService<Member, MemberInterface> {
   }
 
   async getAuthenticatedMemberProfile(): Promise<MemberProfile> {
-    const apiUrl: string = 'https://api.app.shortcut.com/api/v3/member'
-    const response: AxiosResponse | void = await axios.get(apiUrl, {headers: this.headers}).catch(error => {
+    const apiUrl: string = '/member'
+    const response: AxiosResponse | void = await this.http.get(apiUrl).catch(error => {
       handleResponseFailure(error, {})
     })
     if(!response) throw new Error('Failed to get member profile')

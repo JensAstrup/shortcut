@@ -120,6 +120,19 @@ Or
 const client = new Client('YOUR_API_KEY')
 ```
 
+A key passed to the constructor takes precedence over the environment variable. The environment
+variable is only ever read, never written, so each client keeps its own credential — you can use
+several clients with different keys, against different workspaces, in the same process:
+
+```javascript
+const workspaceA = new Client('KEY_A')
+const workspaceB = new Client('KEY_B')
+
+const story = await workspaceA.stories.get(123)
+story.name = 'Renamed'
+await story.save() // still authenticated as KEY_A
+```
+
 ## Usage
 
 Full documentation for the package can be found [here](https://jensastrup.github.io/shortcut/).

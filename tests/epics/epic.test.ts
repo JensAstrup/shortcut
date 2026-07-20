@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { AxiosInstance } from 'axios'
 
 import Epic from '@sx/epics/epic'
 import Objective from '@sx/objectives/objective'
@@ -6,27 +6,13 @@ import ObjectivesService from '@sx/objectives/objectives-service'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
 import { convertApiFields } from '@sx/utils/convert-fields'
-import { getHeaders } from '@sx/utils/headers'
 
 import Member from '../../src/members/member'
 import MembersService from '../../src/members/members-service'
+import { stubHttp } from '../helpers/http'
 
-
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn()
-}))
-
-const mockedAxios = axios as jest.Mocked<typeof axios>
 
 describe('Epic', () => {
-  process.env.SHORTCUT_API_KEY = 'token'
-  beforeEach(() => {
-    mockedAxios.post.mockClear()
-  })
-
   describe('objectives getter', () => {
     it('returns an array of objectives', async () => {
       const objectives = [{ id: 1 }, { id: 2 }]
@@ -69,20 +55,22 @@ describe('Epic', () => {
 
   describe('comment method', () => {
     it('successfully posts a comment and returns the epic comment object', async () => {
+      const http: AxiosInstance = stubHttp()
       const commentData = { text: 'Test comment' }
-      const expectedResponse = { data: commentData }
-      mockedAxios.post.mockResolvedValue(expectedResponse)
+      const expectedResponse = { data: commentData };
+      (http.post as jest.Mock).mockResolvedValue(expectedResponse)
 
-      const epic = new Epic({ id: 1 })
+      const epic = new Epic({ id: 1 }).setHttp(http)
       const result = await epic.comment('Test comment')
 
       expect(result).toEqual(convertApiFields(commentData))
-      expect(mockedAxios.post).toHaveBeenCalledWith(`${Epic.baseUrl}/${epic.id}/comments`, { text: 'Test comment' }, { headers: getHeaders() })
+      expect(http.post).toHaveBeenCalledWith(`${Epic.baseUrl}/${epic.id}/comments`, { text: 'Test comment' })
     })
 
-    it('throws an error if the mockedAxios request fails', async () => {
-      mockedAxios.post.mockRejectedValue(new Error('Network error'))
-      const epic = new Epic({ id: 1 })
+    it('throws an error if the request fails', async () => {
+      const http: AxiosInstance = stubHttp();
+      (http.post as jest.Mock).mockRejectedValue(new Error('Network error'))
+      const epic = new Epic({ id: 1 }).setHttp(http)
 
       await expect(epic.comment('Test comment')).rejects.toThrow('Failed to add comment')
     })
@@ -90,11 +78,12 @@ describe('Epic', () => {
 
   describe('addComment method', () => {
     it('successfully posts a comment and returns the epic comment object', async () => {
+      const http: AxiosInstance = stubHttp()
       const commentData = { text: 'Test comment' }
-      const expectedResponse = { data: commentData }
-      mockedAxios.post.mockResolvedValue(expectedResponse)
+      const expectedResponse = { data: commentData };
+      (http.post as jest.Mock).mockResolvedValue(expectedResponse)
 
-      const epic = new Epic({ id: 1 })
+      const epic = new Epic({ id: 1 }).setHttp(http)
       const comment = {
         text: 'Test comment',
         authorId: '123',
@@ -105,18 +94,19 @@ describe('Epic', () => {
       const result = await epic.addComment(comment)
 
       expect(result).toEqual(convertApiFields(commentData))
-      expect(mockedAxios.post).toHaveBeenCalledWith(`${Epic.baseUrl}/${epic.id}/comments`, {
+      expect(http.post).toHaveBeenCalledWith(`${Epic.baseUrl}/${epic.id}/comments`, {
         text: 'Test comment',
         author_id: '123',
         created_at: null,
         external_id: null,
         updated_at: null
-      }, { headers: getHeaders() })
+      })
     })
 
-    it('throws an error if the mockedAxios request fails', async () => {
-      mockedAxios.post.mockRejectedValue(new Error('Network error'))
-      const epic = new Epic({ id: 1 })
+    it('throws an error if the request fails', async () => {
+      const http: AxiosInstance = stubHttp();
+      (http.post as jest.Mock).mockRejectedValue(new Error('Network error'))
+      const epic = new Epic({ id: 1 }).setHttp(http)
       const comment = {
         text: 'Test comment',
         authorId: '123',

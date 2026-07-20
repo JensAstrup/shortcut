@@ -4,7 +4,7 @@ import LinkedFile from '@sx/linked-files/linked-file'
 
 
 class LinkedFilesService extends BaseService<LinkedFile, LinkedFileInterface> {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/linked-files'
+  public baseUrl = '/linked-files'
   public factory = (data: LinkedFileInterface): LinkedFile => new LinkedFile(data)
   public availableOperations: ServiceOperation[] = ['list', 'get']
 }
