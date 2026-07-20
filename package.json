@@ -30,7 +30,9 @@
     "test:integration": "jest --config jest.integration.config.js",
     "docs": "npx typedoc",
     "lint": "eslint src tests",
-    "lint:fix": "eslint src tests --fix"
+    "lint:fix": "eslint src tests --fix",
+    "prepare-version": "ts-node --project tsconfig.cli.json scripts/release-branch.ts prepare-version",
+    "create-release": "ts-node --project tsconfig.cli.json scripts/release-branch.ts create-release"
   },
   "keywords": [],
   "author": "",
