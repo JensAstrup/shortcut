@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios'
 
 import BaseData from '@sx/base-data'
-import BaseResource from '@sx/base-resource'
+import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
@@ -23,6 +23,7 @@ class Epic extends BaseResource<EpicInterface> implements EpicInterface {
     'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',
     'name', 'objectiveIds', 'ownerIds', 'plannedStartDate', 'requestedById',
     'startedAtOverride', 'state', 'updatedAt']
+  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   constructor(init: EpicInterface | object) {
     super()

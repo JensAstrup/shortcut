@@ -1,4 +1,4 @@
-import {AxiosInstance} from 'axios'
+import {AxiosError, AxiosInstance} from 'axios'
 
 import BaseInterface from '@sx/base-interface'
 import camelToSnake from '@sx/utils/camel-to-snake'
@@ -153,8 +153,10 @@ abstract class BaseResource<Interface = BaseInterface> {
         const data: Record<string, ShortcutApiFieldType> = response.data
         Object.keys(data).forEach(key => {
           this[snakeToCamel(key)] = data[key]
-          this.changedFields = []
         })
+        // Cleared once after the writes rather than on every iteration; each assignment above goes
+        // through the Proxy and re-adds to changedFields, so this has to come last either way.
+        this.changedFields = []
       })
   }
 
@@ -175,13 +177,34 @@ abstract class BaseResource<Interface = BaseInterface> {
       }
     })
 
-    const response = await this.http.post(baseUrl, body)
+    // Unlike update(), a failed create rejects rather than resolving, so the error is caught here to
+    // report which fields the API objected to. Previously this surfaced as a bare "422" with the
+    // response body discarded, which says nothing about what was wrong with the request.
+    const response = await this.http.post(baseUrl, body).catch((error: AxiosError) => {
+      handleResponseFailure(error, body)
+      throw new Error(
+        `Error creating resource: HTTP ${error.response?.status} ${JSON.stringify(error.response?.data)}`,
+        {cause: error}
+      )
+    })
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
-      throw new Error('HTTP error ' + response.status)
+      throw new Error('HTTP error ' + response.status + ' ' + JSON.stringify(response.data))
     }
 
-    return Object.assign(this, response.data)
+    // Mirrors update(): the response is raw API JSON, so keys are converted before being applied.
+    // `Object.assign(this, response.data)` would write snake_case properties alongside the existing
+    // camelCase ones, and — because the instance is a Proxy that records every write — would leave
+    // every one of those keys in changedFields. The next save() then PUTs the whole object and the
+    // API rejects it with "disallowed-key" for the read-only fields.
+    const data: Record<string, ShortcutApiFieldType> = response.data
+    Object.keys(data).forEach(key => {
+      this[snakeToCamel(key)] = data[key]
+    })
+    // Cleared after the writes above, not during, so the freshly created resource starts clean.
+    this.changedFields = []
+
+    return this
   }
 
   /**

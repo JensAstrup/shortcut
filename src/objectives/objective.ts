@@ -5,6 +5,7 @@ import UUID from '@sx/utils/uuid'
 
 class Objective extends BaseResource<ObjectiveInterface> implements ObjectiveInterface {
   public baseUrl: string = '/objectives'
+  public createFields: string[] = ['name', 'description', 'state', 'archived', 'categories']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
   constructor(init: object) {

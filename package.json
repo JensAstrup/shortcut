@@ -27,6 +27,7 @@
     "reformat-imports:cjs": "node scripts/reformat-cjs-imports.js",
     "prepublishOnly": "npm run build",
     "test": "jest",
+    "test:integration": "jest --config jest.integration.config.js",
     "docs": "npx typedoc",
     "lint": "eslint src tests",
     "lint:fix": "eslint src tests --fix"

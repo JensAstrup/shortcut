@@ -43,6 +43,16 @@ import WorkflowService from '@sx/workflows/workflows-service'
  */
 class Story extends BaseResource<StoryInterface> implements StoryInterface {
   public static baseUrl: string = '/stories'
+  /**
+   * `labels` is deliberately absent: it is an accessor backed by the `_labels` instance field, so it
+   * never appears in `Object.keys(this)` and listing it would have no effect. Set labels with
+   * `update()` after the story exists.
+   */
+  public createFields: string[] = [
+    'name', 'description', 'storyType', 'workflowStateId', 'epicId', 'estimate', 'groupId',
+    'iterationId', 'ownerIds', 'followerIds', 'requestedById', 'deadline', 'externalId',
+    'externalLinks', 'projectId', 'archived'
+  ]
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   // These properties are utilized internally by the class and should not be accessed directly
