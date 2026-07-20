@@ -19,6 +19,16 @@ import Workflow from '@sx/workflows/workflow'
  */
 const WORKFLOW_STATES_BY_CLIENT = new WeakMap<AxiosInstance, Record<number, WorkflowStateInterface>>()
 
+/**
+ * In-flight population requests, keyed by client.
+ *
+ * The cache above is only written once `/workflows` resolves, so concurrent first lookups — the
+ * common case, since `Promise.all` over several stories each reads `story.workflow` — would all
+ * observe an empty cache and each issue the same full-list fetch. Callers share the first request
+ * instead. Cleared on settle so a failed fetch does not poison later attempts.
+ */
+const POPULATION_BY_CLIENT = new WeakMap<AxiosInstance, Promise<WorkflowStateInterface[]>>()
+
 class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
   public baseUrl = '/workflows'
   protected factory = (data: WorkflowInterface): Workflow => new Workflow(data)
@@ -53,10 +63,27 @@ class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
     }, [])
   }
 
-  public async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
+  /**
+   * Populates the state cache, reusing an already-running fetch for the same client rather than
+   * starting a second one.
+   */
+  private populateWorkflowStates(): Promise<WorkflowStateInterface[]> {
+    const inFlight = POPULATION_BY_CLIENT.get(this.http)
+    if (inFlight) {
+      return inFlight
+    }
+    // The stored promise is the one returned, so every caller settles on the same result, and the
+    // entry is removed on settle whether it resolved or rejected.
+    const request = this.getWorkflowStates().finally(() => {
+      POPULATION_BY_CLIENT.delete(this.http)
+    })
+    POPULATION_BY_CLIENT.set(this.http, request)
+    return request
+  }
 
+  public async getWorkflowState(id: number): Promise<WorkflowStateInterface> {
     if (Object.keys(this.workflowStates).length === 0) {
-      await this.getWorkflowStates()
+      await this.populateWorkflowStates()
     }
     return this.workflowStates[id]
   }

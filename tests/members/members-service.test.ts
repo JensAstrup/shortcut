@@ -16,7 +16,8 @@ describe('MembersService', () => {
     jest.spyOn(MembersService.prototype, 'getAuthenticatedMemberProfile').mockResolvedValue({id: 'UUID1', name: 'Test Member'} as MemberProfile)
     const memberData = {id: 'UUID1', name: 'Test Member'} as MemberProfileApiData
     const {http, mock} = mockHttp()
-    mock.onGet().reply(200, memberData)
+    // getAuthenticatedMemberProfile is stubbed above, so the only real request is the member lookup.
+    mock.onGet(`/members/${memberData.id}`).reply(200, memberData)
     const membersService = new MembersService({http})
     const member = await membersService.getAuthenticatedMember()
     expect(member.id).toBe('UUID1')
@@ -28,7 +29,7 @@ describe('MembersService', () => {
     const workspace = {url_slug: 'test-workspace', estimate_scale: [1, 2, 3], }
     const memberData = {id: 'UUID1', name: 'Test Member', mention_name: 'TestMember', workspace2: workspace, deactivated: false, display_icon: '', email_address: 'test@member.com', gravatar_hash: 'hash', is_owner: false, two_factor_auth_enabled: true} as MemberProfileApiData
     const {http, mock} = mockHttp()
-    mock.onGet().reply(200, memberData)
+    mock.onGet('/member').reply(200, memberData)
     const membersService = new MembersService({http})
     const memberProfile = await membersService.getAuthenticatedMemberProfile()
     expect(memberProfile.id).toBe('UUID1')
@@ -39,7 +40,7 @@ describe('MembersService', () => {
 
   it('should throw an error if request fails', async () => {
     const {http, mock} = mockHttp()
-    mock.onGet().reply(500)
+    mock.onGet('/member').reply(500)
     const membersService = new MembersService({http})
     await expect(membersService.getAuthenticatedMemberProfile()).rejects.toThrow('Failed to get member profile')
     expect(mockHandleResponseFailure).toHaveBeenCalledTimes(1)

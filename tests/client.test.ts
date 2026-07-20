@@ -17,7 +17,7 @@ describe('Client', () => {
   /** The client is private by design; tests reach in to bind a mock adapter to it. */
   function adapterFor(client: Client): AxiosMockAdapter {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return new AxiosMockAdapter((client as any).http) 
+    return new AxiosMockAdapter((client as any).http)
   }
 
   it('authenticates requests with the key passed to the constructor', async () => {

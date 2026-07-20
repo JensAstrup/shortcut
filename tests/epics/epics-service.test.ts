@@ -27,10 +27,10 @@ describe('Epics service', () => {
     http = stubHttp()
   })
 
-  it('should get workflow', () => {
+  it('should get workflow', async () => {
     (http.get as jest.Mock).mockResolvedValue({data: {id: 1, name: 'Workflow 1'}})
     const service = new EpicsService({http})
-    expect(service.getWorkflow()).resolves.toEqual({id: 1, name: 'Workflow 1'})
+    await expect(service.getWorkflow()).resolves.toEqual({id: 1, name: 'Workflow 1'})
     expect(http.get).toHaveBeenCalledWith('/epic-workflow')
   })
 
