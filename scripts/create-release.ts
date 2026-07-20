@@ -2,11 +2,12 @@ import { basename } from 'path'
 
 import { config } from 'dotenv'
 import { execa } from 'execa'
-import { Octokit } from 'octokit'
+import type { Octokit } from 'octokit'
 import OpenAI from 'openai'
 import ora from 'ora'
 
 import { getNewVersion } from './utils/get-new-version'
+import { getOctokit, getRepo } from './utils/github'
 
 
 config({ path: '.env.local' })
@@ -73,19 +74,6 @@ type GitHubIssue = {
   title: string
   body?: string | null
   pull_request?: unknown
-}
-
-function getOctokit(): Octokit {
-  return new Octokit({
-    auth: process.env.GITHUB_TOKEN!,
-  })
-}
-
-function getRepo(): { owner: string, repo: string } {
-  return {
-    owner: process.env.GITHUB_REPO_OWNER!,
-    repo: process.env.GITHUB_REPO_NAME!,
-  }
 }
 
 /**

@@ -1,11 +1,12 @@
 import { exec } from 'child_process'
 import { promisify } from 'util'
 
-import { LinearClient } from '@linear/sdk'
 import dotenv from 'dotenv'
 import OpenAI from 'openai'
 import { zodTextFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
+
+import { getOctokit, getRepo } from './github'
 
 
 dotenv.config({ path: '.env.local' })
@@ -16,7 +17,7 @@ const execPromise = promisify(exec)
 interface CommitInfo {
   sha: string
   message: string
-  linearIssueId?: string
+  issueNumber?: number
   description: string
 }
 
@@ -35,14 +36,6 @@ async function executeGitCommand(command: string): Promise<string> {
   }
 }
 
-function getLinearClient(): LinearClient {
-  const token = process.env.LINEAR_API_TOKEN
-  if (!token) {
-    throw new Error('LINEAR_API_TOKEN environment variable is not set')
-  }
-  return new LinearClient({ accessToken: token })
-}
-
 function getOpenAIClient(): OpenAI {
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey) {
@@ -53,11 +46,17 @@ function getOpenAIClient(): OpenAI {
   })
 }
 
-async function getIssueDetails(issueId: string): Promise<string> {
+/**
+ * Fetches the body (or title, if the body is empty) of a GitHub issue or pull request
+ */
+async function getIssueDetails(issueNumber: number): Promise<string> {
   try {
-    const linearClient = getLinearClient()
-    const linearIssue = await linearClient.issue(issueId)
-    return linearIssue.description || linearIssue.title
+    const octokit = getOctokit()
+    const issue = await octokit.rest.issues.get({
+      ...getRepo(),
+      issue_number: issueNumber,
+    })
+    return issue.data.body || issue.data.title
   }
   catch {
     return 'Failed to fetch issue description'
@@ -65,13 +64,13 @@ async function getIssueDetails(issueId: string): Promise<string> {
 }
 
 /**
- * Extract Linear issue ID from commit message
- * Looks for pattern SHA-<number>
+ * Extract a GitHub issue number from a commit message
+ * The number is a bare leading value, e.g. "326 Inject axios instance (#335)"
  */
-function extractLinearIssueId(commitMessage: string): string | undefined {
-  const shaPattern = /SHA-(\d+)/i
-  const match = commitMessage.match(shaPattern)
-  return match ? match[1] : undefined
+function extractIssueNumber(commitMessage: string): number | undefined {
+  const issuePattern = /^(\d+)\b/
+  const match = commitMessage.match(issuePattern)
+  return match?.[1] ? Number(match[1]) : undefined
 }
 
 /**
@@ -94,17 +93,17 @@ async function getCommitsBetweenBranches(): Promise<CommitInfo[]> {
     const sha = parts[0] || 'unknown'
     const messageParts = parts.slice(1)
     const message = messageParts.join('|') || 'No commit message'
-    const linearIssueId = extractLinearIssueId(message)
+    const issueNumber = extractIssueNumber(message)
 
     let description = message
-    if (linearIssueId) {
-      description = await getIssueDetails(linearIssueId)
+    if (issueNumber) {
+      description = await getIssueDetails(issueNumber)
     }
 
     return {
       sha,
       message,
-      linearIssueId,
+      issueNumber,
       description
     }
   })

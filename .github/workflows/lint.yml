@@ -18,8 +18,8 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 24.x
-      - name: Install Yarn
-        run: npm install -g yarn
+      - name: Enable Corepack
+        run: corepack enable
       - name: Install dependencies
         run: yarn install --immutable
       - name: Run ESLint on changed files

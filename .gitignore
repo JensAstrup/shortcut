@@ -1,4 +1,12 @@
 /node_modules/
+
+# Yarn (node-modules linker, corepack-managed release)
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
 .idea/
 /lib/
 /coverage/
