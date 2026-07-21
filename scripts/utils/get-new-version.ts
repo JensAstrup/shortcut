@@ -19,7 +19,7 @@ async function getNewVersion(): Promise<string> {
     return packageJson.version
   }
   catch (error) {
-    throw new Error(`Failed to get version from package.json: ${error instanceof Error ? error.message : String(error)}`)
+    throw new Error(`Failed to get version from package.json: ${error instanceof Error ? error.message : String(error)}`, { cause: error })
   }
 }
 

@@ -32,7 +32,7 @@ async function executeGitCommand(command: string): Promise<string> {
     return stdout.trim()
   }
   catch (error) {
-    throw new Error(`Failed to execute git command: ${error instanceof Error ? error.message : String(error)}`)
+    throw new Error(`Failed to execute git command: ${error instanceof Error ? error.message : String(error)}`, { cause: error })
   }
 }
 
