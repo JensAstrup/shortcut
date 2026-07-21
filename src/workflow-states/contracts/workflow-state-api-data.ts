@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export interface WorkflowStateApiData extends BaseData {
+interface WorkflowStateApiData extends BaseData {
     color: string;
     createdAt: Date;
     description: string;
@@ -15,3 +15,6 @@ export interface WorkflowStateApiData extends BaseData {
     updated_at: Date;
     verb: string | null;
 }
+
+export type { WorkflowStateApiData }
+

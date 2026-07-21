@@ -1,23 +1,22 @@
-import axios from 'axios'
+import {AxiosError, AxiosInstance} from 'axios'
 
 import BaseInterface from '@sx/base-interface'
-import BaseService, {BaseSearchableService} from '@sx/base-service'
 import camelToSnake from '@sx/utils/camel-to-snake'
 import {ShortcutApiFieldType, ShortcutFieldType} from '@sx/utils/field-type'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import {getHeaders} from '@sx/utils/headers'
+import {defaultHttpClient} from '@sx/utils/http'
 import snakeToCamel from '@sx/utils/snake-to-camel'
 
 
 /* The possible operations that can be available on a resource */
-export type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
+type ResourceOperation = 'update' | 'create' | 'delete' | 'comment'
 
 
 /**
  * Base class for all Shortcut resources. Provides methods for creating, updating, and deleting resources.
  * @group Story
  */
-export default abstract class BaseResource<Interface = BaseInterface> {
+abstract class BaseResource<Interface = BaseInterface> {
   [key: string]: ShortcutFieldType
 
   /**
@@ -34,7 +33,6 @@ export default abstract class BaseResource<Interface = BaseInterface> {
    */
   public availableOperations: ResourceOperation[] = []
 
-  public service: BaseService<BaseResource, BaseInterface> | BaseSearchableService<BaseResource, BaseInterface>
   /**
    * Return a Proxy object to intercept property access and set operations on derived classes.
    * The Proxy object will track changes made to the object and store them in the `changedFields` property
@@ -46,15 +44,17 @@ export default abstract class BaseResource<Interface = BaseInterface> {
       Object.assign(this, init)
     }
     this.changedFields = []
-    // Check to ensure that the baseUrl property is overridden in the subclass
+    // Check to ensure that the baseUrl property is overridden in the subclass. Reading the getter is
+    // the check: the base implementation throws. Bound to a name so it reads as a deliberate access
+    // rather than a statement with no effect.
     if (this.constructor === BaseResource) {
-      (this.constructor as typeof BaseResource).baseUrl
+      const _baseUrl = (this.constructor as typeof BaseResource).baseUrl
     }
     return new Proxy(this, {
-      get(target, property, receiver) {
+      get(target, property, receiver): ShortcutFieldType {
         return Reflect.get(target, property, receiver)
       },
-      set(target, property, value, receiver) {
+      set(target, property, value, receiver): boolean {
         // Track all changes made to the object
         if (!target.changedFields.includes(String(property))) {
           target.changedFields.push(String(property))
@@ -73,6 +73,57 @@ export default abstract class BaseResource<Interface = BaseInterface> {
   }
 
   /**
+   * The path for this resource's own requests, relative to the client's base URL.
+   *
+   * Subclasses are inconsistent about where they declare it: some (Story, Label, Team, Iteration,
+   * StoryLink) use `static baseUrl`, while others (Task, Objective, CustomField, LinkedFile,
+   * UploadedFile) need a path derived from instance data and declare it on the instance. Resolving
+   * both here keeps `update()`, `create()` and `delete()` in agreement — previously `delete()` read
+   * only the instance property, so resources with just a static one built a request to
+   * `undefined/<id>`.
+   *
+   * @throws {Error} - Throws if the subclass declares neither form.
+   */
+  protected get resourceUrl(): string {
+    return (this.baseUrl as string | undefined) ?? (this.constructor as typeof BaseResource).baseUrl
+  }
+
+  /**
+   * @internal
+   * Attach the HTTP client that this resource should use for its own requests. Called by services
+   * so that a resource keeps making requests as the {@link Client} that fetched it, rather than
+   * resolving credentials from the environment at call time.
+   *
+   * Defined via `Object.defineProperty` rather than assignment: the resource is a Proxy that records
+   * every `set` into `changedFields`, and a plain assignment here would leak the client into update
+   * request bodies. Subclasses holding child resources should override this to cascade.
+   */
+  public setHttp(http: AxiosInstance): this {
+    Object.defineProperty(this, '_http', {
+      value: http,
+      writable: true,
+      enumerable: false,
+      configurable: true
+    })
+    return this
+  }
+
+  /**
+   * The HTTP client for this resource's requests. Resources obtained from a {@link Client} use that
+   * client's instance; resources constructed directly fall back to one built from the
+   * `SHORTCUT_API_KEY` environment variable.
+   *
+   * @throws {Error} - If no client was attached and `SHORTCUT_API_KEY` is not set
+   */
+  protected get http(): AxiosInstance {
+    const attached = this._http as AxiosInstance | undefined
+    if (attached) return attached
+    const fallback = defaultHttpClient()
+    this.setHttp(fallback)
+    return fallback
+  }
+
+  /**
    * Update the current instance of the resource with the changed fields.
    * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
    * @throws {Error} - Throws an error if the HTTP request fails.
@@ -81,8 +132,9 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('update'))) {
       throw new Error('Update operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
-    const url = `${baseUrl}/${this.id}`
+    // The class index signature widens every property to ShortcutFieldType, so the id is narrowed to
+    // what it actually is before being interpolated.
+    const url = `${this.resourceUrl}/${this.id as string | number}`
     const body = this.changedFields.reduce((acc: Record<string, unknown>, field) => {
       if (field.startsWith('_')) {
         return acc
@@ -91,18 +143,20 @@ export default abstract class BaseResource<Interface = BaseInterface> {
       return acc
     }, {})
 
-    await axios.put(url, body, {headers: getHeaders()})
+    await this.http.put(url, body)
       .catch((error) => {
         handleResponseFailure(error, body)
       }).then((response) => {
         if (!response) {
           return
         }
-        const data: Record<string, ShortcutApiFieldType> = response!.data
+        const data: Record<string, ShortcutApiFieldType> = response.data
         Object.keys(data).forEach(key => {
           this[snakeToCamel(key)] = data[key]
-          this.changedFields = []
         })
+        // Cleared once after the writes rather than on every iteration; each assignment above goes
+        // through the Proxy and re-adds to changedFields, so this has to come last either way.
+        this.changedFields = []
       })
   }
 
@@ -115,7 +169,7 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('create'))) {
       throw new Error('Create operation not available for this resource')
     }
-    const baseUrl = (this.constructor as typeof BaseResource).baseUrl
+    const baseUrl = this.resourceUrl
     const body: Record<string, unknown> = {}
     Object.keys(this).forEach(key => {
       if (this.createFields.includes(key)) {
@@ -123,13 +177,34 @@ export default abstract class BaseResource<Interface = BaseInterface> {
       }
     })
 
-    const response = await axios.post(baseUrl, body, {headers: getHeaders()})
+    // Unlike update(), a failed create rejects rather than resolving, so the error is caught here to
+    // report which fields the API objected to. Previously this surfaced as a bare "422" with the
+    // response body discarded, which says nothing about what was wrong with the request.
+    const response = await this.http.post(baseUrl, body).catch((error: AxiosError) => {
+      handleResponseFailure(error, body)
+      throw new Error(
+        `Error creating resource: HTTP ${error.response?.status} ${JSON.stringify(error.response?.data)}`,
+        {cause: error}
+      )
+    })
     const HTTP_ERROR = 400
     if (response.status >= HTTP_ERROR) {
-      throw new Error('HTTP error ' + response.status)
+      throw new Error('HTTP error ' + response.status + ' ' + JSON.stringify(response.data))
     }
 
-    return Object.assign(this, response.data)
+    // Mirrors update(): the response is raw API JSON, so keys are converted before being applied.
+    // `Object.assign(this, response.data)` would write snake_case properties alongside the existing
+    // camelCase ones, and — because the instance is a Proxy that records every write — would leave
+    // every one of those keys in changedFields. The next save() then PUTs the whole object and the
+    // API rejects it with "disallowed-key" for the read-only fields.
+    const data: Record<string, ShortcutApiFieldType> = response.data
+    Object.keys(data).forEach(key => {
+      this[snakeToCamel(key)] = data[key]
+    })
+    // Cleared after the writes above, not during, so the freshly created resource starts clean.
+    this.changedFields = []
+
+    return this
   }
 
   /**
@@ -162,8 +237,8 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     if (!(this.availableOperations.includes('delete'))) {
       throw new Error('Delete operation not available for this resource')
     }
-    const url = `${this.baseUrl}/${this.id}`
-    const response = await axios.delete(url, {headers: getHeaders()}).catch((error) => {
+    const url = `${this.resourceUrl}/${this.id as string | number}`
+    const response = await this.http.delete(url).catch((error) => {
       handleResponseFailure(error, {})
     })
     if(!response) {
@@ -171,3 +246,6 @@ export default abstract class BaseResource<Interface = BaseInterface> {
     }
   }
 }
+
+export { type ResourceOperation, BaseResource as default }
+

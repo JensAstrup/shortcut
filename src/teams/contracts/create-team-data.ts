@@ -1,7 +1,7 @@
 import BaseCreateData from '@sx/base-create-data'
 
 
-export default interface CreateTeamData extends BaseCreateData {
+interface CreateTeamData extends BaseCreateData {
     color?: string
     colorKey?: string
     description?: string
@@ -11,3 +11,6 @@ export default interface CreateTeamData extends BaseCreateData {
     name: string
     workflowIds?: number[]
 }
+
+export { CreateTeamData as default }
+

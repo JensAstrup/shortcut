@@ -1,8 +1,6 @@
-import UUID from '@sx/utils/uuid'
+// UUID is an alias for string, so listing it alongside string here was a redundant union member.
+type ShortcutFieldType = string | number | boolean | Date | [] | object | URL | null | undefined
 
-
-type ShortcutFieldType = string | number | boolean | Date | UUID | [] | object | URL | null | undefined
-
-type ShortcutApiFieldType = string | number | boolean | string[] | number[] | boolean[]  | UUID | [] | object | null
+type ShortcutApiFieldType = string | number | boolean | string[] | number[] | boolean[] | [] | object | null
 
 export {ShortcutApiFieldType, ShortcutFieldType}

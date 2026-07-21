@@ -2,19 +2,18 @@ import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import IterationInterface, {IterationStats, IterationStatus, Label} from '@sx/iterations/contracts/iteration-interface'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
-import {getHeaders} from '@sx/utils/headers'
 
 
 /**
  * @InheritDoc
  */
 class Iteration extends BaseResource<IterationInterface> implements IterationInterface {
-  public static baseUrl = 'https://api.app.shortcut.com/api/v3/iterations'
+  public static baseUrl = '/iterations'
   public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
   get teams(): Promise<Team[]> {
-    const service = new TeamsService({headers: getHeaders()})
+    const service = new TeamsService({http: this.http})
     return service.getMany(this.groupIds)
   }
 

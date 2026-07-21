@@ -2,7 +2,7 @@ import BaseData from '@sx/base-data'
 import {IterationStats, Label} from '@sx/iterations/contracts/iteration-interface'
 
 
-export interface IterationApiData extends BaseData {
+interface IterationApiData extends BaseData {
     app_url: string;
     created_at: Date;
     end_date: Date;
@@ -21,3 +21,6 @@ export interface IterationApiData extends BaseData {
     status: 'unstarted' | 'started' | 'done';
     updated_at: Date;
 }
+
+export type { IterationApiData }
+

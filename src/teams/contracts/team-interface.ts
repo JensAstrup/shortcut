@@ -1,7 +1,7 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export default interface TeamInterface extends BaseInterface {
+interface TeamInterface extends BaseInterface {
     appUrl: string
     archived: boolean
     color: string
@@ -17,3 +17,6 @@ export default interface TeamInterface extends BaseInterface {
     numStoriesStarted: number
     workflowIds: number[]
 }
+
+export { TeamInterface as default }
+

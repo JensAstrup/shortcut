@@ -3,12 +3,11 @@ import CustomField from '@sx/custom-fields/custom-field'
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story-custom-field-interface'
-import { getHeaders } from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class StoryCustomField extends BaseResource<StoryInterface> implements StoryCustomFieldInterface {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/stories'
+class StoryCustomField extends BaseResource<StoryInterface> implements StoryCustomFieldInterface {
+  public baseUrl = '/stories'
   public availableOperations = []
   private customField: CustomField | null = null
 
@@ -27,7 +26,7 @@ export default class StoryCustomField extends BaseResource<StoryInterface> imple
     if (this.customField) {
       return Promise.resolve(this.customField)
     }
-    const service: CustomFieldsService = new CustomFieldsService({ headers: getHeaders() })
+    const service: CustomFieldsService = new CustomFieldsService({http: this.http})
     const field: Promise<CustomField> = service.get(this.fieldId)
     field.then((field: CustomField) => this.customField = field)
     return field
@@ -45,3 +44,6 @@ export default class StoryCustomField extends BaseResource<StoryInterface> imple
   valueId: UUID
   id: UUID | number
 }
+
+export { StoryCustomField as default }
+

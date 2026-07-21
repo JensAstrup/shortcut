@@ -10,7 +10,7 @@ import snakeToCamel from '@sx/utils/snake-to-camel'
 type AnyObject = Record<string, ShortcutFieldType>
 
 function convertApiFields<Input extends BaseData, Interface extends BaseInterface>(object: Input): Interface {
-  const convertObject = (obj: BaseData | BaseData[]): BaseData | BaseData[]=> {
+  function convertObject(obj: BaseData | BaseData[]): BaseData | BaseData[] {
     if (Array.isArray(obj)) {
       return obj.map(item => <BaseData>convertObject(item)) // Recursively process each item in the array
     }
@@ -38,7 +38,7 @@ function convertApiFields<Input extends BaseData, Interface extends BaseInterfac
 }
 
 function convertToApiFields<Input extends BaseCreateInterface, U extends BaseData>(object: Input): U {
-  const convertObject = (obj: BaseCreateInterface | BaseCreateInterface[]): AnyObject | Array<object> => {
+  function convertObject(obj: BaseCreateInterface | BaseCreateInterface[]): AnyObject | Array<object> {
     if (Array.isArray(obj)) {
       return obj.map(item => convertObject(item)) // Recursively process each item in the array
     }

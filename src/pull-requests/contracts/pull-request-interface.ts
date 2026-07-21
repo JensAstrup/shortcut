@@ -1,7 +1,7 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export interface PullRequestInterface extends BaseInterface{
+interface PullRequestInterface extends BaseInterface{
     branchId: number
     branchName: string
     buildStatus: string
@@ -27,3 +27,5 @@ export interface PullRequestInterface extends BaseInterface{
     url: string
     vcsLabels: Record<string, unknown>[]
 }
+
+export type { PullRequestInterface }

@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export interface StoryCommentInterface extends BaseInterface {
+interface StoryCommentInterface extends BaseInterface {
     appUrl: string
     authorId: UUID
     blocker: boolean
@@ -20,3 +20,6 @@ export interface StoryCommentInterface extends BaseInterface {
     unblocksParent: boolean
     updatedAt: Date
 }
+
+export type { StoryCommentInterface }
+

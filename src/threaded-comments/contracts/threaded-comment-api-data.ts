@@ -2,7 +2,7 @@ import BaseData from '@sx/base-data'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface ThreadedCommentApiData extends BaseData {
+interface ThreadedCommentApiData extends BaseData {
     app_url: string
     author_id: UUID
     comments: ThreadedCommentApiData[]
@@ -17,3 +17,5 @@ export default interface ThreadedCommentApiData extends BaseData {
     text: string
     updated_at: string
 }
+
+export { ThreadedCommentApiData as default }

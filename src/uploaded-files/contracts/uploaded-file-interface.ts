@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface UploadedFileInterface extends BaseInterface {
+interface UploadedFileInterface extends BaseInterface {
     contentType: string
     createdAt: Date
     description: string | null
@@ -19,3 +19,6 @@ export default interface UploadedFileInterface extends BaseInterface {
     updatedAt: Date | null
     uploaderId: UUID
 }
+
+export { UploadedFileInterface as default }
+

@@ -45,10 +45,10 @@ class Bundle<R extends BaseResource>{
       this.resources = <R[]>bundled
     }
     return new Proxy(this, {
-      get(target, property: string | symbol, receiver) {
+      get(target, property: string | symbol, receiver): unknown {
         return Reflect.get(target, property, receiver)
       },
-      set(target, property: string | symbol, value, receiver) {
+      set(target, property: string | symbol, value, receiver): boolean {
         // Check that property is defined on R
         if (!Reflect.has(target.resources[FIRST_BUNDLED], property)) {
           throw new Error(`Property ${String(property)} is not defined on ${target.resources[FIRST_BUNDLED].constructor.name}`)

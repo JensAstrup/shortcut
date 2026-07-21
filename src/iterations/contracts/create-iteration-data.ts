@@ -2,7 +2,7 @@ import BaseCreateData from '@sx/base-create-data'
 import {Label} from '@sx/iterations/contracts/iteration-interface'
 
 
-export default interface CreateIterationData extends BaseCreateData {
+interface CreateIterationData extends BaseCreateData {
     description?: string;
     name: string;
     startDate: Date;
@@ -11,3 +11,6 @@ export default interface CreateIterationData extends BaseCreateData {
     labels: Label[];
     groupIds?: string[];
 }
+
+export { CreateIterationData as default }
+

@@ -2,16 +2,18 @@ import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import UUID from '@sx/utils/uuid'
 
 
-export default class Task extends BaseResource {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/stories/'
+class Task extends BaseResource {
+  public baseUrl = '/stories/'
   public availableOperations: ResourceOperation[] = ['update', 'delete']
   public createFields = ['complete', 'createdAt', 'description', 'externalId', 'ownerIds', 'updatedAt']
 
   constructor(init: object) {
     super()
     Object.assign(this, init)
+    // Set before resetting changedFields: assigning it afterwards left 'baseUrl' permanently marked
+    // as changed, so every update() sent a spurious base_url field in the request body.
+    this.baseUrl = `/stories/${this.storyId}/tasks`
     this.changedFields = []
-    this.baseUrl = `https://api.app.shortcut.com/api/v3/stories/${this.storyId}/tasks`
   }
 
   complete: boolean
@@ -28,3 +30,6 @@ export default class Task extends BaseResource {
   storyId: number
   updatedAt: Date
 }
+
+export { Task as default }
+

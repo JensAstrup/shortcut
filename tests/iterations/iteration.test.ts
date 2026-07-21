@@ -4,13 +4,9 @@ import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
 
 
-jest.mock('../../src/utils/headers', () => ({
-  getHeaders: jest.fn().mockReturnValue({Authorization: 'Bearer token'})
-}))
-
 describe('Iteration class', () => {
   it('should have the correct baseUrl static property', () => {
-    expect(Iteration.baseUrl).toBe('https://api.app.shortcut.com/api/v3/iterations')
+    expect(Iteration.baseUrl).toBe('/iterations')
   })
 
   it('returns an array of Teams', async () => {

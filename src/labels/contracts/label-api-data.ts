@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export default interface LabelApiData extends BaseData {
+interface LabelApiData extends BaseData {
     app_url: string
     archived: boolean
     color: string | null
@@ -14,3 +14,6 @@ export default interface LabelApiData extends BaseData {
     stats: object[]
     updated_at: string | null
 }
+
+export { LabelApiData as default }
+

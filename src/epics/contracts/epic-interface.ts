@@ -2,7 +2,7 @@ import BaseInterface from '@sx/base-interface'
 import UUID from '@sx/utils/uuid'
 
 
-export default interface EpicInterface extends BaseInterface {
+interface EpicInterface extends BaseInterface {
     appUrl: string
     archived: boolean
     associatedGroups: []
@@ -40,3 +40,6 @@ export default interface EpicInterface extends BaseInterface {
     storiesWithoutProjects: number
     updatedAt: string | null
 }
+
+export { EpicInterface as default }
+

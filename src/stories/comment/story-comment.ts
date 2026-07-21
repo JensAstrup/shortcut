@@ -1,16 +1,13 @@
-import axios from 'axios'
-
 import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import Story from '@sx/stories/story'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
-export default class StoryComment extends BaseResource<StoryCommentInterface> implements StoryCommentInterface {
+class StoryComment extends BaseResource<StoryCommentInterface> implements StoryCommentInterface {
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   constructor(init: object) {
@@ -31,7 +28,7 @@ export default class StoryComment extends BaseResource<StoryCommentInterface> im
    */
   public async react(emoji: string): Promise<void> {
     const url: string = `${Story.baseUrl}/${this.storyId}/comments/${this.id}/reactions`
-    await axios.post(url, {emoji}, {headers: getHeaders()}).catch((error) => {
+    await this.http.post(url, {emoji}).catch((error) => {
       handleResponseFailure(error, {emoji})
       throw new Error(`Error reacting to comment: ${error}`)
     })
@@ -51,12 +48,12 @@ export default class StoryComment extends BaseResource<StoryCommentInterface> im
   public async comment(comment: string): Promise<StoryComment | void> {
     const url = `${Story.baseUrl}/${this.storyId}/comments`
     const requestData: Record<string, string | number> = {text: comment, parentId: this.id}
-    const response = await axios.post(url, requestData, {headers: getHeaders()}).catch((error) => {
+    const response = await this.http.post(url, requestData).catch((error) => {
       handleResponseFailure(error, requestData)
       throw new Error(`Error creating comment: ${error}`)
     })
     const data: StoryCommentApiData = response.data
-    return convertApiFields(data) as StoryComment
+    return new StoryComment(convertApiFields<StoryCommentApiData, StoryCommentInterface>(data))
   }
 
   authorId: string
@@ -77,3 +74,6 @@ export default class StoryComment extends BaseResource<StoryCommentInterface> im
   position: number
   unblocksParent: boolean
 }
+
+export { StoryComment as default }
+

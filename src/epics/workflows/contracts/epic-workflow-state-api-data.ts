@@ -1,7 +1,7 @@
 import BaseData from '@sx/base-data'
 
 
-export default interface EpicWorkflowStateApiData extends BaseData {
+interface EpicWorkflowStateApiData extends BaseData {
     color: string
     created_at: string
     description: string
@@ -12,3 +12,6 @@ export default interface EpicWorkflowStateApiData extends BaseData {
     type: string
     updated_at: string
 }
+
+export { EpicWorkflowStateApiData as default }
+

@@ -1,11 +1,11 @@
 import BaseInterface from '@sx/base-interface'
 
 
-export interface Label {
-}
+// Placeholders: the API shapes are not yet modelled. `object` rather than an empty interface, which
+// would accept any non-nullish value including primitives.
+type Label = object
 
-export interface IterationStats {
-}
+type IterationStats = object
 
 enum IterationStatus {
     DONE = 'done',
@@ -34,4 +34,4 @@ interface IterationInterface extends BaseInterface {
 }
 
 export default IterationInterface
-export {IterationStatus}
+export { IterationStatus, type Label, type IterationStats }

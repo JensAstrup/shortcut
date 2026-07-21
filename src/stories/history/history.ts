@@ -1,3 +1,5 @@
+import {AxiosInstance} from 'axios'
+
 import BaseResource from '@sx/base-resource'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
@@ -6,7 +8,6 @@ import HistoryAction from '@sx/stories/history/actions/history-action'
 import HistoryInterface from '@sx/stories/history/contracts/history-interface'
 import FlatHistory from '@sx/stories/history/flat-history'
 import ResourceConverter from '@sx/utils/convert-to-resource'
-import {getHeaders} from '@sx/utils/headers'
 import UUID from '@sx/utils/uuid'
 
 
@@ -18,15 +19,26 @@ class History extends BaseResource<HistoryInterface> implements HistoryInterface
     this.instantiateActions()
   }
 
-  private instantiateActions() {
+  private instantiateActions(): void {
     this.actions = this.actions?.map(action => new HistoryAction(action))
+  }
+
+  /**
+   * @internal
+   * Actions are built in the constructor, before a client is attached, so the client is handed down
+   * to them here.
+   */
+  public setHttp(http: AxiosInstance): this {
+    super.setHttp(http)
+    this.actions?.forEach((action: HistoryAction) => action.setHttp(http))
+    return this
   }
 
   /**
    * Get an instance of the member that made the change
    */
   get member(): Promise<Member | null> {
-    const service = new MembersService({headers: getHeaders()})
+    const service = new MembersService({http: this.http})
     return service.get(this.memberId)
   }
 
@@ -39,7 +51,7 @@ class History extends BaseResource<HistoryInterface> implements HistoryInterface
     // @ts-expect-error idk and I'm not in the mood to figure it out
     const changes: Array<{ workflowStateId: HistoryActionChangeInterface}> = actions.map(action => action.changes)
     const convertedChanges: Array<FlatHistory> = []
-    const converter = new ResourceConverter()
+    const converter = new ResourceConverter(this.http)
     for (const obj of changes) {
       if (obj === undefined) continue
       if (obj.workflowStateId) {

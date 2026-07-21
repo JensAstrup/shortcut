@@ -6,7 +6,7 @@ import WorkflowInterface from '@sx/workflows/contracts/workflow-interface'
 /**
  * @inheritDoc
  */
-export default class Workflow extends BaseResource<WorkflowInterface> implements WorkflowInterface {
+class Workflow extends BaseResource<WorkflowInterface> implements WorkflowInterface {
   constructor(init: object) {
     super()
     Object.assign(this, init)
@@ -25,3 +25,6 @@ export default class Workflow extends BaseResource<WorkflowInterface> implements
   teamId: number
   updatedAt: Date
 }
+
+export { Workflow as default }
+

@@ -3,8 +3,8 @@ import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-in
 import UUID from '@sx/utils/uuid'
 
 
-export default class UploadedFile extends BaseResource<UploadedFileInterface> implements UploadedFileInterface {
-  public baseUrl = 'https://api.app.shortcut.com/api/v3/files'
+class UploadedFile extends BaseResource<UploadedFileInterface> implements UploadedFileInterface {
+  public baseUrl = '/files'
   public availableOperations: ResourceOperation[] = ['update', 'delete']
 
   constructor(init: UploadedFileInterface) {
@@ -29,3 +29,6 @@ export default class UploadedFile extends BaseResource<UploadedFileInterface> im
   updatedAt: Date | null
   uploaderId: UUID
 }
+
+export { UploadedFile as default }
+
