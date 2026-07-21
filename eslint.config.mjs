@@ -44,6 +44,14 @@ export default [
     }
   },
   {
+    files: ['scripts/**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.cli.json'
+      }
+    }
+  },
+  {
     files: ['**/*.test.*', 'tests/**'],
     // Scoped here rather than to all **/*.ts so that describe/it/expect in src are still undefined-var errors.
     languageOptions: {
