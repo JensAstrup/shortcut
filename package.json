@@ -38,7 +38,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@babel/preset-env": "7.24.3",
+    "@babel/preset-env": "8.0.2",
     "@babel/preset-typescript": "7.24.1",
     "@jens_astrup/tscpaths": "0.0.11",
     "@jest/globals": "29.7.0",
