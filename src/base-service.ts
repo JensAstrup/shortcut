@@ -107,7 +107,7 @@ function Gettable<TBase extends Constructor<AnyServiceBase>>(
       if (response.status >= HTTP_ERROR) {
         throw new Error('HTTP error ' + response.status)
       }
-      const instanceData = convertApiFields<BaseData, InterfaceOf<TBase>>(response.data)
+      const instanceData = convertApiFields<BaseData, InterfaceOf<TBase>>(response.data as BaseData)
       const instance = this.build(instanceData) as ResourceOf<TBase>
       this.instances[id] = instance
       return instance
@@ -130,8 +130,8 @@ function Listable<TBase extends Constructor<AnyServiceBase>>(
       if (response.status >= HTTP_ERROR) {
         throw new Error('HTTP error ' + response.status)
       }
-      const instancesData: Record<string, ShortcutApiFieldType>[] = response.data ?? []
-      const resources = instancesData.map(instance => this.build(convertApiFields(instance))) as Array<ResourceOf<TBase>>
+      const instancesData: Record<string, ShortcutApiFieldType>[] = response.data as Record<string, ShortcutApiFieldType>[] ?? []
+      const resources = instancesData.map(instance => this.build(convertApiFields<BaseData, InterfaceOf<TBase>>(instance)) as ResourceOf<TBase>)
       this.instances = resources.reduce((acc: Record<string, ResourceOf<TBase>>, resource) => {
         let id: string = resource.id as string
         if (!isNaN(Number(resource.id))) {
@@ -194,7 +194,7 @@ function Searchable<TBase extends Constructor<AnyServiceBase>>(
         return new SearchResponse<ResourceOf<TBase>, InterfaceOf<TBase>>({
           query: query,
           next: nextPage,
-          results: resourceData.map(r => this.build(convertApiFields<BaseData, InterfaceOf<TBase>>(r))) as Array<ResourceOf<TBase>>,
+          results: resourceData.map(r => this.build(convertApiFields<BaseData, InterfaceOf<TBase>>(r)) as ResourceOf<TBase>),
           service: this
         })
       }
