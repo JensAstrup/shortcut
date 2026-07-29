@@ -11,6 +11,7 @@ class Iteration extends BaseResource<IterationInterface> implements IterationInt
   public static baseUrl = '/iterations'
   public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
   public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
+  protected dateOnlyFields: string[] = ['startDate', 'endDate']
 
   get teams(): Promise<Team[]> {
     const service = new TeamsService({http: this.http})
