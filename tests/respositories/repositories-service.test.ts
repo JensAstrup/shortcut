@@ -8,6 +8,9 @@ describe('RepositoriesService', () => {
     const repositoriesService = new RepositoriesService({http: stubHttp()})
     expect(repositoriesService).toBeInstanceOf(RepositoriesService)
     expect(repositoriesService.baseUrl).toEqual('/repositories')
-    expect(repositoriesService.availableOperations).toEqual(['get', 'list'])
+    expect(typeof repositoriesService.get).toBe('function')
+    expect(typeof repositoriesService.list).toBe('function')
+    // @ts-expect-error repositories are not searchable
+    void repositoriesService.search
   })
 })

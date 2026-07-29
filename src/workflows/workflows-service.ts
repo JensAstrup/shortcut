@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 
-import BaseService, {ServiceOperation} from '@sx/base-service'
+import {Gettable, Listable, ServiceBaseFor} from '@sx/base-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {WorkflowStateApiData} from '@sx/workflow-states/contracts/workflow-state-api-data'
 import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
@@ -29,10 +29,9 @@ const WORKFLOW_STATES_BY_CLIENT = new WeakMap<AxiosInstance, Record<number, Work
  */
 const POPULATION_BY_CLIENT = new WeakMap<AxiosInstance, Promise<WorkflowStateInterface[]>>()
 
-class WorkflowsService extends BaseService<Workflow, WorkflowInterface> {
+class WorkflowsService extends Listable(Gettable(ServiceBaseFor<Workflow, WorkflowInterface>())) {
   public baseUrl = '/workflows'
   protected factory = (data: WorkflowInterface): Workflow => new Workflow(data)
-  public availableOperations: ServiceOperation[] = ['get', 'list']
 
   private get workflowStates(): Record<number, WorkflowStateInterface> {
     let cached = WORKFLOW_STATES_BY_CLIENT.get(this.http)

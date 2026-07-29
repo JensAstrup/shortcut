@@ -1,6 +1,6 @@
 import {AxiosError} from 'axios'
 
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import {StoryApiData} from '@sx/stories/contracts/story-api-data'
@@ -14,10 +14,9 @@ import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 /**
  * @inheritDoc
  */
-class Team extends BaseResource<TeamInterface> implements TeamInterface {
+class Team extends Deletable(Creatable(Updatable(ResourceBaseFor<TeamInterface>()))) implements TeamInterface {
   public static baseUrl = '/groups' // Shortcut renamed groups to teams
   public createFields: string[] = ['name', 'mentionName']
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
   constructor(init: TeamInterface) {
     super()

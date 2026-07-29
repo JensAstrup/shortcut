@@ -1,7 +1,10 @@
-import BaseResource from '@sx/base-resource'
+import {ResourceCore} from '@sx/base-resource'
 import {ShortcutFieldType} from '@sx/utils/field-type'
 import UUID from '@sx/utils/uuid'
 
+
+/** A resource that can participate in a bulk update. */
+type BundleResource = ResourceCore & {update(): Promise<void>}
 
 /**
  * To make bulk updates to multiple instances of a resource, use the Bundle class. A bundle can be created with a list of instance ids and a
@@ -14,14 +17,14 @@ import UUID from '@sx/utils/uuid'
  * bundle.estimate = 3
  * bundle.update() // Changes are propagated to the instances and sent to the API
  */
-class Bundle<R extends BaseResource>{
+class Bundle<R extends BundleResource>{
   [key: string]: ShortcutFieldType
 
   id?: string | number | null | undefined
 
   public changedFields: string[] = []
   public instanceIds: UUID[] | number[] = []
-  public resources: BaseResource[]
+  public resources: BundleResource[]
   public factory: (data: { id: UUID | number }) => R
 
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // Resources
-import BaseResource from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, ResourceCore, Updatable} from '@sx/base-resource'
 import Client from '@sx/client'
 import Iteration from '@sx/iterations/iteration'
 import Member from '@sx/members/member'
@@ -18,7 +18,7 @@ import CustomField from '@sx/custom-fields/custom-field'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 
 // Services
-import BaseService from '@sx/base-service'
+import {Gettable, Listable, Searchable, ServiceBase, ServiceBaseFor} from '@sx/base-service'
 import StoriesService from '@sx/stories/stories-service'
 import IterationsService from '@sx/iterations/iterations-service'
 import TeamsService from '@sx/teams/teams-service'
@@ -59,7 +59,6 @@ import Bundle from '@sx/bundle'
 export default Client
 export {Client, Iteration, Member, Story, Team, Workflow, Epic, Objective, Label, KeyResult, LinkedFile, CustomField, UploadedFile}
 export {
-  BaseService,
   StoriesService,
   IterationsService,
   TeamsService,
@@ -72,6 +71,11 @@ export {
   LinkedFilesService,
   CustomFieldsService,
   UploadedFilesService,
+  ServiceBase,
+  ServiceBaseFor,
+  Gettable,
+  Listable,
+  Searchable,
 }
 export {
   IterationInterface,
@@ -94,4 +98,4 @@ export {
   UploadedFileInterface
 
 }
-export {Bundle, BaseResource, SearchResponse}
+export {Bundle, ResourceCore, ResourceBaseFor, Updatable, Creatable, Deletable, SearchResponse}

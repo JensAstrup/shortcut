@@ -1,13 +1,13 @@
 import BaseInterface from '@sx/base-interface'
-import BaseResource from '@sx/base-resource'
-import {BaseSearchableService} from '@sx/base-service'
+import {ResourceBaseFor} from '@sx/base-resource'
+import {Searchable, ServiceBaseFor} from '@sx/base-service'
 import {SearchResponse} from '@sx/index'
 
 import {stubHttp} from '../helpers/http'
 
 
-// Mock for BaseResource
-class MockResource extends BaseResource {
+// Mock for ResourceCore
+class MockResource extends ResourceBaseFor() {
   id: string
 
   constructor(id: string) {
@@ -16,8 +16,8 @@ class MockResource extends BaseResource {
   }
 }
 
-// Mock for BaseSearchableService
-class MockService extends BaseSearchableService<MockResource, BaseInterface> {
+// Mock for a searchable service
+class MockService extends Searchable(ServiceBaseFor<MockResource, BaseInterface>()) {
 }
 
 describe('SearchResponse', () => {

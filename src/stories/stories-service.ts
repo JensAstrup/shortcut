@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 
-import {BaseSearchableService, ServiceOperation} from '@sx/base-service'
+import {Gettable, Searchable, ServiceBaseFor} from '@sx/base-service'
 import {StoryApiData} from '@sx/stories/contracts/story-api-data'
 import StoryInterface from '@sx/stories/contracts/story-interface'
 import Story from '@sx/stories/story'
@@ -11,10 +11,9 @@ import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 /**
  * @inheritDoc
  */
-class StoriesService extends BaseSearchableService<Story, StoryInterface> {
+class StoriesService extends Searchable(Gettable(ServiceBaseFor<Story, StoryInterface>())) {
   public baseUrl = '/stories'
   protected factory = (data: object): Story => new Story(data)
-  public availableOperations: ServiceOperation[] = ['get', 'search']
 
   constructor(init: { http: AxiosInstance }) {
     super(init)

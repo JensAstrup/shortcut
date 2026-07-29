@@ -29,7 +29,6 @@ describe('BaseResource', () => {
   describe('save method', () => {
     it('calls update if id exists', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['update']
       resource.changedFields = []
       resource.name = 'Updated Name'
       resource.labels = [{name: 'label1'}, {name: 'label2'}] as Label[];
@@ -53,17 +52,8 @@ describe('BaseResource', () => {
       expect(resource.name).toBe('Updated Name')
     })
 
-    it('throws an error on update if operation is not available', async () => {
-      const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['create']
-      resource.name = 'Updated Name'
-
-      await expect(resource.save()).rejects.toThrow('Update operation not available for this resource')
-    })
-
     it('logs errors when server responds with a non-success status code', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['update']
       const mockError = {
         response: {
           status: 500,
@@ -83,7 +73,6 @@ describe('BaseResource', () => {
     // Test when no response is received (e.g., network issues)
     it('logs errors when request is made but no response is received', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['update']
       const mockError = {
         request: 'Request made but no response received'
       };
@@ -97,7 +86,6 @@ describe('BaseResource', () => {
     // Test when there is an error setting up the request
     it('logs errors when an error occurs in setting up the request', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['update']
       const mockError = new Error('Error in setting up the request');
       (http.put as jest.Mock).mockRejectedValue(mockError)
 
@@ -108,7 +96,6 @@ describe('BaseResource', () => {
 
     it('calls create if id does not exist', async () => {
       const resource = new Story({}).setHttp(http)
-      resource.availableOperations = ['create']
       resource.name = 'New Name';
       (http.post as jest.Mock).mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
 
@@ -121,7 +108,6 @@ describe('BaseResource', () => {
 
     it('calls create if id does not exist and uses createFields', async () => {
       const resource = new Story({}).setHttp(http)
-      resource.availableOperations = ['create']
       resource.createFields = ['snake_name']
       resource.name = 'New Name';
       (http.post as jest.Mock).mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
@@ -131,14 +117,6 @@ describe('BaseResource', () => {
       expect(http.post).toHaveBeenCalledWith(expect.any(String), expect.any(Object))
       expect(resource.id).toBe(123)
       expect(resource.name).toBe('New Name')
-    })
-
-    it('throws an error on create if operation is not available', async () => {
-      const resource = new Story({}).setHttp(http)
-      resource.availableOperations = ['update']
-      resource.name = 'New Name'
-
-      await expect(resource.save()).rejects.toThrow('Create operation not available for this resource')
     })
 
     // Iteration is the resource that actually declares `dateOnlyFields`, so it exercises the real
@@ -173,7 +151,6 @@ describe('BaseResource', () => {
 
     it('leaves Date fields not listed in dateOnlyFields as full Date values', async () => {
       const resource = new Story({}).setHttp(http)
-      resource.availableOperations = ['create']
       resource.createFields = ['deadline']
       const deadline = new Date('2026-07-29T12:31:07.768Z')
       resource.deadline = deadline
@@ -190,7 +167,6 @@ describe('BaseResource', () => {
   describe('delete method', () => {
     it('sends a delete request for the resource', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['delete']
       const del = http.delete as jest.Mock
       del.mockResolvedValue({})
 
@@ -205,7 +181,6 @@ describe('BaseResource', () => {
     // to one resolution path cannot silently break the other.
     it('builds the delete url from a static baseUrl', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['delete']
       const del = http.delete as jest.Mock
       del.mockResolvedValue({})
 
@@ -219,7 +194,6 @@ describe('BaseResource', () => {
     it('builds the delete url from an instance baseUrl', async () => {
       // Task derives its instance baseUrl from storyId in the constructor, so the fixture needs one.
       const resource = new Task({id: 456, storyId: 789}).setHttp(http)
-      resource.availableOperations = ['delete']
       const del = http.delete as jest.Mock
       del.mockResolvedValue({})
 
@@ -230,16 +204,8 @@ describe('BaseResource', () => {
       expect(url).not.toContain('undefined')
     })
 
-    it('throws an error if delete operation is not available', async () => {
-      const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['update']
-
-      await expect(resource.delete()).rejects.toThrow('Delete operation not available for this resource')
-    })
-
     it('throws an error on delete failure', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['delete']
       const del = http.delete as jest.Mock
       del.mockRejectedValue(new Error('Error deleting story'))
 

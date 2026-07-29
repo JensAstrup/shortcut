@@ -1,15 +1,19 @@
 import BaseInterface from '@sx/base-interface'
-import BaseResource from '@sx/base-resource'
-import {BaseSearchableService} from '@sx/base-service'
+import { ResourceCore } from '@sx/base-resource'
 
 
-class SearchResponse<Resource extends BaseResource, Interface extends BaseInterface> {
+/** Structural contract for anything that can be paged via {@link SearchResponse.next}. */
+interface SearchableService<Resource extends ResourceCore, Interface extends BaseInterface> {
+  search(query: string, next?: string): Promise<SearchResponse<Resource, Interface>>
+}
+
+class SearchResponse<Resource extends ResourceCore, Interface extends BaseInterface> {
   public query: string
   public nextPage: undefined | string | null
   public results: Resource[]
-  public service: BaseSearchableService<Resource, Interface>
+  public service: SearchableService<Resource, Interface>
 
-  constructor(init: {query: string, results: Resource[], next?: string, service: BaseSearchableService<Resource, Interface> }) {
+  constructor(init: {query: string, results: Resource[], next?: string, service: SearchableService<Resource, Interface> }) {
     this.query = init.query
     this.nextPage = init.next
     this.results = init.results
@@ -29,3 +33,4 @@ class SearchResponse<Resource extends BaseResource, Interface extends BaseInterf
 }
 
 export default SearchResponse
+export { SearchableService }

@@ -1,8 +1,8 @@
 import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 import BaseInterface from '../src/base-interface'
-import BaseResource from '../src/base-resource'
-import { BaseSearchableService, BaseService, ServiceOperation } from '../src/base-service'
+import { ResourceBaseFor } from '../src/base-resource'
+import { Gettable, Listable, Searchable, ServiceBaseFor } from '../src/base-service'
 
 import { stubHttp } from './helpers/http'
 
@@ -12,7 +12,7 @@ interface MockInterface extends BaseInterface {
   name: string
 }
 
-class MockResource extends BaseResource implements MockInterface {
+class MockResource extends ResourceBaseFor<MockInterface>() implements MockInterface {
   constructor(data: MockInterface) {
     super(data)
     Object.assign(this, data)
@@ -23,9 +23,7 @@ class MockResource extends BaseResource implements MockInterface {
 }
 
 
-class MockService extends BaseService<MockResource, MockInterface> {
-  availableOperations: ServiceOperation[] = ['get', 'list']
-
+class MockService extends Listable(Gettable(ServiceBaseFor<MockResource, MockInterface>())) {
   constructor(init: { http: AxiosInstance }) {
     super(init)
     this.baseUrl = '/resources'
@@ -42,7 +40,6 @@ describe('MockService', () => {
   beforeEach(() => {
     http = stubHttp()
     mockService = new MockService({ http })
-    mockService.availableOperations = ['get', 'list', 'search']
   })
 
   it('should get a resource by ID', async () => {
@@ -50,7 +47,6 @@ describe('MockService', () => {
     const mockResponse = { status: 200, data: mockData };
     (http.get as jest.Mock).mockResolvedValue(mockResponse)
 
-    mockService.availableOperations = ['get']
     const resource = await mockService.get('1')
 
     expect(http.get).toHaveBeenCalledWith(`${mockService.baseUrl}/1`)
@@ -59,17 +55,11 @@ describe('MockService', () => {
     expect(resource.name).toEqual(mockData.name)
   })
 
-  it('should throw an error if get method is not available on resource', async () => {
-    mockService.availableOperations = ['list']
-    await expect(mockService.get('1')).rejects.toThrow('Operation not supported')
-  })
-
   it('should get multiple resources', async () => {
     const mockData = [{ id: '1', name: 'Test Resource 1' }, { id: '2', name: 'Test Resource 2' }]
     const mockResponse = { status: 200, data: mockData };
     (http.get as jest.Mock).mockResolvedValue(mockResponse)
 
-    mockService.availableOperations = ['get']
     const resources = await mockService.getMany(['1', '2'])
 
     expect(resources).toBeInstanceOf(Array)
@@ -83,7 +73,6 @@ describe('MockService', () => {
     const mockResponse = { status: 200, data: mockData };
     (http.get as jest.Mock).mockResolvedValue(mockResponse)
 
-    mockService.availableOperations = ['list']
     const resources = await mockService.list()
 
     expect(http.get).toHaveBeenCalledWith(mockService.baseUrl)
@@ -97,15 +86,15 @@ describe('MockService', () => {
     expect(resources[1].name).toEqual(mockData[1].name)
   })
 
-  it('should throw an error if list method is not available on resource', async () => {
-    mockService.availableOperations = ['get']
-    await expect(mockService.list()).rejects.toThrow('Operation not supported')
+  // A service composed without Searchable has no search method at all — the compile-time
+  // replacement for the old runtime "Operation not supported" guard.
+  it('does not expose search on a get+list service', () => {
+    // @ts-expect-error search is not composed into MockService
+    void mockService.search
   })
 })
 
-class MockSearchableService extends BaseSearchableService<MockResource, MockInterface> {
-  availableOperations: ServiceOperation[] = ['get', 'list', 'search']
-
+class MockSearchableService extends Searchable(Listable(Gettable(ServiceBaseFor<MockResource, MockInterface>()))) {
   constructor(init: { http: AxiosInstance }) {
     super(init)
     this.baseUrl = '/resources'
@@ -121,7 +110,6 @@ describe('BaseSearchableService', () => {
   beforeEach(() => {
     http = stubHttp()
     mockService = new MockSearchableService({ http })
-    mockService.availableOperations = ['search']
     mockService.baseUrl = '/mockResources'
   })
 

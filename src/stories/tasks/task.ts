@@ -1,11 +1,10 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
+import TaskInterface from '@sx/stories/tasks/contracts/task-interface'
 import UUID from '@sx/utils/uuid'
 
 
-class Task extends BaseResource {
+class Task extends Deletable(Updatable(ResourceBaseFor<TaskInterface>())) implements TaskInterface {
   public baseUrl = '/stories/'
-  public availableOperations: ResourceOperation[] = ['update', 'delete']
-  public createFields = ['complete', 'createdAt', 'description', 'externalId', 'ownerIds', 'updatedAt']
 
   constructor(init: object) {
     super()

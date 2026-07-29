@@ -1,10 +1,10 @@
-import BaseResource from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import UUID from '@sx/utils/uuid'
 
 import Bundle from '../src/bundle'
 
-// Mocks for BaseResource and UUID
-class Story extends BaseResource {
+// Mocks for ResourceCore and UUID
+class Story extends ResourceBaseFor() {
   id: UUID | number
   estimate?: number
 

@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios'
 
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import EpicApiData from '@sx/epics/contracts/epic-api-data'
 import Epic from '@sx/epics/epic'
 import LabelInterface from '@sx/labels/contracts/label-interface'
@@ -10,10 +10,9 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 
 
-class Label extends BaseResource<LabelInterface> implements LabelInterface {
+class Label extends Deletable(Creatable(Updatable(ResourceBaseFor<LabelInterface>()))) implements LabelInterface {
   public static baseUrl: string = '/labels'
   public createFields = ['color', 'description', 'externalId', 'name']
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
   constructor(init: LabelInterface | object) {
     super()

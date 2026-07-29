@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 
-import BaseResource from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
 import {HistoryActionChangeInterface} from '@sx/stories/history/actions/contracts/history-action-interface'
@@ -11,7 +11,7 @@ import ResourceConverter from '@sx/utils/convert-to-resource'
 import UUID from '@sx/utils/uuid'
 
 
-class History extends BaseResource<HistoryInterface> implements HistoryInterface {
+class History extends ResourceBaseFor<HistoryInterface>() implements HistoryInterface {
   constructor(init: HistoryInterface) {
     super()
     Object.assign(this, init)

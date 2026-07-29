@@ -29,7 +29,6 @@ describe('BaseResource HTTP client injection', () => {
     const mock = new AxiosMockAdapter(http)
     mock.onPut('/stories/1').reply(200, {})
     const story = new Story({id: 1, name: 'orig'}).setHttp(http)
-    story.availableOperations = ['update']
     story.changedFields = []
 
     story.name = 'changed'
@@ -53,8 +52,6 @@ describe('BaseResource HTTP client injection', () => {
     const http = createHttpClient('tok')
     const mock = new AxiosMockAdapter(http)
     mock.onPut('/stories/1/tasks/9').reply(200, {})
-    // Task already permits 'update'; assigning availableOperations here would itself register as a
-    // changed field and mask what this test is checking.
     const task = new Task({id: 9, storyId: 1, description: 'orig'}).setHttp(http)
 
     task.description = 'changed'

@@ -1,4 +1,4 @@
-import BaseResource from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import CustomField from '@sx/custom-fields/custom-field'
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
 import StoryInterface from '@sx/stories/contracts/story-interface'
@@ -6,9 +6,8 @@ import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story
 import UUID from '@sx/utils/uuid'
 
 
-class StoryCustomField extends BaseResource<StoryInterface> implements StoryCustomFieldInterface {
+class StoryCustomField extends ResourceBaseFor<StoryInterface>() implements StoryCustomFieldInterface {
   public baseUrl = '/stories'
-  public availableOperations = []
   private customField: CustomField | null = null
 
   constructor(init: StoryCustomFieldInterface) {

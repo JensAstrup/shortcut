@@ -1,4 +1,4 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import MemberInterface, {MemberState} from '@sx/members/contracts/member-interface'
 import {MemberProfile} from '@sx/members/contracts/member-profile'
 import StoryInterface from '@sx/stories/contracts/story-interface'
@@ -9,9 +9,8 @@ import TeamsService from '@sx/teams/teams-service'
 /**
  * @inheritDoc
  */
-class Member extends BaseResource<MemberInterface> implements MemberInterface {
+class Member extends ResourceBaseFor<MemberInterface>() implements MemberInterface {
   public static baseUrl = '/members'
-  public availableOperations: ResourceOperation[] = []
 
   createdAt: string
   disabled: boolean
