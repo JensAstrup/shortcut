@@ -61,7 +61,7 @@
     "ts-node": "10.9.2",
     "tsconfig-paths-jest": "0.0.1",
     "tscpaths": "0.0.9",
-    "typedoc-plugin-coverage": "3.1.0",
+    "typedoc-plugin-coverage": "4.0.3",
     "typescript": "5.4.4",
     "zod": "4.4.3"
   },
