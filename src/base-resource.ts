@@ -15,7 +15,6 @@ import snakeToCamel from '@sx/utils/snake-to-camel'
  * create/update/delete/save methods — those are added by the {@link Updatable}, {@link Creatable} and
  * {@link Deletable} mixins. Not intended to be instantiated directly; obtain a bound constructor
  * through {@link ResourceBaseFor}.
- * @group Story
  */
 abstract class ResourceCore<Interface = BaseInterface> {
   [key: string]: ShortcutFieldType
@@ -244,21 +243,20 @@ function Updatable<TBase extends ResourceConstructor>(Base: TBase): TBase & Cons
         return acc
       }, {})
 
-      await this.http.put(url, body)
+      const response = await this.http.put(url, body)
         .catch((error: AxiosError) => {
           handleResponseFailure(error, body)
-        }).then((response) => {
-          if (!response) {
-            return
-          }
-          const data: Record<string, ShortcutApiFieldType> = response.data as Record<string, ShortcutApiFieldType>
-          Object.keys(data).forEach(key => {
-            this[snakeToCamel(key)] = data[key]
-          })
-          // Cleared once after the writes rather than on every iteration; each assignment above goes
-          // through the Proxy and re-adds to changedFields, so this has to come last either way.
-          this.changedFields = []
         })
+      if (!response) {
+        throw new Error(`Failed to update resource at ${url}`)
+      }
+      const data: Record<string, ShortcutApiFieldType> = response.data as Record<string, ShortcutApiFieldType>
+      Object.keys(data).forEach(key => {
+        this[snakeToCamel(key)] = data[key]
+      })
+      // Cleared once after the writes rather than on every iteration; each assignment above goes
+      // through the Proxy and re-adds to changedFields, so this has to come last either way.
+      this.changedFields = []
     }
 
     /**

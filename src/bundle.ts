@@ -24,7 +24,7 @@ class Bundle<R extends BundleResource>{
 
   public changedFields: string[] = []
   public instanceIds: UUID[] | number[] = []
-  public resources: BundleResource[]
+  public resources: R[]
   public factory: (data: { id: UUID | number }) => R
 
 
@@ -75,7 +75,7 @@ class Bundle<R extends BundleResource>{
         if (field.startsWith('_')) {
           continue
         }
-        resource[field] = this[field]
+        (resource as BundleResource)[field] = this[field]
       }
       await resource.update()
     }

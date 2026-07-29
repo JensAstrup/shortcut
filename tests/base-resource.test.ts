@@ -90,7 +90,7 @@ describe('BaseResource', () => {
       const put = http.put as jest.Mock
       put.mockRejectedValue(mockError)
 
-      await resource.update()
+      await expect(resource.update()).rejects.toThrow('Failed to update resource')
 
       expect(console.error).toHaveBeenCalledWith('Error status', 500)
       expect(console.error).toHaveBeenCalledWith('Error data', 'Internal Server Error')
@@ -106,7 +106,7 @@ describe('BaseResource', () => {
       const put = http.put as jest.Mock
       put.mockRejectedValue(mockError)
 
-      await resource.update()
+      await expect(resource.update()).rejects.toThrow('Failed to update resource')
 
       expect(console.error).toHaveBeenCalledWith('Error request', 'Request made but no response received')
     })
@@ -118,7 +118,7 @@ describe('BaseResource', () => {
       const put = http.put as jest.Mock
       put.mockRejectedValue(mockError)
 
-      await resource.update()
+      await expect(resource.update()).rejects.toThrow('Failed to update resource')
 
       expect(console.error).toHaveBeenCalledWith('Error message', 'Error in setting up the request')
     })

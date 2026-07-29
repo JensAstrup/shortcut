@@ -5,6 +5,8 @@ import UUID from '@sx/utils/uuid'
 
 
 class KeyResult extends Updatable(ResourceBaseFor<KeyResultInterface>()) implements KeyResultInterface {
+  public static baseUrl: string = '/key_results'
+
   constructor(init: object) {
     super()
     Object.assign(this, init)

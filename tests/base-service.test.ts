@@ -92,6 +92,75 @@ describe('MockService', () => {
     // @ts-expect-error search is not composed into MockService
     void mockService.search
   })
+
+  // An AxiosError carries the request config, so chaining it as `cause` would hand the API token to
+  // any caller that logs the error. The token is stripped before the error is re-thrown, mirroring
+  // Searchable's behavior on the same error path.
+  it('strips the Shortcut-Token from the chained cause on a get() AxiosError', async () => {
+    const error = new AxiosError('Request failed', '401')
+    error.config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Shortcut-Token': 'super-secret-token'
+      }
+    } as unknown as InternalAxiosRequestConfig
+    error.response = {
+      status: 401,
+      statusText: 'Unauthorized',
+      data: { message: 'Invalid token' }
+    } as AxiosResponse;
+    (http.get as jest.Mock).mockRejectedValue(error)
+
+    const thrown = await mockService.get('1').then(() => null, (e: Error) => e)
+
+    expect(thrown).toBeInstanceOf(Error)
+    expect(thrown!.message).toContain('HTTP error 401 (Unauthorized)')
+    const cause = thrown!.cause as AxiosError
+    expect(cause).toBe(error)
+    expect(cause.config?.headers['Shortcut-Token']).toBeUndefined()
+    expect(JSON.stringify(cause.config)).not.toContain('super-secret-token')
+    expect(cause.config?.headers['Content-Type']).toBe('application/json')
+  })
+
+  it('rethrows non-Axios errors unchanged from get()', async () => {
+    const error = new Error('boom');
+    (http.get as jest.Mock).mockRejectedValue(error)
+
+    await expect(mockService.get('1')).rejects.toBe(error)
+  })
+
+  it('strips the Shortcut-Token from the chained cause on a list() AxiosError', async () => {
+    const error = new AxiosError('Request failed', '401')
+    error.config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Shortcut-Token': 'super-secret-token'
+      }
+    } as unknown as InternalAxiosRequestConfig
+    error.response = {
+      status: 401,
+      statusText: 'Unauthorized',
+      data: { message: 'Invalid token' }
+    } as AxiosResponse;
+    (http.get as jest.Mock).mockRejectedValue(error)
+
+    const thrown = await mockService.list().then(() => null, (e: Error) => e)
+
+    expect(thrown).toBeInstanceOf(Error)
+    expect(thrown!.message).toContain('HTTP error 401 (Unauthorized)')
+    const cause = thrown!.cause as AxiosError
+    expect(cause).toBe(error)
+    expect(cause.config?.headers['Shortcut-Token']).toBeUndefined()
+    expect(JSON.stringify(cause.config)).not.toContain('super-secret-token')
+    expect(cause.config?.headers['Content-Type']).toBe('application/json')
+  })
+
+  it('rethrows non-Axios errors unchanged from list()', async () => {
+    const error = new Error('boom');
+    (http.get as jest.Mock).mockRejectedValue(error)
+
+    await expect(mockService.list()).rejects.toBe(error)
+  })
 })
 
 class MockSearchableService extends Searchable(Listable(Gettable(ServiceBaseFor<MockResource, MockInterface>()))) {

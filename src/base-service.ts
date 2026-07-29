@@ -103,14 +103,25 @@ function Gettable<TBase extends Constructor<AnyServiceBase>>(
         return this.instances[id] as ResourceOf<TBase>
       }
       const url = `${this.baseUrl}/${id}`
-      const response = await this.http.get(url)
-      if (response.status >= HTTP_ERROR) {
-        throw new Error('HTTP error ' + response.status)
+      try {
+        const response = await this.http.get(url)
+        const instanceData = convertApiFields<BaseData, InterfaceOf<TBase>>(response.data as BaseData)
+        const instance = this.build(instanceData) as ResourceOf<TBase>
+        this.instances[id] = instance
+        return instance
       }
-      const instanceData = convertApiFields<BaseData, InterfaceOf<TBase>>(response.data as BaseData)
-      const instance = this.build(instanceData) as ResourceOf<TBase>
-      this.instances[id] = instance
-      return instance
+      catch (e) {
+        if (e instanceof AxiosError) {
+          // An AxiosError carries the request config, so `error.cause` would otherwise hand the
+          // Shortcut-Token to anything that logs it. The header is redacted before the error is chained,
+          // which keeps the original stack for debugging without leaking the credential.
+          if (e.config?.headers) {
+            delete e.config.headers['Shortcut-Token']
+          }
+          throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data), {cause: e})
+        }
+        throw e
+      }
     }
 
     public async getMany(ids: UUID[] | number[]): Promise<Array<ResourceOf<TBase>>> {
@@ -126,21 +137,32 @@ function Listable<TBase extends Constructor<AnyServiceBase>>(
 ): TBase & Constructor<ListableService<ResourceOf<TBase>>> {
   class ListableMixin extends Base {
     public async list(): Promise<Array<ResourceOf<TBase>>> {
-      const response: AxiosResponse = await this.http.get(this.baseUrl)
-      if (response.status >= HTTP_ERROR) {
-        throw new Error('HTTP error ' + response.status)
+      try {
+        const response: AxiosResponse = await this.http.get(this.baseUrl)
+        const instancesData: Record<string, ShortcutApiFieldType>[] = response.data as Record<string, ShortcutApiFieldType>[] ?? []
+        const resources = instancesData.map(instance => this.build(convertApiFields<BaseData, InterfaceOf<TBase>>(instance)) as ResourceOf<TBase>)
+        this.instances = resources.reduce((acc: Record<string, ResourceOf<TBase>>, resource) => {
+          let id: string = resource.id as string
+          if (!isNaN(Number(resource.id))) {
+            id = Number(resource.id).toString()
+          }
+          acc[id] = resource
+          return acc
+        }, {})
+        return resources
       }
-      const instancesData: Record<string, ShortcutApiFieldType>[] = response.data as Record<string, ShortcutApiFieldType>[] ?? []
-      const resources = instancesData.map(instance => this.build(convertApiFields<BaseData, InterfaceOf<TBase>>(instance)) as ResourceOf<TBase>)
-      this.instances = resources.reduce((acc: Record<string, ResourceOf<TBase>>, resource) => {
-        let id: string = resource.id as string
-        if (!isNaN(Number(resource.id))) {
-          id = Number(resource.id).toString()
+      catch (e) {
+        if (e instanceof AxiosError) {
+          // An AxiosError carries the request config, so `error.cause` would otherwise hand the
+          // Shortcut-Token to anything that logs it. The header is redacted before the error is chained,
+          // which keeps the original stack for debugging without leaking the credential.
+          if (e.config?.headers) {
+            delete e.config.headers['Shortcut-Token']
+          }
+          throw new Error('HTTP error ' + e.response?.status + ' (' + e.response?.statusText + ') ' + JSON.stringify(e.response?.data), {cause: e})
         }
-        acc[id] = resource
-        return acc
-      }, {})
-      return resources
+        throw e
+      }
     }
   }
   return ListableMixin

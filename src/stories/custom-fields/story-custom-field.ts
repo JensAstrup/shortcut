@@ -1,12 +1,11 @@
 import {ResourceBaseFor} from '@sx/base-resource'
 import CustomField from '@sx/custom-fields/custom-field'
 import CustomFieldsService from '@sx/custom-fields/custom-fields-service'
-import StoryInterface from '@sx/stories/contracts/story-interface'
 import StoryCustomFieldInterface from '@sx/stories/custom-fields/contracts/story-custom-field-interface'
 import UUID from '@sx/utils/uuid'
 
 
-class StoryCustomField extends ResourceBaseFor<StoryInterface>() implements StoryCustomFieldInterface {
+class StoryCustomField extends ResourceBaseFor<StoryCustomFieldInterface>() implements StoryCustomFieldInterface {
   public baseUrl = '/stories'
   private customField: CustomField | null = null
 
