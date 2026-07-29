@@ -2,10 +2,10 @@ import process from 'process'
 
 import { AxiosInstance } from 'axios'
 
-import Iteration from '../src/iterations/iteration'
-import Label from '../src/labels/label'
-import Story from '../src/stories/story'
-import Task from '../src/stories/tasks/task'
+import Iteration from '@sx/iterations/iteration'
+import Label from '@sx/labels/label'
+import Story from '@sx/stories/story'
+import Task from '@sx/stories/tasks/task'
 
 import { stubHttp } from './helpers/http'
 
