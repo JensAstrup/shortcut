@@ -1,4 +1,4 @@
-import {AxiosInstance} from 'axios'
+import {AxiosError, AxiosInstance} from 'axios'
 
 import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
@@ -30,7 +30,9 @@ import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
-import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
+import {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
+import WorkflowState from '@sx/workflow-states/workflow-state'
+import Workflow from '@sx/workflows/workflow'
 import WorkflowService from '@sx/workflows/workflows-service'
 
 
@@ -126,17 +128,26 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     return this._labels
   }
 
-  get workflow(): Promise<WorkflowStateInterface> {
+  /**
+   * Get the workflow the story belongs to.
+   */
+  get workflow(): Promise<Workflow> {
     const service = new WorkflowService({http: this.http})
-    return service.getWorkflowState(this.workflowStateId)
+    return service.get(this.workflowId)
   }
 
   /**
-   * Get the state of the story, i.e. Finished, Started, Unstarted
+   * Get the workflow state of the story, e.g. its name, type (Finished, Started, Unstarted), and position.
+   * Resolves the parent workflow via `workflowId`, then finds the state matching `workflowStateId`.
    */
-  async state(): Promise<WorkflowStateType> {
-    const workflow = await this.workflow
-    return workflow.type
+  get state(): Promise<WorkflowState> {
+    return this.workflow.then((workflow) => {
+      const state = workflow.states.find((workflowState) => workflowState.id === this.workflowStateId)
+      if (!state) {
+        throw new Error(`Workflow state with id ${this.workflowStateId} not found`)
+      }
+      return new WorkflowState(state).setHttp(this.http)
+    })
   }
 
   get iteration(): Promise<Iteration> | null {
@@ -233,8 +244,8 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
    * @throws {Error} - If the story is already finished or not started.
    */
   public async timeInDevelopment(): Promise<number> {
-    const workflow: WorkflowStateInterface = await this.workflow
-    if (workflow.type === WorkflowStateType.FINISHED) {
+    const state: WorkflowState = await this.state
+    if (state.type === WorkflowStateType.FINISHED) {
       throw new Error('Story is already finished')
     }
     if (!this.startedAt) {
@@ -247,11 +258,11 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
 
   public async comment(comment: string): Promise<StoryComment> {
     const url = `${Story.baseUrl}/${this.id}/comments`
-    const response = await this.http.post(url, {text: comment}).catch((error) => {
+    const response = await this.http.post(url, {text: comment}).catch((error: AxiosError) => {
       handleResponseFailure(error, {storyId: this.id})
       throw new Error(`Error creating comment: ${error}`)
     })
-    const data: StoryCommentApiData = response.data
+    const data: StoryCommentApiData = response.data as StoryCommentApiData
     const interfaceData = convertApiFields(data)
 
     return new StoryComment(interfaceData).setHttp(this.http)

@@ -2,9 +2,9 @@ import BaseInterface from '@sx/base-interface'
 
 
 enum WorkflowStateType {
-    FINISHED = 'Finished',
-    STARTED = 'Started',
-    UNSTARTED = 'Unstarted'
+    FINISHED = 'finished',
+    STARTED = 'started',
+    UNSTARTED = 'unstarted'
 
 }
 

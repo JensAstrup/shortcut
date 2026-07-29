@@ -6,44 +6,44 @@ import WorkflowStatesService from '@sx/workflow-states/workflow-states-service'
 
 
 /**
- * Resolving a single workflow state costs a full workflow list fetch, and short-lived services are
- * built per lookup (`story.workflow` constructs a new WorkflowsService on every access). The cache is
- * therefore keyed on the HTTP client: shared across services built from the same client, never shared
- * between clients authenticated against different workspaces.
+ * `story.workflow`/`story.state` now retrieve a single workflow by ID (`GET /workflows/{id}`),
+ * building a short-lived `WorkflowsService` per access, so there is no cross-call caching for these
+ * accessors (matching `epic`/`team`). `WorkflowStatesService`, by contrast, still lists every workflow
+ * once and caches it per HTTP client via a module-level `WeakMap` — that cache is what the last test
+ * below exercises.
  */
-describe('workflow state caching', () => {
-  function workflowsFor(mock: AxiosMockAdapter): number {
-    return mock.history.get.filter(request => request.url === '/workflows').length 
+describe('workflow and workflow state retrieval', () => {
+  function workflowRequestsFor(mock: AxiosMockAdapter, id: number): number {
+    return mock.history.get.filter(request => request.url === `/workflows/${id}`).length
   }
 
-  it('fetches the workflow list once across repeated lookups on one client', async () => {
+  it('fetches the workflow by ID for both the workflow and state getters', async () => {
     const http = createHttpClient('tok')
     const mock = new AxiosMockAdapter(http)
-    mock.onGet('/workflows').reply(200, [{id: 1, name: 'wf', states: [{id: 10, name: 'Ready', type: 'Started'}]}])
-    const story = new Story({id: 1, workflowStateId: 10}).setHttp(http)
+    mock.onGet('/workflows/1').reply(200, {id: 1, name: 'wf', states: [{id: 10, name: 'Ready', type: 'Started'}]})
+    const story = new Story({id: 1, workflowId: 1, workflowStateId: 10}).setHttp(http)
 
-    await story.workflow
-    await story.workflow
-    await story.workflow
+    const workflow = await story.workflow
+    const state = await story.state
 
-    expect(workflowsFor(mock)).toEqual(1)
+    expect(workflow.name).toEqual('wf')
+    expect(state.name).toEqual('Ready')
+    expect(workflowRequestsFor(mock, 1)).toEqual(2)
   })
 
-  it('does not serve one client\'s workflow states to another', async () => {
+  it('does not serve one client\'s workflow to another', async () => {
     const a = createHttpClient('key-a')
     const b = createHttpClient('key-b')
     const mockA = new AxiosMockAdapter(a)
     const mockB = new AxiosMockAdapter(b)
-    mockA.onGet('/workflows').reply(200, [{id: 1, name: 'wfA', states: [{id: 10, name: 'A-state', type: 'Started'}]}])
-    mockB.onGet('/workflows').reply(200, [{id: 2, name: 'wfB', states: [{id: 10, name: 'B-state', type: 'Done'}]}])
+    mockA.onGet('/workflows/1').reply(200, {id: 1, name: 'wfA', states: [{id: 10, name: 'A-state', type: 'Started'}]})
+    mockB.onGet('/workflows/2').reply(200, {id: 2, name: 'wfB', states: [{id: 10, name: 'B-state', type: 'Done'}]})
 
-    const fromA = await new Story({id: 1, workflowStateId: 10}).setHttp(a).workflow
-    const fromB = await new Story({id: 2, workflowStateId: 10}).setHttp(b).workflow
+    const fromA = await new Story({id: 1, workflowId: 1, workflowStateId: 10}).setHttp(a).state
+    const fromB = await new Story({id: 2, workflowId: 2, workflowStateId: 10}).setHttp(b).state
 
     expect(fromA.name).toEqual('A-state')
     expect(fromB.name).toEqual('B-state')
-    expect(workflowsFor(mockA)).toEqual(1)
-    expect(workflowsFor(mockB)).toEqual(1)
   })
 
   it('shares the cache between separate WorkflowStatesService instances on one client', async () => {
@@ -54,6 +54,6 @@ describe('workflow state caching', () => {
     await new WorkflowStatesService({http}).get(10)
     await new WorkflowStatesService({http}).get(10)
 
-    expect(workflowsFor(mock)).toEqual(1)
+    expect(mock.history.get.filter(request => request.url === '/workflows').length).toEqual(1)
   })
 })
