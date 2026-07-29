@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosError} from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter'
 
 import Epic from '@sx/epics/epic'
@@ -20,6 +20,8 @@ import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/con
 import WorkflowState from '@sx/workflow-states/workflow-state'
 import Workflow from '@sx/workflows/workflow'
 import WorkflowService from '@sx/workflows/workflows-service'
+
+import {stubHttp} from '../helpers/http'
 
 
 const axiosMock = new AxiosMockAdapter(axios)
@@ -155,10 +157,10 @@ describe('Story', () => {
   })
 
   describe('history method', () => {
-    it('should throw an error if request fails', () => {
+    it('should throw an error if request fails', async () => {
       const story = new Story({id: 1})
       axiosMock.onGet().reply(500)
-      expect(story.history()).rejects.toThrow('Error fetching history: Error: Request failed with status code 500')
+      await expect(story.history()).rejects.toThrow('Error fetching history')
     })
 
     it('should return the story history', async () => {
@@ -258,11 +260,28 @@ describe('Story', () => {
       expect(result).toMatchObject(convertApiFields(commentData))
     })
 
-    it('throws an error if the axios request fails', async () => {
+    it('throws an error with the Axios error as cause if the axios request fails', async () => {
+      expect.assertions(2)
       axiosMock.onPost().reply(500)
-      const story = new Story({id: 1}) // Adjust initial data as needed
+      const story = new Story({id: 1})
 
-      await expect(story.comment('Test comment')).rejects.toThrow('Error creating comment: Error: Request failed with status code 500')
+      await story.comment('Test comment').catch((error: Error) => {
+        expect(error.message).toEqual('Error creating comment')
+        expect((error.cause as AxiosError).isAxiosError).toBe(true)
+      })
+    })
+
+    it('throws an error with a non-Axios error as cause, without calling handleResponseFailure', async () => {
+      expect.assertions(2)
+      const nonAxiosError = new Error('boom')
+      const http = stubHttp()
+      jest.spyOn(http, 'post').mockRejectedValue(nonAxiosError)
+      const story = new Story({id: 1}).setHttp(http)
+
+      await story.comment('Test comment').catch((error: Error) => {
+        expect(error.message).toEqual('Error creating comment')
+        expect(error.cause).toBe(nonAxiosError)
+      })
     })
   })
 
@@ -291,7 +310,7 @@ describe('Story', () => {
       axiosMock.onPost().reply(500)
       const story = new Story({id: 1, tasks: []})
 
-      await expect(story.addTask('Test task')).rejects.toThrow('Error adding task: Error: Request failed with status code 500')
+      await expect(story.addTask('Test task')).rejects.toThrow('Error adding task')
     })
   })
 

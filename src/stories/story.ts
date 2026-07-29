@@ -1,4 +1,4 @@
-import {AxiosError, AxiosInstance} from 'axios'
+import {AxiosError, AxiosInstance, isAxiosError} from 'axios'
 
 import BaseResource, {ResourceOperation} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
@@ -195,7 +195,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     const url = `${Story.baseUrl}/${this.id}/history`
     const response = await this.http.get(url).catch((error) => {
       handleResponseFailure(error as AxiosError, {storyId: this.id})
-      throw new Error(`Error fetching history: ${error}`)
+      throw new Error('Error fetching history', {cause: error})
     })
     const historyData: HistoryApiData[] = response.data as HistoryApiData[]
     return historyData.map((history) => {
@@ -258,9 +258,11 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
 
   public async comment(comment: string): Promise<StoryComment> {
     const url = `${Story.baseUrl}/${this.id}/comments`
-    const response = await this.http.post(url, {text: comment}).catch((error: AxiosError) => {
-      handleResponseFailure(error, {storyId: this.id})
-      throw new Error(`Error creating comment: ${error}`)
+    const response = await this.http.post(url, {text: comment}).catch((error: unknown) => {
+      if (isAxiosError(error)) {
+        handleResponseFailure(error, {storyId: this.id})
+      }
+      throw new Error('Error creating comment', {cause: error})
     })
     const data: StoryCommentApiData = response.data as StoryCommentApiData
     const interfaceData = convertApiFields(data)
@@ -282,7 +284,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     const requestData = {description: task}
     const response = await this.http.post(url, requestData).catch((error) => {
       handleResponseFailure(error as AxiosError, {storyId: this.id})
-      throw new Error(`Error adding task: ${error}`)
+      throw new Error('Error adding task', {cause: error})
     })
     const data: TaskApiData = response.data as TaskApiData
     const interfaceData = convertApiFields(data)
