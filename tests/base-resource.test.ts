@@ -2,6 +2,7 @@ import process from 'process'
 
 import { AxiosInstance } from 'axios'
 
+import Iteration from '../src/iterations/iteration'
 import Label from '../src/labels/label'
 import Story from '../src/stories/story'
 import Task from '../src/stories/tasks/task'
@@ -138,6 +139,48 @@ describe('BaseResource', () => {
       resource.name = 'New Name'
 
       await expect(resource.save()).rejects.toThrow('Create operation not available for this resource')
+    })
+
+    // Iteration is the resource that actually declares `dateOnlyFields`, so it exercises the real
+    // subclass-configured path rather than reaching into BaseResource's protected field from outside.
+    it('serializes dateOnlyFields as YYYY-MM-DD on create', async () => {
+      const startDate = new Date('2026-07-29T12:31:07.768Z')
+      const endDate = new Date('2026-08-05T12:31:07.768Z')
+      const resource = new Iteration({name: 'Iteration 1', startDate, endDate}).setHttp(http);
+      (http.post as jest.Mock).mockResolvedValue({data: {id: 1}})
+
+      await resource.save()
+
+      const [, body] = (http.post as jest.Mock).mock.calls[0]
+      expect(body.start_date).toBe('2026-07-29')
+      expect(body.end_date).toBe('2026-08-05')
+    })
+
+    it('serializes dateOnlyFields as YYYY-MM-DD on update', async () => {
+      const startDate = new Date('2026-07-29T12:31:07.768Z')
+      const resource = new Iteration({id: 1}).setHttp(http)
+      resource.changedFields = []
+      resource.startDate = startDate;
+      (http.put as jest.Mock).mockResolvedValue({data: {id: 1}})
+
+      await resource.save()
+
+      const [, body] = (http.put as jest.Mock).mock.calls[0]
+      expect(body.start_date).toBe('2026-07-29')
+    })
+
+    it('leaves Date fields not listed in dateOnlyFields as full Date values', async () => {
+      const resource = new Story({}).setHttp(http)
+      resource.availableOperations = ['create']
+      resource.createFields = ['deadline']
+      const deadline = new Date('2026-07-29T12:31:07.768Z')
+      resource.deadline = deadline;
+      (http.post as jest.Mock).mockResolvedValue({data: {id: 1}})
+
+      await resource.save()
+
+      const [, body] = (http.post as jest.Mock).mock.calls[0]
+      expect(body.deadline).toBe(deadline)
     })
   })
 

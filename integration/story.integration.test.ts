@@ -130,11 +130,14 @@ describe('story lifecycle', () => {
     cleanup.register(`story ${story.id}`, () => story.delete())
 
     const fetched = await client.stories.get(story.id)
-    const state = await fetched.workflow
 
+    // `state` resolves to the WorkflowState the story currently sits in.
+    const state = await fetched.state
     expect(state.id).toBe(workflowStateId)
-    // `state()` reads through the same cache; both should agree.
-    expect(await fetched.state()).toBe(state.type)
+
+    // `workflow` resolves to the parent workflow, which must contain that state.
+    const workflow = await fetched.workflow
+    expect(workflow.states.some(each => each.id === workflowStateId)).toBe(true)
   })
 
   it('links two stories and removes the link', async () => {

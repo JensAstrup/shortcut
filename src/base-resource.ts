@@ -29,6 +29,11 @@ abstract class BaseResource<Interface = BaseInterface> {
    */
   public createFields: string[] = []
   /**
+   * Fields serialized as date-only (`YYYY-MM-DD`) in create/update bodies rather than as a full ISO
+   * timestamp. Some Shortcut endpoints (e.g. iteration `start_date`/`end_date`) reject a datetime.
+   */
+  protected dateOnlyFields: string[] = []
+  /**
    * The available operations for the resource, any not in this list will raise an error when called
    */
   public availableOperations: ResourceOperation[] = []
@@ -124,6 +129,18 @@ abstract class BaseResource<Interface = BaseInterface> {
   }
 
   /**
+   * Serializes a field's value for a create/update body, formatting `Date` values listed in
+   * `dateOnlyFields` as `YYYY-MM-DD` instead of a full ISO timestamp.
+   */
+  private serializeFieldValue(field: string, value: ShortcutFieldType): unknown {
+    if (value instanceof Date && this.dateOnlyFields.includes(field)) {
+      const [dateOnly] = value.toISOString().split('T')
+      return dateOnly
+    }
+    return value
+  }
+
+  /**
    * Update the current instance of the resource with the changed fields.
    * @return {Promise<void>} - A Promise that resolves when the resource has been updated.
    * @throws {Error} - Throws an error if the HTTP request fails.
@@ -139,7 +156,7 @@ abstract class BaseResource<Interface = BaseInterface> {
       if (field.startsWith('_')) {
         return acc
       }
-      acc[camelToSnake(field)] = this[field]
+      acc[camelToSnake(field)] = this.serializeFieldValue(field, this[field])
       return acc
     }, {})
 
@@ -173,7 +190,7 @@ abstract class BaseResource<Interface = BaseInterface> {
     const body: Record<string, unknown> = {}
     Object.keys(this).forEach(key => {
       if (this.createFields.includes(key)) {
-        body[camelToSnake(key)] = this[key]
+        body[camelToSnake(key)] = this.serializeFieldValue(key, this[key])
       }
     })
 
