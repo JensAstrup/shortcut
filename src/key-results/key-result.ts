@@ -1,11 +1,11 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {ResourceBaseFor, Updatable} from '@sx/base-resource'
 import KeyResultInterface, {KeyResultType} from '@sx/key-results/contracts/key-result-interface'
 import KeyResultValueInterface from '@sx/key-results/contracts/key-result-value-interface'
 import UUID from '@sx/utils/uuid'
 
 
-class KeyResult extends BaseResource<KeyResultInterface> implements KeyResultInterface {
-  public availableOperations: ResourceOperation[] = ['update']
+class KeyResult extends Updatable(ResourceBaseFor<KeyResultInterface>()) implements KeyResultInterface {
+  public static baseUrl: string = '/key_results'
 
   constructor(init: object) {
     super()

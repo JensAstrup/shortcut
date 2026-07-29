@@ -1,12 +1,11 @@
-import BaseService, {ServiceOperation} from '@sx/base-service'
+import {Gettable, Listable, ServiceBaseFor} from '@sx/base-service'
 import LabelInterface from '@sx/labels/contracts/label-interface'
 import Label from '@sx/labels/label'
 
 
-class LabelsService extends BaseService<Label, LabelInterface> {
+class LabelsService extends Listable(Gettable(ServiceBaseFor<Label, LabelInterface>())) {
   public baseUrl: string = '/labels'
   protected factory = (data: object): Label => new Label(data)
-  public availableOperations: ServiceOperation[] = ['get', 'list']
 
   /**
    * A convenience method to get a label by its name

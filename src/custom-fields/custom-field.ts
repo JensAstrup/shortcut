@@ -1,12 +1,11 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import CustomFieldEnumValueInterface from '@sx/custom-fields/contracts/custom-field-enum-value-interface'
 import CustomFieldInterface from '@sx/custom-fields/contracts/custom-field-interface'
 import UUID from '@sx/utils/uuid'
 
 
-class CustomField extends BaseResource<CustomFieldInterface> implements CustomFieldInterface {
+class CustomField extends Deletable(Updatable(ResourceBaseFor<CustomFieldInterface>())) implements CustomFieldInterface {
   public baseUrl = '/custom-fields'
-  public availableOperations: ResourceOperation[] = ['update', 'delete']
 
   constructor(init: CustomFieldInterface) {
     super()

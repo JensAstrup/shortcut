@@ -1,6 +1,6 @@
 import {AxiosError, AxiosInstance, isAxiosError} from 'axios'
 
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import Epic from '@sx/epics/epic'
 import EpicsService from '@sx/epics/epics-service'
 import Iteration from '@sx/iterations/iteration'
@@ -41,9 +41,9 @@ import WorkflowService from '@sx/workflows/workflows-service'
  * Related: {@link StoriesService} for the service managing stories.
  *
  * @story
- * @inheritDoc BaseResource
+ * @inheritDoc ResourceCore
  */
-class Story extends BaseResource<StoryInterface> implements StoryInterface {
+class Story extends Deletable(Creatable(Updatable(ResourceBaseFor<StoryInterface>()))) implements StoryInterface {
   public static baseUrl: string = '/stories'
   /**
    * `labels` is deliberately absent: it is an accessor backed by the `_labels` instance field, so it
@@ -55,7 +55,6 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     'iterationId', 'ownerIds', 'followerIds', 'requestedById', 'deadline', 'externalId',
     'externalLinks', 'projectId', 'archived'
   ]
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   // These properties are utilized internally by the class and should not be accessed directly
   private _labels: Label[] = []
@@ -86,7 +85,7 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     return this
   }
 
-  protected async _preSave(): Promise<void> {
+  public async _preSave(): Promise<void> {
     if (this.changedFields.includes('labels')) {
       this.labels = this.labels.map((label) => {
         return {name: label.name} as Label

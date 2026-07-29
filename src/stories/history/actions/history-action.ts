@@ -1,4 +1,4 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import Label from '@sx/labels/label'
 import LabelsService from '@sx/labels/labels-service'
 import Member from '@sx/members/member'
@@ -7,9 +7,7 @@ import HistoryActionInterface, {HistoryActionChangeInterface, HistoryActionEnum}
 import UUID from '@sx/utils/uuid'
 
 
-class HistoryAction extends BaseResource<HistoryActionInterface> implements HistoryActionInterface {
-  public availableOperations: ResourceOperation[] = []
-
+class HistoryAction extends ResourceBaseFor<HistoryActionInterface>() implements HistoryActionInterface {
   constructor(init: HistoryActionInterface) {
     super()
     Object.assign(this, init)

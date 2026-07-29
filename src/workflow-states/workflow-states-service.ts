@@ -1,6 +1,6 @@
 import {AxiosInstance} from 'axios'
 
-import BaseService, {ServiceOperation} from '@sx/base-service'
+import {ServiceBase} from '@sx/base-service'
 import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowState from '@sx/workflow-states/workflow-state'
 import Workflow from '@sx/workflows/workflow'
@@ -26,10 +26,9 @@ const POPULATION_BY_CLIENT = new WeakMap<AxiosInstance, Promise<void>>()
 /**
  * There are no API endpoints for workflow states, so we need to get the workflows and filter the state attributes from there
  */
-class WorkflowStatesService extends BaseService<WorkflowState, WorkflowStateInterface> {
+class WorkflowStatesService extends ServiceBase<WorkflowState, WorkflowStateInterface> {
   public baseUrl = ''
   protected factory = (data: object): WorkflowState => new WorkflowState(data as WorkflowStateInterface)
-  public availableOperations: ServiceOperation[] = []
 
   private get workflowStates(): WorkflowStateInterface[] {
     return (WORKFLOWS_BY_CLIENT.get(this.http) ?? []).map(workflow => workflow.states).flat()

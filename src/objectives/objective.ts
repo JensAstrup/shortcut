@@ -1,12 +1,11 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import ObjectiveInterface from '@sx/objectives/contracts/objective-interface'
 import UUID from '@sx/utils/uuid'
 
 
-class Objective extends BaseResource<ObjectiveInterface> implements ObjectiveInterface {
+class Objective extends Deletable(Creatable(Updatable(ResourceBaseFor<ObjectiveInterface>()))) implements ObjectiveInterface {
   public baseUrl: string = '/objectives'
   public createFields: string[] = ['name', 'description', 'state', 'archived', 'categories']
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
 
   constructor(init: object) {
     super()
