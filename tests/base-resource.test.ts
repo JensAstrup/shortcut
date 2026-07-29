@@ -2,12 +2,25 @@ import process from 'process'
 
 import { AxiosInstance } from 'axios'
 
+import {ResourceBaseFor, Updatable} from '@sx/base-resource'
 import Iteration from '@sx/iterations/iteration'
 import Label from '@sx/labels/label'
 import Story from '@sx/stories/story'
 import Task from '@sx/stories/tasks/task'
 
 import { stubHttp } from './helpers/http'
+
+
+// A resource that only composes `Updatable`, so `save()` resolves to `Updatable`'s implementation
+// rather than being overridden by `Creatable`'s (as happens for every resource that has both).
+class UpdatableOnlyResource extends Updatable(ResourceBaseFor()) {
+  public static baseUrl = '/mock-updatable'
+}
+
+// Composes no capability mixins and declares no `baseUrl` in either form, to exercise ResourceCore
+// directly rather than through a concrete resource's overrides.
+class BareResource extends ResourceBaseFor() {
+}
 
 
 describe('BaseResource', () => {
@@ -24,6 +37,18 @@ describe('BaseResource', () => {
       const resource = new Story(init)
       expect(resource.name).toBe('Test')
     })
+
+    // Concrete resources all call `super()` bare and assign `init` themselves, so ResourceCore's own
+    // `if (init) Object.assign(this, init)` branch is otherwise never exercised.
+    it('assigns init directly when constructed through the base class', () => {
+      const resource = new BareResource({name: 'Bare'})
+      expect(resource.name).toBe('Bare')
+    })
+
+    it('throws when neither a static nor instance baseUrl is declared', () => {
+      const resource = new BareResource()
+      expect(() => resource.resourceUrl).toThrow('You must override baseUrl in the subclass')
+    })
   })
 
   describe('save method', () => {
@@ -31,8 +56,9 @@ describe('BaseResource', () => {
       const resource = new Story({id: 123}).setHttp(http)
       resource.changedFields = []
       resource.name = 'Updated Name'
-      resource.labels = [{name: 'label1'}, {name: 'label2'}] as Label[];
-      (http.put as jest.Mock).mockResolvedValue({data: {snake_name: 'Updated Name'}})
+      resource.labels = [{name: 'label1'}, {name: 'label2'}] as Label[]
+      const put = http.put as jest.Mock
+      put.mockResolvedValue({data: {snake_name: 'Updated Name'}})
 
       await resource.save()
 
@@ -60,8 +86,9 @@ describe('BaseResource', () => {
           data: 'Internal Server Error',
           headers: {'content-type': 'application/json'}
         }
-      };
-      (http.put as jest.Mock).mockRejectedValue(mockError)
+      }
+      const put = http.put as jest.Mock
+      put.mockRejectedValue(mockError)
 
       await resource.update()
 
@@ -75,8 +102,9 @@ describe('BaseResource', () => {
       const resource = new Story({id: 123}).setHttp(http)
       const mockError = {
         request: 'Request made but no response received'
-      };
-      (http.put as jest.Mock).mockRejectedValue(mockError)
+      }
+      const put = http.put as jest.Mock
+      put.mockRejectedValue(mockError)
 
       await resource.update()
 
@@ -86,8 +114,9 @@ describe('BaseResource', () => {
     // Test when there is an error setting up the request
     it('logs errors when an error occurs in setting up the request', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      const mockError = new Error('Error in setting up the request');
-      (http.put as jest.Mock).mockRejectedValue(mockError)
+      const mockError = new Error('Error in setting up the request')
+      const put = http.put as jest.Mock
+      put.mockRejectedValue(mockError)
 
       await resource.update()
 
@@ -96,8 +125,9 @@ describe('BaseResource', () => {
 
     it('calls create if id does not exist', async () => {
       const resource = new Story({}).setHttp(http)
-      resource.name = 'New Name';
-      (http.post as jest.Mock).mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
+      resource.name = 'New Name'
+      const post = http.post as jest.Mock
+      post.mockResolvedValue({data: {id: 123, snake_name: 'New Name'}})
 
       await resource.save()
 
@@ -161,6 +191,43 @@ describe('BaseResource', () => {
 
       const [, body] = post.mock.calls[0] as [string, { deadline: string }]
       expect(body.deadline).toBe(deadline)
+    })
+
+    // Every resource that composes `Creatable` also composes `Updatable`, and `Creatable`'s `save()`
+    // shadows `Updatable`'s on the prototype chain — so an update-only resource is needed to reach
+    // `Updatable`'s own `save()` body rather than always going through `Creatable`'s copy.
+    it('dispatches save() to update() on an update-only resource', async () => {
+      const resource = new UpdatableOnlyResource({id: 1}).setHttp(http)
+      resource.changedFields = []
+      resource.name = 'Changed';
+      (http.put as jest.Mock).mockResolvedValue({data: {}})
+
+      await resource.save()
+
+      expect(http.put).toHaveBeenCalledWith('/mock-updatable/1', {name: 'Changed'})
+    })
+
+    it('throws a descriptive error when create fails', async () => {
+      const resource = new Story({}).setHttp(http)
+      resource.name = 'New Name'
+      const mockError = {
+        response: {
+          status: 422,
+          data: {message: 'Invalid'},
+          headers: {'content-type': 'application/json'}
+        }
+      };
+      (http.post as jest.Mock).mockRejectedValue(mockError)
+
+      await expect(resource.save()).rejects.toThrow('Error creating resource: HTTP 422 {"message":"Invalid"}')
+    })
+
+    it('throws an HTTP error when create resolves with a non-success status', async () => {
+      const resource = new Story({}).setHttp(http)
+      resource.name = 'New Name';
+      (http.post as jest.Mock).mockResolvedValue({status: 422, data: {message: 'Invalid'}})
+
+      await expect(resource.save()).rejects.toThrow('HTTP error 422 {"message":"Invalid"}')
     })
   })
 
