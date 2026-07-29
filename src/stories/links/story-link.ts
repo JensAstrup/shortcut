@@ -1,10 +1,9 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import StoryLinkInterface from '@sx/stories/links/contracts/story-link-interface'
 
 
-class StoryLink extends BaseResource<StoryLinkInterface> implements StoryLinkInterface {
+class StoryLink extends Deletable(Creatable(Updatable(ResourceBaseFor<StoryLinkInterface>()))) implements StoryLinkInterface {
   public static baseUrl = '/story-links'
-  public availableOperations: ResourceOperation[] = ['delete', 'create', 'update']
   public createFields: string[] = ['subjectId', 'verb', 'objectId']
 
   constructor(init: object) {

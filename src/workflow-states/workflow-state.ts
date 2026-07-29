@@ -1,10 +1,8 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 
 
-class WorkflowState extends BaseResource<WorkflowStateInterface> implements WorkflowStateInterface {
-  public availableOperations: ResourceOperation[] = []
-
+class WorkflowState extends ResourceBaseFor<WorkflowStateInterface>() implements WorkflowStateInterface {
   constructor(init: WorkflowStateInterface) {
     super()
     Object.assign(this, init)

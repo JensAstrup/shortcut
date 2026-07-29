@@ -1,11 +1,9 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {ResourceBaseFor} from '@sx/base-resource'
 import RepositoryInterface from '@sx/repositories/contracts/repository'
 import {RepositoryType} from '@sx/repositories/contracts/repository-api-data'
 
 
-class Repository extends BaseResource<RepositoryInterface> implements RepositoryInterface {
-  public availableOperations: ResourceOperation[] = []
-
+class Repository extends ResourceBaseFor<RepositoryInterface>() implements RepositoryInterface {
   createdAt: Date | null
   entityType: string | null
   externalId: string | null

@@ -1,4 +1,6 @@
-import {BaseSearchableService, ServiceOperation} from '@sx/base-service'
+import { AxiosError } from 'axios'
+
+import {Gettable, Listable, Searchable, ServiceBaseFor} from '@sx/base-service'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import Epic from '@sx/epics/epic'
 import EpicWorkflowApiData from '@sx/epics/workflows/contracts/epic-workflow-api-data'
@@ -7,14 +9,13 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 
 
-class EpicsService extends BaseSearchableService<Epic, EpicInterface> {
+class EpicsService extends Searchable(Listable(Gettable(ServiceBaseFor<Epic, EpicInterface>()))) {
   public baseUrl = '/epics'
   protected factory = (data: object): Epic => new Epic(data)
-  public availableOperations: ServiceOperation[] = ['get', 'search', 'list']
 
   public async getWorkflow(): Promise<EpicWorkflowInterface> {
     const workflowUrl: string = '/epic-workflow'
-    const response = await this.http.get(workflowUrl).catch((error) => {
+    const response = await this.http.get<EpicWorkflowApiData>(workflowUrl).catch((error: AxiosError) => {
       handleResponseFailure(error, {})
       return
     })

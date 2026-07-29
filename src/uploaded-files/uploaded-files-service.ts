@@ -1,5 +1,5 @@
-import BaseService, {ServiceOperation} from '@sx/base-service'
-import Story from '@sx/stories/story'
+import {Gettable, Listable, ServiceBaseFor} from '@sx/base-service'
+import StoryInterface from '@sx/stories/contracts/story-interface'
 import UploadedFileApiData from '@sx/uploaded-files/contracts/uploaded-file-api-data'
 import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
@@ -7,21 +7,20 @@ import {convertApiFields} from '@sx/utils/convert-fields'
 import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 
 
-class UploadedFilesService extends BaseService<UploadedFile, UploadedFileInterface> {
+class UploadedFilesService extends Listable(Gettable(ServiceBaseFor<UploadedFile, UploadedFileInterface>())) {
   public baseUrl = '/files'
   public factory = (data: UploadedFileInterface): UploadedFile => new UploadedFile(data)
-  public availableOperations: ServiceOperation[] = ['list', 'get']
 
   /**
    * Uploads a file to Shortcut, optionally associating it with a story. Note that it is unknown where non-story associated files are stored.
    * @param file - The file to upload
-   * @param story - The story to associate the file with, either an instance of {@link Story} or a story ID
+   * @param story - The story to associate the file with, either a story (or story-shaped object) or a story ID
    */
-  async upload(file: Buffer, story?: Story | number): Promise<UploadedFile> {
+  async upload(file: Buffer, story?: StoryInterface | number): Promise<UploadedFile> {
     const formData = new FormData()
     formData.append('file0', file)
     if (story) {
-      const storyId = story instanceof Story ? story.id : story
+      const storyId = typeof story === 'number' ? story : story.id
       formData.append('story_id', storyId.toString())
     }
     // Drop the client's default JSON content type so that axios derives the content type from the

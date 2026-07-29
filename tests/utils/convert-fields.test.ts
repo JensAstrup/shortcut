@@ -15,6 +15,13 @@ describe('convertApiFields', () => {
     expect(output.dateTime.toISOString()).toBe('2020-01-01T00:00:00.000Z')
   })
 
+  test('converts date-only strings to Date objects', () => {
+    const input = {start_date: '2026-07-29'}
+    const output: Record<string, Date> = convertApiFields(input)
+    expect(output.startDate).toBeInstanceOf(Date)
+    expect(output.startDate.toISOString()).toBe('2026-07-29T00:00:00.000Z')
+  })
+
   test('recursively converts nested objects', () => {
     const input = {nested_object: {snake_case_key: 'value'}}
     const output = convertApiFields(input)

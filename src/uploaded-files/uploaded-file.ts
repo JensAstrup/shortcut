@@ -1,11 +1,10 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import UploadedFileInterface from '@sx/uploaded-files/contracts/uploaded-file-interface'
 import UUID from '@sx/utils/uuid'
 
 
-class UploadedFile extends BaseResource<UploadedFileInterface> implements UploadedFileInterface {
+class UploadedFile extends Deletable(Updatable(ResourceBaseFor<UploadedFileInterface>())) implements UploadedFileInterface {
   public baseUrl = '/files'
-  public availableOperations: ResourceOperation[] = ['update', 'delete']
 
   constructor(init: UploadedFileInterface) {
     super(init)

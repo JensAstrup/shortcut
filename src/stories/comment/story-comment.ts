@@ -1,4 +1,4 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import StoryCommentApiData from '@sx/stories/comment/contracts/story-comment-api-data'
 import {StoryCommentInterface} from '@sx/stories/comment/contracts/story-comment-interface'
 import Story from '@sx/stories/story'
@@ -7,9 +7,7 @@ import {handleResponseFailure} from '@sx/utils/handle-response-failure'
 import UUID from '@sx/utils/uuid'
 
 
-class StoryComment extends BaseResource<StoryCommentInterface> implements StoryCommentInterface {
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
-
+class StoryComment extends Deletable(Creatable(Updatable(ResourceBaseFor<StoryCommentInterface>()))) implements StoryCommentInterface {
   constructor(init: object) {
     super()
     Object.assign(this, init)

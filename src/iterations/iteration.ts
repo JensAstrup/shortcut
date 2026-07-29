@@ -1,4 +1,4 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import IterationInterface, {IterationStats, IterationStatus, Label} from '@sx/iterations/contracts/iteration-interface'
 import Team from '@sx/teams/team'
 import TeamsService from '@sx/teams/teams-service'
@@ -7,10 +7,10 @@ import TeamsService from '@sx/teams/teams-service'
 /**
  * @InheritDoc
  */
-class Iteration extends BaseResource<IterationInterface> implements IterationInterface {
+class Iteration extends Deletable(Creatable(Updatable(ResourceBaseFor<IterationInterface>()))) implements IterationInterface {
   public static baseUrl = '/iterations'
   public createFields: string[] = ['name', 'startDate', 'endDate', 'labels']
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
+  public dateOnlyFields: string[] = ['startDate', 'endDate']
 
   get teams(): Promise<Team[]> {
     const service = new TeamsService({http: this.http})

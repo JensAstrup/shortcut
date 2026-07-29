@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios'
 
-import BaseService, {ServiceOperation} from '@sx/base-service'
+import {Gettable, Listable, ServiceBaseFor} from '@sx/base-service'
 import MemberInterface from '@sx/members/contracts/member-interface'
 import {MemberProfile} from '@sx/members/contracts/member-profile'
 import MemberProfileApiData from '@sx/members/contracts/member-profile-api-data'
@@ -11,10 +11,9 @@ import WorkspaceInterface from '@sx/workspace/contracts/workspace'
 import WorkspaceApiData from '@sx/workspace/contracts/workspace-api-data'
 
 
-class MembersService extends BaseService<Member, MemberInterface> {
+class MembersService extends Listable(Gettable(ServiceBaseFor<Member, MemberInterface>())) {
   public baseUrl = '/members'
   protected factory = (data: object): Member => new Member(data)
-  public availableOperations: ServiceOperation[] = ['get', 'list']
 
   async getAuthenticatedMember(): Promise<Member>{
     const profile: MemberProfile = await this.getAuthenticatedMemberProfile()

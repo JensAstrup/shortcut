@@ -1,4 +1,4 @@
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import LinkedFileInterface from '@sx/linked-files/contracts/linked-file-interface'
 import StoriesService from '@sx/stories/stories-service'
 import Story from '@sx/stories/story'
@@ -9,11 +9,10 @@ import UUID from '@sx/utils/uuid'
  * @remarks
  * Related: {@link LinkedFilesService} for the service managing stories.
  *
- * @inheritDoc BaseResource
+ * @inheritDoc ResourceCore
  */
-class LinkedFile extends BaseResource<LinkedFileInterface> implements LinkedFileInterface {
+class LinkedFile extends Deletable(Creatable(Updatable(ResourceBaseFor<LinkedFileInterface>()))) implements LinkedFileInterface {
   public baseUrl = '/linked-files'
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete']
   public createFields = ['contentType', 'description', 'name', 'size', 'storyId', 'type', 'uploaderId', 'url']
 
   constructor(init: LinkedFileInterface) {

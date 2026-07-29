@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosError} from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter'
 
 import Epic from '@sx/epics/epic'
@@ -16,9 +16,12 @@ import TeamsService from '@sx/teams/teams-service'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
-import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
+import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowState from '@sx/workflow-states/workflow-state'
+import Workflow from '@sx/workflows/workflow'
 import WorkflowService from '@sx/workflows/workflows-service'
+
+import {stubHttp} from '../helpers/http'
 
 
 const axiosMock = new AxiosMockAdapter(axios)
@@ -60,25 +63,36 @@ describe('Story', () => {
   })
 
   describe('workflow getter', () => {
-    it('should return workflow state by ID', () => {
-      const story = new Story({workflowStateId: 1})
-      jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
-        id: 1,
-        name: 'Unstarted'
-      } as object as Promise<WorkflowState>)
-      expect(story.workflow).toEqual({id: 1, name: 'Unstarted'})
-      expect(WorkflowService.prototype.getWorkflowState).toHaveBeenCalledWith(1)
+    it('should return the workflow by workflowId', async () => {
+      const story = new Story({workflowId: 1})
+      const workflow = {id: 1, name: 'Engineering', states: []} as object as Workflow
+      jest.spyOn(WorkflowService.prototype, 'get').mockResolvedValue(workflow)
+      expect(await story.workflow).toEqual(workflow)
+      expect(WorkflowService.prototype.get).toHaveBeenCalledWith(1)
     })
   })
 
-  describe('state method', () => {
-    it('should return workflow state by ID', async () => {
-      const story = new Story({workflowStateId: 1})
-      jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+  describe('state getter', () => {
+    it('should return the workflow state matching workflowStateId', async () => {
+      const story = new Story({workflowId: 1, workflowStateId: 2})
+      const workflow = {
         id: 1,
-        type: 'Unstarted'
-      } as object as Promise<WorkflowState>)
-      expect(await story.state()).toEqual('Unstarted')
+        states: [{id: 2, name: 'In Progress', type: WorkflowStateType.STARTED}]
+      } as object as Workflow
+      jest.spyOn(WorkflowService.prototype, 'get').mockResolvedValue(workflow)
+
+      const state = await story.state
+      expect(state).toBeInstanceOf(WorkflowState)
+      expect(state.id).toEqual(2)
+      expect(state.type).toEqual(WorkflowStateType.STARTED)
+    })
+
+    it('should throw an error when no state matches workflowStateId', async () => {
+      const story = new Story({workflowId: 1, workflowStateId: 99})
+      const workflow = {id: 1, states: []} as object as Workflow
+      jest.spyOn(WorkflowService.prototype, 'get').mockResolvedValue(workflow)
+
+      await expect(story.state).rejects.toThrow('Workflow state with id 99 not found')
     })
   })
 
@@ -143,10 +157,10 @@ describe('Story', () => {
   })
 
   describe('history method', () => {
-    it('should throw an error if request fails', () => {
+    it('should throw an error if request fails', async () => {
       const story = new Story({id: 1})
       axiosMock.onGet().reply(500)
-      expect(story.history()).rejects.toThrow('Error fetching history: Error: Request failed with status code 500')
+      await expect(story.history()).rejects.toThrow('Error fetching history')
     })
 
     it('should return the story history', async () => {
@@ -200,32 +214,33 @@ describe('Story', () => {
 
     afterEach(() => {
       global.Date = realDate
+      jest.restoreAllMocks()
     })
 
 
-    it('should throw an error if workflow state is finished', () => {
-      jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+    it('should throw an error if workflow state is finished', async () => {
+      jest.spyOn(Story.prototype, 'state', 'get').mockResolvedValue({
         id: 1,
-        type: 'Finished'
-      } as unknown as Promise<WorkflowState>)
+        type: WorkflowStateType.FINISHED
+      } as object as WorkflowState)
       const story = new Story({id: 1, workflowStateId: 1})
-      expect(story.timeInDevelopment()).rejects.toThrow('Story is already finished')
+      await expect(story.timeInDevelopment()).rejects.toThrow('Story is already finished')
     })
 
-    it('should throw an error if story does not have a started date', () => {
-      jest.spyOn(WorkflowService.prototype, 'getWorkflowState').mockReturnValue({
+    it('should throw an error if story does not have a started date', async () => {
+      jest.spyOn(Story.prototype, 'state', 'get').mockResolvedValue({
         id: 1,
-        type: 'Started'
-      } as object as Promise<WorkflowState>)
+        type: WorkflowStateType.STARTED
+      } as object as WorkflowState)
       const story = new Story({id: 1, startedAt: null})
-      expect(story.timeInDevelopment()).rejects.toThrow('Story is not started')
+      await expect(story.timeInDevelopment()).rejects.toThrow('Story is not started')
     })
 
     it('should return the time in development', async () => {
-      const mockWorkflow = {type: 'SomeWorkflowType'}
+      const mockState = {type: 'SomeWorkflowType'}
       const mockStartedAt = new Date('2021-01-01')
 
-      jest.spyOn(Story.prototype, 'workflow', 'get').mockResolvedValue(mockWorkflow as object as Promise<WorkflowStateInterface>)
+      jest.spyOn(Story.prototype, 'state', 'get').mockResolvedValue(mockState as object as WorkflowState)
 
       const story = new Story({id: 1, workflowStateId: 1, startedAt: null})
       story.startedAt = mockStartedAt
@@ -245,11 +260,28 @@ describe('Story', () => {
       expect(result).toMatchObject(convertApiFields(commentData))
     })
 
-    it('throws an error if the axios request fails', async () => {
+    it('throws an error with the Axios error as cause if the axios request fails', async () => {
+      expect.assertions(2)
       axiosMock.onPost().reply(500)
-      const story = new Story({id: 1}) // Adjust initial data as needed
+      const story = new Story({id: 1})
 
-      await expect(story.comment('Test comment')).rejects.toThrow('Error creating comment: Error: Request failed with status code 500')
+      await story.comment('Test comment').catch((error: Error) => {
+        expect(error.message).toEqual('Error creating comment')
+        expect((error.cause as AxiosError).isAxiosError).toBe(true)
+      })
+    })
+
+    it('throws an error with a non-Axios error as cause, without calling handleResponseFailure', async () => {
+      expect.assertions(2)
+      const nonAxiosError = new Error('boom')
+      const http = stubHttp()
+      jest.spyOn(http, 'post').mockRejectedValue(nonAxiosError)
+      const story = new Story({id: 1}).setHttp(http)
+
+      await story.comment('Test comment').catch((error: Error) => {
+        expect(error.message).toEqual('Error creating comment')
+        expect(error.cause).toBe(nonAxiosError)
+      })
     })
   })
 
@@ -278,7 +310,7 @@ describe('Story', () => {
       axiosMock.onPost().reply(500)
       const story = new Story({id: 1, tasks: []})
 
-      await expect(story.addTask('Test task')).rejects.toThrow('Error adding task: Error: Request failed with status code 500')
+      await expect(story.addTask('Test task')).rejects.toThrow('Error adding task')
     })
   })
 

@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios'
 
 import BaseData from '@sx/base-data'
-import BaseResource, {ResourceOperation} from '@sx/base-resource'
+import {Creatable, Deletable, ResourceBaseFor, Updatable} from '@sx/base-resource'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import Member from '@sx/members/member'
 import MembersService from '@sx/members/members-service'
@@ -17,13 +17,12 @@ import { handleResponseFailure } from '@sx/utils/handle-response-failure'
 import UUID from '@sx/utils/uuid'
 
 
-class Epic extends BaseResource<EpicInterface> implements EpicInterface {
+class Epic extends Deletable(Creatable(Updatable(ResourceBaseFor<EpicInterface>()))) implements EpicInterface {
   public static baseUrl: string = '/epics'
   public createFields: string[] = ['completedAtOverride', 'createdAt', 'deadline', 'description',
     'epicStateId', 'externalId', 'followerIds', 'groupId', 'groupIds', 'labels', 'milestoneId',
     'name', 'objectiveIds', 'ownerIds', 'plannedStartDate', 'requestedById',
     'startedAtOverride', 'state', 'updatedAt']
-  public availableOperations: ResourceOperation[] = ['create', 'update', 'delete', 'comment']
 
   constructor(init: EpicInterface | object) {
     super()
