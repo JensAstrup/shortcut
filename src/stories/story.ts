@@ -194,10 +194,10 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
   public async history(): Promise<History[]> {
     const url = `${Story.baseUrl}/${this.id}/history`
     const response = await this.http.get(url).catch((error) => {
-      handleResponseFailure(error, {storyId: this.id})
+      handleResponseFailure(error as AxiosError, {storyId: this.id})
       throw new Error(`Error fetching history: ${error}`)
     })
-    const historyData: HistoryApiData[] = response.data
+    const historyData: HistoryApiData[] = response.data as HistoryApiData[]
     return historyData.map((history) => {
       const historyInterface = convertApiFields<HistoryApiData, HistoryInterface>(history)
       return new History(historyInterface).setHttp(this.http)
@@ -281,10 +281,10 @@ class Story extends BaseResource<StoryInterface> implements StoryInterface {
     const url = `${Story.baseUrl}/${this.id}/tasks`
     const requestData = {description: task}
     const response = await this.http.post(url, requestData).catch((error) => {
-      handleResponseFailure(error, {storyId: this.id})
+      handleResponseFailure(error as AxiosError, {storyId: this.id})
       throw new Error(`Error adding task: ${error}`)
     })
-    const data: TaskApiData = response.data
+    const data: TaskApiData = response.data as TaskApiData
     const interfaceData = convertApiFields(data)
     const createdTask = new Task(interfaceData).setHttp(this.http)
     this.tasks.push(createdTask)
