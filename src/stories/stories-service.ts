@@ -1,4 +1,4 @@
-import {AxiosInstance} from 'axios'
+import {AxiosError, AxiosInstance} from 'axios'
 
 import {Gettable, Searchable, ServiceBaseFor} from '@sx/base-service'
 import {StoryApiData} from '@sx/stories/contracts/story-api-data'
@@ -24,8 +24,8 @@ class StoriesService extends Searchable(Gettable(ServiceBaseFor<Story, StoryInte
    */
   async getExternallyLinked(link: string): Promise<Story[]> {
     const url = '/external-link/stories'
-    const response = await this.http.get(url, { params: { external_link: link } }).catch((error) => {
-      handleResponseFailure(error, { external_link: link })
+    const response = await this.http.get<StoryApiData[]>(url, { params: { external_link: link } }).catch((error) => {
+      handleResponseFailure(error as AxiosError, { external_link: link })
     })
     if (!response) {
       throw new Error('Failed to fetch externally linked stories')

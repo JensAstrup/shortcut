@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios'
+
 import {Gettable, Listable, Searchable, ServiceBaseFor} from '@sx/base-service'
 import EpicInterface from '@sx/epics/contracts/epic-interface'
 import Epic from '@sx/epics/epic'
@@ -13,7 +15,7 @@ class EpicsService extends Searchable(Listable(Gettable(ServiceBaseFor<Epic, Epi
 
   public async getWorkflow(): Promise<EpicWorkflowInterface> {
     const workflowUrl: string = '/epic-workflow'
-    const response = await this.http.get(workflowUrl).catch((error) => {
+    const response = await this.http.get<EpicWorkflowApiData>(workflowUrl).catch((error: AxiosError) => {
       handleResponseFailure(error, {})
       return
     })
