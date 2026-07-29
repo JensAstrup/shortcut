@@ -146,12 +146,13 @@ describe('BaseResource', () => {
     it('serializes dateOnlyFields as YYYY-MM-DD on create', async () => {
       const startDate = new Date('2026-07-29T12:31:07.768Z')
       const endDate = new Date('2026-08-05T12:31:07.768Z')
-      const resource = new Iteration({name: 'Iteration 1', startDate, endDate}).setHttp(http);
-      (http.post as jest.Mock).mockResolvedValue({data: {id: 1}})
+      const resource = new Iteration({name: 'Iteration 1', startDate, endDate}).setHttp(http)
+      const post = http.post as jest.Mock
+      post.mockResolvedValue({data: {id: 1}})
 
       await resource.save()
 
-      const [, body] = (http.post as jest.Mock).mock.calls[0]
+      const [, body] = post.mock.calls[0] as [string, { start_date: string; end_date: string }]
       expect(body.start_date).toBe('2026-07-29')
       expect(body.end_date).toBe('2026-08-05')
     })
@@ -160,12 +161,13 @@ describe('BaseResource', () => {
       const startDate = new Date('2026-07-29T12:31:07.768Z')
       const resource = new Iteration({id: 1}).setHttp(http)
       resource.changedFields = []
-      resource.startDate = startDate;
-      (http.put as jest.Mock).mockResolvedValue({data: {id: 1}})
+      resource.startDate = startDate
+      const put = http.put as jest.Mock
+      put.mockResolvedValue({data: {id: 1}})
 
       await resource.save()
 
-      const [, body] = (http.put as jest.Mock).mock.calls[0]
+      const [, body] = put.mock.calls[0] as [string, { start_date: string }]
       expect(body.start_date).toBe('2026-07-29')
     })
 
@@ -174,12 +176,13 @@ describe('BaseResource', () => {
       resource.availableOperations = ['create']
       resource.createFields = ['deadline']
       const deadline = new Date('2026-07-29T12:31:07.768Z')
-      resource.deadline = deadline;
-      (http.post as jest.Mock).mockResolvedValue({data: {id: 1}})
+      resource.deadline = deadline
+      const post = http.post as jest.Mock
+      post.mockResolvedValue({data: {id: 1}})
 
       await resource.save()
 
-      const [, body] = (http.post as jest.Mock).mock.calls[0]
+      const [, body] = post.mock.calls[0] as [string, { deadline: string }]
       expect(body.deadline).toBe(deadline)
     })
   })
@@ -187,8 +190,9 @@ describe('BaseResource', () => {
   describe('delete method', () => {
     it('sends a delete request for the resource', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['delete'];
-      (http.delete as jest.Mock).mockResolvedValue({})
+      resource.availableOperations = ['delete']
+      const del = http.delete as jest.Mock
+      del.mockResolvedValue({})
 
       await resource.delete()
 
@@ -201,12 +205,13 @@ describe('BaseResource', () => {
     // to one resolution path cannot silently break the other.
     it('builds the delete url from a static baseUrl', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['delete'];
-      (http.delete as jest.Mock).mockResolvedValue({})
+      resource.availableOperations = ['delete']
+      const del = http.delete as jest.Mock
+      del.mockResolvedValue({})
 
       await resource.delete()
 
-      const [url] = (http.delete as jest.Mock).mock.calls[0]
+      const [url] = del.mock.calls[0] as [string]
       expect(url).toBe(`${Story.baseUrl}/123`)
       expect(url).not.toContain('undefined')
     })
@@ -214,12 +219,13 @@ describe('BaseResource', () => {
     it('builds the delete url from an instance baseUrl', async () => {
       // Task derives its instance baseUrl from storyId in the constructor, so the fixture needs one.
       const resource = new Task({id: 456, storyId: 789}).setHttp(http)
-      resource.availableOperations = ['delete'];
-      (http.delete as jest.Mock).mockResolvedValue({})
+      resource.availableOperations = ['delete']
+      const del = http.delete as jest.Mock
+      del.mockResolvedValue({})
 
       await resource.delete()
 
-      const [url] = (http.delete as jest.Mock).mock.calls[0]
+      const [url] = del.mock.calls[0] as [string]
       expect(url).toBe('/stories/789/tasks/456')
       expect(url).not.toContain('undefined')
     })
@@ -233,8 +239,9 @@ describe('BaseResource', () => {
 
     it('throws an error on delete failure', async () => {
       const resource = new Story({id: 123}).setHttp(http)
-      resource.availableOperations = ['delete'];
-      (http.delete as jest.Mock).mockRejectedValue(new Error('Error deleting story'))
+      resource.availableOperations = ['delete']
+      const del = http.delete as jest.Mock
+      del.mockRejectedValue(new Error('Error deleting story'))
 
       await expect(resource.delete()).rejects.toThrow('Failed to delete resource')
     })
