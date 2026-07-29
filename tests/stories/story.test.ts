@@ -16,7 +16,7 @@ import TeamsService from '@sx/teams/teams-service'
 import UploadedFile from '@sx/uploaded-files/uploaded-file'
 import UploadedFilesService from '@sx/uploaded-files/uploaded-files-service'
 import {convertApiFields} from '@sx/utils/convert-fields'
-import WorkflowStateInterface from '@sx/workflow-states/contracts/workflow-state-interface'
+import WorkflowStateInterface, {WorkflowStateType} from '@sx/workflow-states/contracts/workflow-state-interface'
 import WorkflowState from '@sx/workflow-states/workflow-state'
 import Workflow from '@sx/workflows/workflow'
 import WorkflowService from '@sx/workflows/workflows-service'
@@ -75,14 +75,14 @@ describe('Story', () => {
       const story = new Story({workflowId: 1, workflowStateId: 2})
       const workflow = {
         id: 1,
-        states: [{id: 2, name: 'In Progress', type: 'Started'}]
+        states: [{id: 2, name: 'In Progress', type: WorkflowStateType.STARTED}]
       } as object as Workflow
       jest.spyOn(WorkflowService.prototype, 'get').mockResolvedValue(workflow)
 
       const state = await story.state
       expect(state).toBeInstanceOf(WorkflowState)
       expect(state.id).toEqual(2)
-      expect(state.type).toEqual('Started')
+      expect(state.type).toEqual(WorkflowStateType.STARTED)
     })
 
     it('should throw an error when no state matches workflowStateId', async () => {
@@ -212,25 +212,26 @@ describe('Story', () => {
 
     afterEach(() => {
       global.Date = realDate
+      jest.restoreAllMocks()
     })
 
 
-    it('should throw an error if workflow state is finished', () => {
+    it('should throw an error if workflow state is finished', async () => {
       jest.spyOn(Story.prototype, 'state', 'get').mockResolvedValue({
         id: 1,
-        type: 'Finished'
+        type: WorkflowStateType.FINISHED
       } as object as WorkflowState)
       const story = new Story({id: 1, workflowStateId: 1})
-      expect(story.timeInDevelopment()).rejects.toThrow('Story is already finished')
+      await expect(story.timeInDevelopment()).rejects.toThrow('Story is already finished')
     })
 
-    it('should throw an error if story does not have a started date', () => {
+    it('should throw an error if story does not have a started date', async () => {
       jest.spyOn(Story.prototype, 'state', 'get').mockResolvedValue({
         id: 1,
-        type: 'Started'
+        type: WorkflowStateType.STARTED
       } as object as WorkflowState)
       const story = new Story({id: 1, startedAt: null})
-      expect(story.timeInDevelopment()).rejects.toThrow('Story is not started')
+      await expect(story.timeInDevelopment()).rejects.toThrow('Story is not started')
     })
 
     it('should return the time in development', async () => {
